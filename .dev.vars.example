@@ -1,0 +1,12 @@
+# Copy this file to .dev.vars (local) and fill in. NEVER commit .dev.vars.
+# On Cloudflare Pages, add the same names under Settings > Variables and Secrets (as Secrets).
+SUPABASE_URL=https://YOUR-PROJECT.supabase.co
+SUPABASE_ANON_KEY=your-anon-or-publishable-key
+SUPABASE_SERVICE_ROLE_KEY=your-service-role-or-secret-key
+GEMINI_API_KEY=your-gemini-api-key
+
+# Optional (defaults shown). Run `npm run check` to confirm these names work for your key.
+# GEMINI_MODEL=gemini-2.5-flash
+# GEMINI_EMBED_MODEL=gemini-embedding-001
+# USER_DAILY_LIMIT=20
+# GLOBAL_DAILY_LIMIT=300
