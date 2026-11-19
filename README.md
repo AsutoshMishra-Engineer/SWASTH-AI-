@@ -183,6 +183,16 @@ npm run dev
 
 ---
 
+## 📚 Clinical & Technical Documentation
+* **Master Clinical Compendium of Medical Cases (608 Cases & Cutaneous Dermatology Integration)**:  
+  👉 [docs/SWASTH_AI_CLINICAL_CASES_COMPENDIUM.md](docs/SWASTH_AI_CLINICAL_CASES_COMPENDIUM.md)  
+  *Detailed medical reference for clinicians, dermatologists, and biomedical engineers covering all 607 WHO/MoHFW clinical verticals, fungal pathobiology (*Tinea Corporis/Cruris*), cellular microbiology (*Trichophyton rubrum*), differential diagnosis matrices, and the critical pharmacovigilance framework for Topical Corticosteroid Abuse (*Tinea Incognito*).*
+* **Comprehensive System Documentation**: [`docs/Swasth_AI_Comprehensive_Documentation.md`](docs/Swasth_AI_Comprehensive_Documentation.md)
+* **10-Page Master Technical & Clinical Project Report (PDF)**: [`docs/Swasth_AI_Comprehensive_Project_Report.pdf`](docs/Swasth_AI_Comprehensive_Project_Report.pdf)
+* **Master Architecture Presentation Deck (PPTX)**: [`docs/Swasth-AI.pptx`](docs/Swasth-AI.pptx)
+
+---
+
 ## 📜 Intellectual Property, Copyright & License
 
 **Copyright © 2026 Asutosh Mishra. All Rights Reserved.**
