@@ -482,42 +482,45 @@
       $('langHiBtn').setAttribute('aria-pressed', String(isHi));
     }
 
-    // Composer & Voice Area visibility
+    // Composer & Dual Action Boxes visibility
     const chatForm = $('chatForm');
-    const odiaVoiceArea = $('odiaVoiceArea');
     const composerFoot = document.querySelector('.composer-foot');
+    const dualActionArea = $('dualActionArea');
 
-    if (chatForm) chatForm.style.display = '';
-    if (composerFoot) composerFoot.style.display = '';
-    if (odiaVoiceArea) odiaVoiceArea.hidden = !(isOr || isHi);
-
-    const odiaVoiceMainText = $('odiaVoiceMainText');
-    if (odiaVoiceMainText) {
-      odiaVoiceMainText.textContent = isHi ? '🎙️ अपनी समस्या बोलकर बताएं' : (isOr ? '🎙️ ଆପଣଙ୍କ ସମସ୍ୟା କୁହନ୍ତୁ' : '🎙️ Speak your symptoms');
-    }
-    const odiaVoiceSubText = $('odiaVoiceSubText');
-    if (odiaVoiceSubText) {
-      odiaVoiceSubText.textContent = isHi ? 'यहाँ टैप करके हिन्दी में बोलें' : (isOr ? 'ଏଠାରେ ଟ୍ୟାପ୍ କରି ଓଡ଼ିଆରେ କୁହନ୍ତୁ' : 'Tap to speak in your language');
-    }
-    const odiaVoiceHint = $('odiaVoiceHint');
-    if (odiaVoiceHint) {
-      odiaVoiceHint.textContent = isHi
-        ? 'बोलने के बाद फिर से टैप करें या रुकने पर अपने आप सलाह मिलेगी'
-        : (isOr ? 'କହି ସାରିବା ପରେ ପୁଣି ଟ୍ୟାପ୍ କରନ୍ତୁ ବା ଅଟକିଗଲେ ଆପେ ଆପେ ପରାମର୍ଶ ମିଳିବ' : 'Tap again when done or pause to receive guidance automatically');
+    if (isEn) {
+      // In English: show normal WhatsApp chat bar + action boxes below
+      if (chatForm) chatForm.style.display = 'flex';
+      if (composerFoot) composerFoot.style.display = 'flex';
+      if (dualActionArea) dualActionArea.classList.remove('hero-mode');
+    } else {
+      // In Odia or Hindi: hide the text typing bar, show ONLY the 2 prominent action boxes!
+      if (chatForm) chatForm.style.display = 'none';
+      if (composerFoot) composerFoot.style.display = 'none';
+      if (dualActionArea) dualActionArea.classList.add('hero-mode');
     }
 
-    const sendBtnSpan = $('sendBtn')?.querySelector('span');
-    if (sendBtnSpan) sendBtnSpan.textContent = isHi ? 'भेजें' : (isOr ? 'ପଠାନ୍ତୁ' : 'Send');
-    const micBadge = document.querySelector('.mic-odia-badge');
-    if (micBadge) micBadge.textContent = isHi ? 'माइक' : (isOr ? 'ମାଇକ୍' : 'Mic');
-    const cameraBadge = $('cameraBadge');
-    if (cameraBadge) cameraBadge.textContent = isHi ? 'फोटो' : (isOr ? 'ଫଟୋ' : 'Photo');
+    const voiceBoxTitle = $('voiceBoxTitle');
+    const voiceBoxSub = $('voiceBoxSub');
+    const photoBoxTitle = $('photoBoxTitle');
+    const photoBoxSub = $('photoBoxSub');
+
+    if (voiceBoxTitle) {
+      voiceBoxTitle.textContent = isHi ? '🎙️ आवाज़ से बोलें (Voice Message)' : (isOr ? '🎙️ ଭଏସ୍ ମେସେଜ୍ (Voice Message)' : '🎙️ Voice Message');
+    }
+    if (voiceBoxSub) {
+      voiceBoxSub.textContent = isHi ? 'यहाँ टैप करें और बोलकर बताएं' : (isOr ? 'ଏଠାରେ ଟ୍ୟାପ୍ କରି ଓଡ଼ିଆରେ କୁହନ୍ତୁ' : 'Tap to speak your health issue');
+    }
+    if (photoBoxTitle) {
+      photoBoxTitle.textContent = isHi ? '📷 फोटो / गैलरी अपलोड (Upload Photo)' : (isOr ? '📷 ଫଟୋ / ଗ୍ୟାଲେରୀ ଅପ୍‌ଲୋଡ୍ (Upload Photo)' : '📷 Upload Photo / Gallery');
+    }
+    if (photoBoxSub) {
+      photoBoxSub.textContent = isHi ? 'कैमरा या गैलरी से फोटो चुनें' : (isOr ? 'କ୍ୟାମେରା କିମ୍ବା ଗ୍ୟାଲେରୀରୁ ଫଟୋ ବାଛନ୍ତୁ' : 'Camera or choose from gallery');
+    }
+
     const imagePreviewLabel = $('imagePreviewLabel');
-    if (imagePreviewLabel) imagePreviewLabel.textContent = isHi ? '📷 त्वचा की फोटो चुनी गई' : (isOr ? '📷 ଚର୍ମର ଫଟୋ ଚୟନ ହୋଇଛି' : '📷 Skin photo selected');
+    if (imagePreviewLabel) imagePreviewLabel.textContent = isHi ? '📷 फोटो संलग्न है' : (isOr ? '📷 ଫଟୋ ସଂଲଗ୍ନ ହୋଇଛି' : '📷 Clinical Photo Attached');
     const imagePreviewHint = $('imagePreviewHint');
-    if (imagePreviewHint) imagePreviewHint.textContent = isHi ? 'लक्षण लिखें या भेजें दबाएं' : (isOr ? 'ଲକ୍ଷଣ ଲେଖନ୍ତୁ ବା ପଠାନ୍ତୁ ଦବାନ୍ତୁ' : 'Describe symptoms or tap Send');
-    const regionalCameraText = $('regionalCameraText');
-    if (regionalCameraText) regionalCameraText.textContent = isHi ? '📷 त्वचा की फोटो खींचें (Skin Photo)' : (isOr ? '📷 ଚର୍ମ ସମସ୍ୟାର ଫଟୋ ନିଅନ୍ତୁ (Skin Photo)' : '📷 Take skin photo (Skin Photo)');
+    if (imagePreviewHint) imagePreviewHint.textContent = isHi ? 'लक्षण लिखें या भेजें दबाएं' : (isOr ? 'ଲକ୍ଷଣ ଲେଖନ୍ତୁ ବା ପଠାନ୍ତୁ ଦବାନ୍ତୁ' : 'Type symptoms or tap Send to analyze');
 
     const pwaBtn = $('pwaInstallBtn');
     if (pwaBtn && !pwaBtn.hidden) {
@@ -1345,11 +1348,15 @@
   function initCameraControl() {
     const cameraInput = $('cameraInput');
     const cameraBtn = $('cameraBtn');
+    const photoBox = $('photoActionBox');
     const regionalCameraBtn = $('regionalCameraBtn');
     const removeBtn = $('removeImageBtn');
 
     if (cameraBtn && cameraInput) {
       cameraBtn.addEventListener('click', () => cameraInput.click());
+    }
+    if (photoBox && cameraInput) {
+      photoBox.addEventListener('click', () => cameraInput.click());
     }
     if (regionalCameraBtn && cameraInput) {
       regionalCameraBtn.addEventListener('click', () => cameraInput.click());
@@ -1512,27 +1519,28 @@
 
   function resetOdiaVoiceBtn() {
     odiaRecording = false;
+    const voiceBox = $('voiceActionBox');
+    if (voiceBox) voiceBox.classList.remove('recording');
     const mainBtn = $('odiaVoiceMainBtn');
     if (mainBtn) mainBtn.classList.remove('recording');
-    const mainText = $('odiaVoiceMainText');
-    const subText = $('odiaVoiceSubText');
-    if (mainText) {
-      mainText.textContent = currentLang === 'hi'
-        ? '🎙️ अपनी समस्या बोलकर बताएं'
-        : (currentLang === 'or' ? '🎙️ ଆପଣଙ୍କ ସମସ୍ୟା କୁହନ୍ତୁ' : '🎙️ Speak your symptoms');
+    const isOr = currentLang === 'or';
+    const isHi = currentLang === 'hi';
+    const voiceBoxTitle = $('voiceBoxTitle');
+    const voiceBoxSub = $('voiceBoxSub');
+    if (voiceBoxTitle) {
+      voiceBoxTitle.textContent = isHi ? '🎙️ आवाज़ से बोलें (Voice Message)' : (isOr ? '🎙️ ଭଏସ୍ ମେସେଜ୍ (Voice Message)' : '🎙️ Voice Message');
     }
-    if (subText) {
-      subText.textContent = currentLang === 'hi'
-        ? 'यहाँ टैप करके हिन्दी में बोलें'
-        : (currentLang === 'or' ? 'ଏଠାରେ ଟ୍ୟାପ୍ କରି ଓଡ଼ିଆରେ କୁହନ୍ତୁ' : 'Tap to speak');
+    if (voiceBoxSub) {
+      voiceBoxSub.textContent = isHi ? 'यहाँ टैप करें और बोलकर बताएं' : (isOr ? 'ଏଠାରେ ଟ୍ୟାପ୍ କରି ଓଡ଼ିଆରେ କୁହନ୍ତୁ' : 'Tap to speak your health issue');
     }
   }
 
   function initOdiaVoiceControl() {
     const mainBtn = $('odiaVoiceMainBtn');
-    if (!mainBtn) return;
+    const voiceBox = $('voiceActionBox');
+    if (!mainBtn && !voiceBox) return;
 
-    mainBtn.addEventListener('click', async () => {
+    const startStopVoice = async () => {
       // If mic is active, clicking it immediately stops recording, turns mic off, and finds results!
       if (odiaRecording) {
         if (odiaTimer) clearTimeout(odiaTimer);
@@ -1545,7 +1553,7 @@
       if (typeof navigator === 'undefined' || !navigator.mediaDevices || !navigator.mediaDevices.getUserMedia) {
         alert(currentLang === 'hi'
           ? 'इस ब्राउज़र में माइक्रोफ़ोन समर्थित नहीं है।'
-          : 'ମାଇକ୍ରୋଫୋନ୍ ସମର୍ଥନ ଏହି ବ୍ରାଉଜରରେ ଉପଲବ୍ଧ ନାହିଁ । (Microphone not supported in this browser)');
+          : (currentLang === 'or' ? 'ମାଇକ୍ରୋଫୋନ୍ ସମର୍ଥନ ଏହି ବ୍ରାଉଜରରେ ଉପଲବ୍ଧ ନାହିଁ ।' : 'Microphone not supported in this browser'));
         return;
       }
 
@@ -1564,37 +1572,42 @@
 
         odiaMediaRecorder.onstart = () => {
           odiaRecording = true;
-          mainBtn.classList.add('recording');
-          const mainText = $('odiaVoiceMainText');
-          const subText = $('odiaVoiceSubText');
-          if (mainText) {
-            mainText.textContent = currentLang === 'hi'
-              ? '🔴 सुन रहा हूँ... बोलिए (Listening)'
-              : (currentLang === 'or' ? '🔴 ଶୁଣୁଛି... କୁହନ୍ତୁ (Listening)' : '🔴 Listening... Speak now');
+          if (mainBtn) mainBtn.classList.add('recording');
+          if (voiceBox) voiceBox.classList.add('recording');
+          const isOr = currentLang === 'or';
+          const isHi = currentLang === 'hi';
+          const voiceBoxTitle = $('voiceBoxTitle');
+          const voiceBoxSub = $('voiceBoxSub');
+          if (voiceBoxTitle) {
+            voiceBoxTitle.textContent = isHi
+              ? '🔴 सुन रहा हूँ... (रोकने के लिए टैप करें)'
+              : (isOr ? '🔴 ଶୁଣୁଛି... (ରୋକିବାକୁ ଟ୍ୟାପ୍ କରନ୍ତୁ)' : '🔴 Listening... (Tap to Send)');
           }
-          if (subText) {
-            subText.textContent = currentLang === 'hi'
-              ? 'पूरा होने पर यहाँ टैप करें (Tap when done)'
-              : (currentLang === 'or' ? 'ସରିଲେ ଏଠାରେ ଟ୍ୟାପ୍ କରନ୍ତୁ (Tap when done)' : 'Tap when done speaking');
+          if (voiceBoxSub) {
+            voiceBoxSub.textContent = isHi
+              ? 'पूरा होने पर यहाँ फिर से टैप करें'
+              : (isOr ? 'ସରିଲେ ଏଠାରେ ପୁଣି ଟ୍ୟାପ୍ କରନ୍ତୁ' : 'Tap when done speaking');
           }
         };
 
         odiaMediaRecorder.onstop = async () => {
           stream.getTracks().forEach((t) => t.stop());
           odiaRecording = false;
-          mainBtn.classList.remove('recording');
-
-          const mainText = $('odiaVoiceMainText');
-          const subText = $('odiaVoiceSubText');
-          if (mainText) {
-            mainText.textContent = currentLang === 'hi'
-              ? '⏳ आवाज़ की जाँच हो रही है (Recognizing)...'
-              : (currentLang === 'or' ? '⏳ ସ୍ୱର ଯାଞ୍ଚ ହେଉଛି (Recognizing)...' : '⏳ Processing voice...');
+          if (mainBtn) mainBtn.classList.remove('recording');
+          if (voiceBox) voiceBox.classList.remove('recording');
+          const isOr = currentLang === 'or';
+          const isHi = currentLang === 'hi';
+          const voiceBoxTitle = $('voiceBoxTitle');
+          const voiceBoxSub = $('voiceBoxSub');
+          if (voiceBoxTitle) {
+            voiceBoxTitle.textContent = isHi
+              ? '⏳ आवाज़ की जाँच हो रही है...'
+              : (isOr ? '⏳ ସ୍ୱର ଯାଞ୍ଚ ହେଉଛି...' : '⏳ Processing voice...');
           }
-          if (subText) {
-            subText.textContent = currentLang === 'hi'
+          if (voiceBoxSub) {
+            voiceBoxSub.textContent = isHi
               ? 'डॉक्टर की सलाह खोजी जा रही है...'
-              : (currentLang === 'or' ? 'ଡାକ୍ତରୀ ପରାମର୍ଶ ଖୋଜା ଚାଲିଛି...' : 'Finding verified medical guidance...');
+              : (isOr ? 'ଡାକ୍ତରୀ ପରାମର୍ଶ ଖୋଜା ଚାଲିଛି...' : 'Finding verified medical guidance...');
           }
 
           if (!odiaAudioChunks.length) {
@@ -1671,7 +1684,10 @@
           : 'ମାଇକ୍ରୋଫୋନ୍ ଅନୁମତି ମିଳିଲା ନାହିଁ । ଦୟାକରି ମାଇକ୍ ଅନୁମତି ଦିଅନ୍ତୁ । (Microphone permission was not granted)');
         resetOdiaVoiceBtn();
       }
-    });
+    };
+
+    if (mainBtn) mainBtn.addEventListener('click', startStopVoice);
+    if (voiceBox) voiceBox.addEventListener('click', startStopVoice);
   }
 
   // ---------- English / Hindi Mic Button (Composer) ----------

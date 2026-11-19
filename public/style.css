@@ -777,33 +777,188 @@ body.chat-active.chat-has-results .messages {
 }
 
 /* COMPOSER */
-.composer {
+/* WHATSAPP-STYLE CLEAN COMPOSER */
+.whatsapp-composer {
   display: flex;
-  gap: 10px;
   align-items: flex-end;
+  gap: 8px;
+  width: 100%;
 }
-.composer-box {
+.whatsapp-box {
   flex: 1;
-  position: relative;
   display: flex;
   align-items: center;
+  background: #ffffff;
+  border: 1.5px solid var(--line);
+  border-radius: 28px;
+  padding: 4px 10px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.04);
+  transition: border-color 0.2s, box-shadow 0.2s;
+  min-height: 48px;
 }
-.composer textarea {
-  width: 100%;
+.whatsapp-box:focus-within {
+  border-color: var(--primary);
+  box-shadow: 0 3px 12px rgba(13, 148, 136, 0.15);
+}
+.btn-icon-inside {
+  background: transparent;
+  border: none;
+  color: var(--muted);
+  cursor: pointer;
+  padding: 6px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 50%;
+  transition: all 0.2s;
+  flex-shrink: 0;
+}
+.btn-icon-inside:hover {
+  color: var(--primary);
+  background: var(--primary-light);
+}
+.whatsapp-box textarea {
+  flex: 1;
+  border: none !important;
+  outline: none !important;
+  background: transparent !important;
+  padding: 8px 10px;
+  font-size: 0.95rem;
+  line-height: 1.4;
   resize: none;
-  max-height: 140px;
-  min-height: 50px;
-  padding: 13px 185px 13px 14px;
+  max-height: 120px;
+  min-height: 24px;
+  box-shadow: none !important;
+  color: var(--ink);
+  font-family: inherit;
+}
+.whatsapp-box textarea::placeholder {
+  color: #94a3b8;
+}
+.whatsapp-send-btn {
+  width: 46px;
+  height: 46px;
+  border-radius: 50%;
+  background: var(--primary);
+  color: #ffffff;
+  border: none;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  box-shadow: 0 3px 10px rgba(13, 148, 136, 0.3);
+  transition: transform 0.15s, background 0.2s;
+  flex-shrink: 0;
+}
+.whatsapp-send-btn:hover {
+  background: var(--primary-hover);
+  transform: scale(1.05);
+}
+.whatsapp-send-btn:active {
+  transform: scale(0.95);
+}
+
+/* THE 2 CLEAN ACTION BOXES (VOICE MESSAGE & PHOTO UPLOAD) */
+.dual-action-area {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 10px;
+  width: 100%;
+  margin-top: 8px;
+}
+.action-box {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 12px 14px;
   border-radius: var(--radius);
+  background: var(--surface);
+  border: 1.5px solid var(--line);
+  cursor: pointer;
+  transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+  text-align: left;
   box-shadow: var(--shadow-sm);
 }
-.composer-actions {
-  position: absolute;
-  right: 8px;
-  display: inline-flex;
+.action-box:hover {
+  transform: translateY(-2px);
+  box-shadow: var(--shadow);
+}
+.action-box.voice-box {
+  border-color: rgba(13, 148, 136, 0.3);
+  background: #f0fdfa;
+}
+.action-box.voice-box:hover {
+  background: #ccfbf1;
+  border-color: var(--primary);
+}
+.action-box.voice-box.recording {
+  background: #fef2f2 !important;
+  border-color: #ef4444 !important;
+  animation: pulse 1s infinite;
+}
+.action-box.photo-box {
+  border-color: rgba(59, 130, 246, 0.3);
+  background: #eff6ff;
+}
+.action-box.photo-box:hover {
+  background: #dbeafe;
+  border-color: #3b82f6;
+}
+.action-box-icon {
+  width: 38px;
+  height: 38px;
+  border-radius: 50%;
+  display: flex;
   align-items: center;
-  gap: 6px;
-  z-index: 2;
+  justify-content: center;
+  flex-shrink: 0;
+}
+.voice-icon-pulse {
+  background: rgba(13, 148, 136, 0.15);
+  color: var(--primary);
+}
+.action-box.voice-box.recording .voice-icon-pulse {
+  background: #fee2e2;
+  color: #dc2626;
+}
+.photo-icon-box {
+  background: rgba(59, 130, 246, 0.15);
+  color: #2563eb;
+}
+.action-box-text {
+  display: flex;
+  flex-direction: column;
+  line-height: 1.25;
+}
+.action-box-text strong {
+  font-size: 0.92rem;
+  color: var(--ink);
+}
+.action-box-text span {
+  font-size: 0.76rem;
+  color: var(--muted);
+}
+
+/* HERO MODE (WHEN IN ODIA OR HINDI) */
+.dual-action-area.hero-mode {
+  grid-template-columns: 1fr;
+  gap: 12px;
+  margin-top: 14px;
+}
+.dual-action-area.hero-mode .action-box {
+  padding: 18px 20px;
+  border-radius: var(--radius-lg);
+  box-shadow: 0 4px 14px rgba(0, 0, 0, 0.06);
+}
+.dual-action-area.hero-mode .action-box-icon {
+  width: 48px;
+  height: 48px;
+}
+.dual-action-area.hero-mode .action-box-text strong {
+  font-size: 1.15rem;
+}
+.dual-action-area.hero-mode .action-box-text span {
+  font-size: 0.88rem;
 }
 .btn-icon {
   background: #f1f5f9;
