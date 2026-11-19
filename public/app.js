@@ -482,20 +482,38 @@
       $('langHiBtn').setAttribute('aria-pressed', String(isHi));
     }
 
+    if (typeof document !== 'undefined' && document.body) {
+      document.body.classList.toggle('lang-or', isOr);
+      document.body.classList.toggle('lang-hi', isHi);
+      document.body.classList.toggle('lang-en', isEn);
+    }
+
     // Composer & Dual Action Boxes visibility
     const chatForm = $('chatForm');
     const composerFoot = document.querySelector('.composer-foot');
     const dualActionArea = $('dualActionArea');
 
     if (isEn) {
-      // In English: show normal WhatsApp chat bar + action boxes below
-      if (chatForm) chatForm.style.display = 'flex';
-      if (composerFoot) composerFoot.style.display = 'flex';
+      // In English: show crystal-clear search bar + action boxes below
+      if (chatForm) {
+        chatForm.hidden = false;
+        chatForm.style.display = 'flex';
+      }
+      if (composerFoot) {
+        composerFoot.hidden = false;
+        composerFoot.style.display = 'flex';
+      }
       if (dualActionArea) dualActionArea.classList.remove('hero-mode');
     } else {
-      // In Odia or Hindi: hide the text typing bar, show ONLY the 2 prominent action boxes!
-      if (chatForm) chatForm.style.display = 'none';
-      if (composerFoot) composerFoot.style.display = 'none';
+      // In Odia or Hindi: completely remove/hide the search bar, show ONLY the 2 clear action boxes!
+      if (chatForm) {
+        chatForm.hidden = true;
+        chatForm.style.display = 'none';
+      }
+      if (composerFoot) {
+        composerFoot.hidden = true;
+        composerFoot.style.display = 'none';
+      }
       if (dualActionArea) dualActionArea.classList.add('hero-mode');
     }
 

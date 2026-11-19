@@ -777,35 +777,45 @@ body.chat-active.chat-has-results .messages {
 }
 
 /* COMPOSER */
-/* WHATSAPP-STYLE CLEAN COMPOSER */
+/* Odia and Hindi: Strict complete removal of search/input bar */
+body.lang-or #chatForm,
+body.lang-hi #chatForm,
+body.lang-or .composer-foot,
+body.lang-hi .composer-foot {
+  display: none !important;
+}
+
+/* WHATSAPP-STYLE CLEAN COMPOSER (ENGLISH) */
 .whatsapp-composer {
   display: flex;
-  align-items: flex-end;
-  gap: 8px;
+  align-items: center;
+  gap: 10px;
   width: 100%;
+  margin-top: 6px;
 }
 .whatsapp-box {
   flex: 1;
   display: flex;
   align-items: center;
   background: #ffffff;
-  border: 1.5px solid var(--line);
+  border: 1.5px solid #cbd5e1;
   border-radius: 28px;
-  padding: 4px 10px;
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.04);
-  transition: border-color 0.2s, box-shadow 0.2s;
+  padding: 4px 12px;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.04);
+  transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
   min-height: 48px;
 }
 .whatsapp-box:focus-within {
   border-color: var(--primary);
-  box-shadow: 0 3px 12px rgba(13, 148, 136, 0.15);
+  box-shadow: 0 0 0 3px rgba(13, 148, 136, 0.15);
+  background: #ffffff;
 }
 .btn-icon-inside {
   background: transparent;
   border: none;
-  color: var(--muted);
+  color: #64748b;
   cursor: pointer;
-  padding: 6px;
+  padding: 7px;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -815,29 +825,30 @@ body.chat-active.chat-has-results .messages {
 }
 .btn-icon-inside:hover {
   color: var(--primary);
-  background: var(--primary-light);
+  background: rgba(13, 148, 136, 0.08);
 }
 .whatsapp-box textarea {
   flex: 1;
   border: none !important;
   outline: none !important;
   background: transparent !important;
-  padding: 8px 10px;
-  font-size: 0.95rem;
-  line-height: 1.4;
+  padding: 10px 12px;
+  font-size: 0.96rem;
+  line-height: 1.45;
   resize: none;
   max-height: 120px;
   min-height: 24px;
   box-shadow: none !important;
-  color: var(--ink);
+  color: #0f172a;
   font-family: inherit;
 }
 .whatsapp-box textarea::placeholder {
   color: #94a3b8;
+  font-size: 0.92rem;
 }
 .whatsapp-send-btn {
-  width: 46px;
-  height: 46px;
+  width: 48px;
+  height: 48px;
   border-radius: 50%;
   background: var(--primary);
   color: #ffffff;
@@ -846,13 +857,13 @@ body.chat-active.chat-has-results .messages {
   align-items: center;
   justify-content: center;
   cursor: pointer;
-  box-shadow: 0 3px 10px rgba(13, 148, 136, 0.3);
+  box-shadow: 0 4px 12px rgba(13, 148, 136, 0.35);
   transition: transform 0.15s, background 0.2s;
   flex-shrink: 0;
 }
 .whatsapp-send-btn:hover {
   background: var(--primary-hover);
-  transform: scale(1.05);
+  transform: scale(1.06);
 }
 .whatsapp-send-btn:active {
   transform: scale(0.95);
@@ -939,26 +950,49 @@ body.chat-active.chat-has-results .messages {
   color: var(--muted);
 }
 
-/* HERO MODE (WHEN IN ODIA OR HINDI) */
+/* HERO MODE (WHEN IN ODIA OR HINDI) - 2 BIG CLEAN CLEAR ACTION BOXES */
 .dual-action-area.hero-mode {
   grid-template-columns: 1fr;
-  gap: 12px;
+  gap: 14px;
   margin-top: 14px;
+  width: 100%;
 }
 .dual-action-area.hero-mode .action-box {
-  padding: 18px 20px;
+  padding: 20px 22px;
   border-radius: var(--radius-lg);
-  box-shadow: 0 4px 14px rgba(0, 0, 0, 0.06);
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.06);
+  border-width: 2px;
+}
+.dual-action-area.hero-mode .action-box.voice-box {
+  background: linear-gradient(135deg, #f0fdfa 0%, #e6fffa 100%);
+  border-color: var(--primary);
+}
+.dual-action-area.hero-mode .action-box.voice-box:hover {
+  background: #ccfbf1;
+  transform: translateY(-2px);
+  box-shadow: 0 8px 24px rgba(13, 148, 136, 0.2);
+}
+.dual-action-area.hero-mode .action-box.photo-box {
+  background: linear-gradient(135deg, #eff6ff 0%, #e0f2fe 100%);
+  border-color: #3b82f6;
+}
+.dual-action-area.hero-mode .action-box.photo-box:hover {
+  background: #dbeafe;
+  transform: translateY(-2px);
+  box-shadow: 0 8px 24px rgba(59, 130, 246, 0.2);
 }
 .dual-action-area.hero-mode .action-box-icon {
-  width: 48px;
-  height: 48px;
+  width: 50px;
+  height: 50px;
 }
 .dual-action-area.hero-mode .action-box-text strong {
-  font-size: 1.15rem;
+  font-size: 1.25rem;
+  font-weight: 800;
+  letter-spacing: -0.01em;
 }
 .dual-action-area.hero-mode .action-box-text span {
-  font-size: 0.88rem;
+  font-size: 0.92rem;
+  color: #475569;
 }
 .btn-icon {
   background: #f1f5f9;
