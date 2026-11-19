@@ -97,7 +97,7 @@
     }
     const footCombined = $('footCopyrightCombined') || $('footCopyrightSmall') || $('footCopyrightMain');
     if (footCombined) {
-      footCombined.innerHTML = '&copy; 2026 Swasth AI &bull; All Rights Reserved &bull; Odisha Public Health Assistant &bull; F-204 DEMO PROJECT';
+      footCombined.innerHTML = '&copy; 2026 Swasth AI &bull; All Rights Reserved &bull; Odisha Public Health Assistant &bull; F-204 DEMO PROJECT &bull; <a href="https://swasth-ai.pages.dev" target="_blank" rel="noopener noreferrer" style="color:var(--primary);font-weight:700;text-decoration:underline;">swasth-ai.pages.dev</a>';
     }
   }
 
@@ -1130,12 +1130,12 @@
   function scanningIndicator() {
     const d = document.createElement('div');
     d.className = 'bubble bot scanning-bubble';
-    d.setAttribute('aria-label', 'Swasth AI is scanning skin photo');
+    d.setAttribute('aria-label', 'Swasth AI is analyzing photo');
 
     const box = document.createElement('div');
     box.className = 'scan-laser-box';
     const icon = document.createElement('span');
-    icon.textContent = '🔬';
+    icon.textContent = '📸';
     icon.style.fontSize = '18px';
     const beam = document.createElement('div');
     beam.className = 'scan-laser-beam';
@@ -1152,11 +1152,11 @@
     const isOr = currentLang === 'or';
     const isHi = currentLang === 'hi';
     title.textContent = isHi
-      ? 'त्वचा फोटो विश्लेषण जारी है...'
-      : (isOr ? 'ଚର୍ମ ଫଟୋ ପରୀକ୍ଷା ଚାଲିଛି...' : 'AI Dermatologist Analyzing...');
+      ? '📸 क्लिनिकल फोटो विश्लेषण जारी है...'
+      : (isOr ? '📸 ଡାକ୍ତରୀ ଫଟୋ ପରୀକ୍ଷା ଚାଲିଛି...' : '📸 AI Clinical Photo Analyzing...');
     sub.textContent = isHi
-      ? 'रिंगवर्म, संक्रमण व सुरक्षित उपाय जाँचे जा रहे हैं'
-      : (isOr ? 'ଦାଦ, ସଂକ୍ରମଣ ଓ ଘରୋଇ ଯତ୍ନ ଯାଞ୍ଚ ହେଉଛି' : 'Scanning lesion borders & clinical safety');
+      ? 'लक्षण, सुरक्षा प्रोटोकॉल व प्राथमिक उपचार जाँचे जा रहे हैं'
+      : (isOr ? 'ଲକ୍ଷଣ, ସୁରକ୍ଷା ପ୍ରୋଟୋକଲ୍ ଓ ଚିକିତ୍ସା ଯାଞ୍ଚ ହେଉଛି' : 'Analyzing clinical features & triage safety protocol');
 
     txtGroup.appendChild(title);
     txtGroup.appendChild(sub);
@@ -1175,15 +1175,19 @@
     if (isVision) {
       const dermaHeader = document.createElement('div');
       dermaHeader.className = 'derma-card-header';
-      const dept = data.department || 'derma';
+      const dept = data.department || 'photo';
       const isOr = currentLang === 'or';
       const isHi = currentLang === 'hi';
 
-      let icon = '🔬';
-      let title = isHi ? '🔬 त्वचा रोग विशेषज्ञ मूल्यांकन (Dermatology Triage)' : (isOr ? '🔬 ଚର୍ମ ରୋଗ ବିଭାଗ ପରୀକ୍ଷା' : '🔬 AI Clinical Dermatology Assessment');
-      let subtitle = isHi ? 'केस 608: रिंगवर्म, एलर्जी व स्टेरॉयड सुरक्षा प्रोटोकॉल' : (isOr ? 'କେସ୍ 608: ଦାଦ, ଆଲର୍ଜି ଓ ଷ୍ଟେରଏଡ୍ ସୁରକ୍ଷା ଯାଞ୍ଚ' : 'Case 608: Allergy, Ringworm & Steroid Safety Protocol');
+      let icon = '📸';
+      let title = isHi ? '📸 क्लिनिकल फोटो मूल्यांकन (Clinical Assessment)' : (isOr ? '📸 ଡାକ୍ତରୀ ଫଟୋ ପରୀକ୍ଷା' : '📸 AI Clinical Photo Assessment');
+      let subtitle = isHi ? 'त्वचा, आँख, मुँह, घाव व बाल स्वास्थ्य जांच प्रोटोकॉल' : (isOr ? 'ଚର୍ମ, ଆଖି, ମୁଖ, ଘା\' ଓ ଶିଶୁ ସୁରକ୍ଷା ଯାଞ୍ଚ' : 'Multi-Condition Clinical Triage & Safety Protocol');
 
-      if (dept === 'eye') {
+      if (dept === 'derma') {
+        icon = '📸';
+        title = isHi ? '📸 क्लिनिकल फोटो मूल्यांकन (Skin & Allergy)' : (isOr ? '📸 ଫଟୋ ପରୀକ୍ଷା (ଚର୍ମ ଓ ଆଲର୍ଜି)' : '📸 AI Clinical Photo (Skin & Allergy)');
+        subtitle = isHi ? 'रिंगवर्म, एलर्जी व स्टेरॉयड सुरक्षा प्रोटोकॉल' : (isOr ? 'ଦାଦ, ଆଲର୍ଜି ଓ ଷ୍ଟେରଏଡ୍ ସୁରକ୍ଷା ଯାଞ୍ଚ' : 'Allergy, Ringworm & Steroid Safety Protocol');
+      } else if (dept === 'eye') {
         icon = '👁️';
         title = isHi ? '👁️ नेत्र चिकित्सा व दृष्टि मूल्यांकन (Ophthalmology Triage)' : (isOr ? '👁️ ନେତ୍ର ଚିକିତ୍ସା ଓ ଦୃଷ୍ଟି ପରୀକ୍ଷା (Ophthalmology Triage)' : '👁️ Clinical Ophthalmology & Eye Assessment');
         subtitle = isHi ? 'कंजक्टिवाइटिस, लाल आँख व आपातकालीन जांच' : (isOr ? 'କଞ୍ଜକ୍ଟିଭାଇଟିସ୍, ଲାଲ୍ ଆଖି ଓ ଜରୁରୀ ପରାମର୍ଶ' : 'Conjunctivitis, Stye & Red Eye Triage Protocol');
@@ -1414,8 +1418,8 @@
     clearPendingImage();
 
     const userBubbleText = text || (currentLang === 'hi'
-      ? '📷 त्वचा की जांच के लिए फोटो भेजी गई'
-      : (currentLang === 'or' ? '📷 ଚର୍ମ ପରୀକ୍ଷା ପାଇଁ ଫଟୋ ପଠାଗଲା' : '📷 Skin photo sent for assessment'));
+      ? '📷 क्लिनिकल फोटो मूल्यांकन के लिए भेजी गई'
+      : (currentLang === 'or' ? '📷 ଡାକ୍ତରୀ ପରୀକ୍ଷା ପାଇଁ ଫଟୋ ପଠାଗଲା' : '📷 Clinical photo sent for assessment'));
     const userBubble = addBubble('user', userBubbleText);
     if (activeImage && activeImage.previewUrl) {
       const card = document.createElement('div');
@@ -1423,12 +1427,12 @@
       const imgEl = document.createElement('img');
       imgEl.src = activeImage.previewUrl;
       imgEl.className = 'user-sent-image';
-      imgEl.alt = 'Uploaded skin photo';
+      imgEl.alt = 'Uploaded clinical photo';
       const badge = document.createElement('span');
       badge.className = 'user-image-badge';
       badge.textContent = currentLang === 'hi'
-        ? '📷 त्वचा फोटो'
-        : (currentLang === 'or' ? '📷 ଚର୍ମ ଫଟୋ' : '📷 Skin Photo');
+        ? '📷 फोटो (Photo)'
+        : (currentLang === 'or' ? '📷 ଫଟୋ (Photo)' : '📷 Photo');
       card.appendChild(imgEl);
       card.appendChild(badge);
       userBubble.prepend(card);
