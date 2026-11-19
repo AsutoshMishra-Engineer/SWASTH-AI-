@@ -49,10 +49,23 @@
 
   // ---------- Navigation / Routing ----------
   let currentSession = null;
-  let viewingLanding = false;
+
+  // Detect if running on Android (Native App, WebView, or Mobile Android Browser) or requesting home view
+  const isAndroidClient = typeof navigator !== 'undefined' && (
+    /Android|wv|SwasthAI-Android/i.test(navigator.userAgent || '') ||
+    (typeof window !== 'undefined' && (
+      (window.location.search && window.location.search.includes('platform=android')) ||
+      (window.location.search && window.location.search.includes('home=1')) ||
+      (window.location.hash && window.location.hash === '#home')
+    ))
+  );
+
+  // On Android, the landing/home page is the initial landing page
+  let viewingLanding = isAndroidClient;
 
   function showLandingPage() {
     viewingLanding = true;
+    if (typeof window !== 'undefined') window.viewingLanding = true;
     if (typeof document !== 'undefined' && document.body) {
       document.body.classList.remove('chat-active');
       document.body.classList.remove('chat-has-results');
@@ -61,6 +74,7 @@
     if ($('chatView')) $('chatView').hidden = true;
     const ok = isVerified(currentSession);
     if ($('navChatBtn')) $('navChatBtn').hidden = !ok;
+    if ($('navHomeBtn')) $('navHomeBtn').hidden = true;
     if ($('heroLoggedInBanner')) $('heroLoggedInBanner').hidden = !ok;
     if ($('loggedInCardContent')) $('loggedInCardContent').hidden = !ok;
     if ($('loggedOutAuthContent')) $('loggedOutAuthContent').hidden = ok;
@@ -89,6 +103,7 @@
 
   function showChatPage() {
     viewingLanding = false;
+    if (typeof window !== 'undefined') window.viewingLanding = false;
     if (isVerified(currentSession)) {
       if (typeof document !== 'undefined' && document.body) {
         document.body.classList.add('chat-active');
@@ -102,6 +117,7 @@
       if ($('authView')) $('authView').hidden = true;
       if ($('chatView')) $('chatView').hidden = false;
       if ($('navChatBtn')) $('navChatBtn').hidden = true;
+      if ($('navHomeBtn')) $('navHomeBtn').hidden = false;
       if ($('heroLoggedInBanner')) $('heroLoggedInBanner').hidden = true;
       startChat();
       applyLanguage(currentLang);
@@ -122,8 +138,9 @@
         showChatPage();
       }
     } else {
-      viewingLanding = false;
+      viewingLanding = isAndroidClient;
       if ($('navChatBtn')) $('navChatBtn').hidden = true;
+      if ($('navHomeBtn')) $('navHomeBtn').hidden = true;
       if ($('heroLoggedInBanner')) $('heroLoggedInBanner').hidden = true;
       if ($('loggedInCardContent')) $('loggedInCardContent').hidden = true;
       if ($('loggedOutAuthContent')) $('loggedOutAuthContent').hidden = false;
@@ -131,6 +148,13 @@
       if ($('chatView')) $('chatView').hidden = true;
       clearChat();
     }
+  }
+
+  // Expose routing helpers to window for native Android WebView bridge
+  if (typeof window !== 'undefined') {
+    window.showLandingPage = showLandingPage;
+    window.showChatPage = showChatPage;
+    window.viewingLanding = viewingLanding;
   }
 
   const brandBtn = $('brandBtn');
@@ -146,6 +170,8 @@
     });
   }
 
+  const navHomeBtn = $('navHomeBtn');
+  if (navHomeBtn) navHomeBtn.addEventListener('click', () => showLandingPage());
   const navChatBtn = $('navChatBtn');
   if (navChatBtn) navChatBtn.addEventListener('click', () => showChatPage());
   const heroChatBtn = $('heroChatBtn');

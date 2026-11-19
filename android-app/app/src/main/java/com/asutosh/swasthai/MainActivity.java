@@ -36,7 +36,8 @@ import java.util.Locale;
 
 public class MainActivity extends AppCompatActivity {
 
-    private static final String APP_URL = "https://swasth-ai.pages.dev";
+    // Launch with Android platform query and #home anchor to guarantee landing on Home Page
+    private static final String APP_URL = "https://swasth-ai.pages.dev/?platform=android#home";
     private static final int PERMISSION_REQUEST_CODE = 2001;
     private static final int FILE_CHOOSER_REQUEST_CODE = 2002;
 
@@ -82,6 +83,10 @@ public class MainActivity extends AppCompatActivity {
         settings.setLoadWithOverviewMode(true);
         settings.setSupportZoom(false);
         settings.setCacheMode(WebSettings.LOAD_DEFAULT);
+
+        // Identify as Native Swasth AI Android App
+        String defaultUA = settings.getUserAgentString();
+        settings.setUserAgentString(defaultUA + " SwasthAI-Android/1.0");
 
         // Hardware Acceleration
         webView.setLayerType(View.LAYER_TYPE_HARDWARE, null);
@@ -259,8 +264,21 @@ public class MainActivity extends AppCompatActivity {
     public void onBackPressed() {
         if (webView.canGoBack()) {
             webView.goBack();
-        } else {
-            super.onBackPressed();
+            return;
         }
+
+        // Return from Chat View to Home View before exiting the app
+        webView.evaluateJavascript("(function() { " +
+                "  var chat = document.getElementById('chatView'); " +
+                "  if (chat && !chat.hidden && typeof window.showLandingPage === 'function') { " +
+                "    window.showLandingPage(); " +
+                "    return true; " +
+                "  } " +
+                "  return false; " +
+                "})();", value -> {
+            if (!"true".equals(value)) {
+                MainActivity.super.onBackPressed();
+            }
+        });
     }
 }
