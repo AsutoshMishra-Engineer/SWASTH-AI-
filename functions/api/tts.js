@@ -17,7 +17,7 @@ async function timedFetch(url, init, ms, where) {
   finally { clearTimeout(t); }
 }
 
-async function fetchBhashiniOdiaTTS(cleanText, env) {
+async function fetchBhashiniTTS(cleanText, env, sourceLanguage = 'or') {
   const userId = env.BHASHINI_USER_ID;
   const udyatKey = env.BHASHINI_UDYAT_KEY || env.BHASHINI_API_KEY;
   const inferenceKey = env.BHASHINI_INFERENCE_KEY;
@@ -36,7 +36,7 @@ async function fetchBhashiniOdiaTTS(cleanText, env) {
           {
             taskType: 'tts',
             config: {
-              language: { sourceLanguage: 'or' }
+              language: { sourceLanguage }
             }
           }
         ],
@@ -66,7 +66,7 @@ async function fetchBhashiniOdiaTTS(cleanText, env) {
           {
             taskType: 'tts',
             config: {
-              language: { sourceLanguage: 'or' },
+              language: { sourceLanguage },
               serviceId,
               gender: 'female'
             }
@@ -88,6 +88,18 @@ async function fetchBhashiniOdiaTTS(cleanText, env) {
     console.warn('Bhashini TTS attempt skipped/failed:', err && err.message);
   }
   return null;
+}
+
+function normalizeForHindiSpeech(text) {
+  return text
+    .replace(/\bORS\b/gi, 'ओआरएस')
+    .replace(/\bCHC\b/gi, 'सामुदायिक स्वास्थ्य केंद्र')
+    .replace(/\bPHC\b/gi, 'प्राथमिक स्वास्थ्य केंद्र')
+    .replace(/\bASHA\b/gi, 'आशा दीदी')
+    .replace(/\bANM\b/gi, 'एएनएम')
+    .replace(/108/g, 'एक सौ आठ')
+    .replace(/112/g, 'एक सौ बारह')
+    .replace(/14416/g, 'एक चार चार एक छह');
 }
 
 function normalizeForOdiaSpeech(text) {
@@ -177,12 +189,20 @@ export async function onRequestPost({ request, env }) {
 
     if (!cleanText) return json({ error: 'empty_text', message: 'Text empty after cleaning.' }, 400);
 
-    const isOdia = /[\u0B00-\u0B7F]/.test(cleanText);
-    const speechText = isOdia ? normalizeForOdiaSpeech(cleanText) : cleanText;
+    const isHindi = /[\u0900-\u097F]/.test(cleanText) || (typeof body?.lang === 'string' && body.lang === 'hi');
+    const isOdia = !isHindi && (/[\u0B00-\u0B7F]/.test(cleanText) || (typeof body?.lang === 'string' && body.lang === 'or'));
+    let speechText = cleanText;
+    if (isHindi) speechText = normalizeForHindiSpeech(cleanText);
+    else if (isOdia) speechText = normalizeForOdiaSpeech(cleanText);
+
+    let targetLang = 'en-IN';
+    if (isHindi) targetLang = 'hi-IN';
+    else if (isOdia) targetLang = 'od-IN';
+
     let base64Audio = null;
     let mimeType = 'audio/wav';
 
-    // 3.1) Tier 1: Sarvam AI Bulbul V3 for Native High-Fidelity Indian Speech (Odia and English)
+    // 3.1) Tier 1: Sarvam AI Bulbul V3 for Native High-Fidelity Indian Speech (Hindi, Odia, and English)
     if (env.SARVAM_API_KEY) {
       try {
         const sarvamRes = await timedFetch('https://api.sarvam.ai/text-to-speech', {
@@ -193,7 +213,7 @@ export async function onRequestPost({ request, env }) {
           },
           body: JSON.stringify({
             inputs: [speechText],
-            target_language_code: isOdia ? 'od-IN' : 'en-IN',
+            target_language_code: targetLang,
             speaker: isOdia ? (env.SARVAM_SPEAKER || 'ritu') : 'ritu',
             model: 'bulbul:v3',
             pace: 0.95
@@ -214,9 +234,9 @@ export async function onRequestPost({ request, env }) {
       }
     }
 
-    // 3.2) Tier 2 for Odia Speech: Bhashini AI (National Language Translation Mission, MeitY)
-    if (isOdia && !base64Audio && env.BHASHINI_USER_ID && (env.BHASHINI_UDYAT_KEY || env.BHASHINI_API_KEY)) {
-      const bhashini = await fetchBhashiniOdiaTTS(speechText, env);
+    // 3.2) Tier 2 for Hindi & Odia: Bhashini AI (National Language Translation Mission, MeitY)
+    if (!base64Audio && env.BHASHINI_USER_ID && (env.BHASHINI_UDYAT_KEY || env.BHASHINI_API_KEY) && (isOdia || isHindi)) {
+      const bhashini = await fetchBhashiniTTS(speechText, env, isHindi ? 'hi' : 'or');
       if (bhashini?.audio) {
         base64Audio = bhashini.audio;
         mimeType = bhashini.mimeType || 'audio/wav';

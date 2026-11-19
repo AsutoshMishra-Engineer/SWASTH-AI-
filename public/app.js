@@ -17,6 +17,13 @@
     '🤰 ଗର୍ଭାବସ୍ଥାରେ ବିପଦର ଲକ୍ଷଣ କ\'ଣ?',
     '☀️ ଅଂଶୁଘାତରୁ ରକ୍ଷା ଓ ପ୍ରାଥମିକ ଯତ୍ନ'
   ];
+  const EXAMPLES_HI = [
+    '🦟 डेंगू से कैसे बचें?',
+    '🐕 कुत्ते के काटने पर क्या करें?',
+    '💧 घर पर ओआरएस (ORS) घोल कैसे बनाएं?',
+    '🤰 गर्भावस्था में खतरे के मुख्य लक्षण क्या हैं?',
+    '☀️ लू (सनस्ट्रोक) से बचाव और प्राथमिक उपचार'
+  ];
   const EXAMPLES = EXAMPLES_EN;
   // Strict Requirement: Default to English on every reload
   let currentLang = 'en';
@@ -414,7 +421,7 @@
     const chipsEl = $('chips');
     if (!chipsEl) return;
     chipsEl.textContent = '';
-    const list = currentLang === 'or' ? EXAMPLES_OR : EXAMPLES_EN;
+    const list = currentLang === 'hi' ? EXAMPLES_HI : (currentLang === 'or' ? EXAMPLES_OR : EXAMPLES_EN);
     list.forEach((q) => {
       const b = document.createElement('button');
       b.type = 'button';
@@ -432,13 +439,20 @@
     } catch {}
 
     const isOr = lang === 'or';
+    const isHi = lang === 'hi';
+    const isEn = !isOr && !isHi;
+
     if ($('langEnBtn')) {
-      $('langEnBtn').classList.toggle('active', !isOr);
-      $('langEnBtn').setAttribute('aria-pressed', String(!isOr));
+      $('langEnBtn').classList.toggle('active', isEn);
+      $('langEnBtn').setAttribute('aria-pressed', String(isEn));
     }
     if ($('langOrBtn')) {
       $('langOrBtn').classList.toggle('active', isOr);
       $('langOrBtn').setAttribute('aria-pressed', String(isOr));
+    }
+    if ($('langHiBtn')) {
+      $('langHiBtn').classList.toggle('active', isHi);
+      $('langHiBtn').setAttribute('aria-pressed', String(isHi));
     }
 
     // Composer & Voice Area visibility
@@ -448,163 +462,211 @@
 
     if (chatForm) chatForm.style.display = '';
     if (composerFoot) composerFoot.style.display = '';
-    if (odiaVoiceArea) odiaVoiceArea.hidden = !isOr;
+    if (odiaVoiceArea) odiaVoiceArea.hidden = !(isOr || isHi);
 
     const odiaVoiceMainText = $('odiaVoiceMainText');
-    if (odiaVoiceMainText) odiaVoiceMainText.textContent = '🎙️ ଆପଣଙ୍କ ସମସ୍ୟା କୁହନ୍ତୁ';
+    if (odiaVoiceMainText) {
+      odiaVoiceMainText.textContent = isHi ? '🎙️ अपनी समस्या बोलकर बताएं' : (isOr ? '🎙️ ଆପଣଙ୍କ ସମସ୍ୟା କୁହନ୍ତୁ' : '🎙️ Speak your symptoms');
+    }
     const odiaVoiceSubText = $('odiaVoiceSubText');
-    if (odiaVoiceSubText) odiaVoiceSubText.textContent = 'ଏଠାରେ ଟ୍ୟାପ୍ କରି ଓଡ଼ିଆରେ କୁହନ୍ତୁ';
+    if (odiaVoiceSubText) {
+      odiaVoiceSubText.textContent = isHi ? 'यहाँ टैप करके हिन्दी में बोलें' : (isOr ? 'ଏଠାରେ ଟ୍ୟାପ୍ କରି ଓଡ଼ିଆରେ କୁହନ୍ତୁ' : 'Tap to speak in your language');
+    }
     const odiaVoiceHint = $('odiaVoiceHint');
-    if (odiaVoiceHint) odiaVoiceHint.textContent = 'କହି ସାରିବା ପରେ ପୁଣି ଟ୍ୟାପ୍ କରନ୍ତୁ ବା ଅଟକିଗଲେ ଆପେ ଆପେ ପରାମର୍ଶ ମିଳିବ';
+    if (odiaVoiceHint) {
+      odiaVoiceHint.textContent = isHi
+        ? 'बोलने के बाद फिर से टैप करें या रुकने पर अपने आप सलाह मिलेगी'
+        : (isOr ? 'କହି ସାରିବା ପରେ ପୁଣି ଟ୍ୟାପ୍ କରନ୍ତୁ ବା ଅଟକିଗଲେ ଆପେ ଆପେ ପରାମର୍ଶ ମିଳିବ' : 'Tap again when done or pause to receive guidance automatically');
+    }
 
     const sendBtnSpan = $('sendBtn')?.querySelector('span');
-    if (sendBtnSpan) sendBtnSpan.textContent = isOr ? 'ପଠାନ୍ତୁ' : 'Send';
+    if (sendBtnSpan) sendBtnSpan.textContent = isHi ? 'भेजें' : (isOr ? 'ପଠାନ୍ତୁ' : 'Send');
     const micBadge = document.querySelector('.mic-odia-badge');
-    if (micBadge) micBadge.textContent = isOr ? 'ମାଇକ୍' : 'Mic';
+    if (micBadge) micBadge.textContent = isHi ? 'माइक' : (isOr ? 'ମାଇକ୍' : 'Mic');
+    const cameraBadge = $('cameraBadge');
+    if (cameraBadge) cameraBadge.textContent = isHi ? 'फोटो' : (isOr ? 'ଫଟୋ' : 'Photo');
+    const imagePreviewLabel = $('imagePreviewLabel');
+    if (imagePreviewLabel) imagePreviewLabel.textContent = isHi ? '📷 त्वचा की फोटो चुनी गई' : (isOr ? '📷 ଚର୍ମର ଫଟୋ ଚୟନ ହୋଇଛି' : '📷 Skin photo selected');
+    const imagePreviewHint = $('imagePreviewHint');
+    if (imagePreviewHint) imagePreviewHint.textContent = isHi ? 'लक्षण लिखें या भेजें दबाएं' : (isOr ? 'ଲକ୍ଷଣ ଲେଖନ୍ତୁ ବା ପଠାନ୍ତୁ ଦବାନ୍ତୁ' : 'Describe symptoms or tap Send');
+    const regionalCameraText = $('regionalCameraText');
+    if (regionalCameraText) regionalCameraText.textContent = isHi ? '📷 त्वचा की फोटो खींचें (Skin Photo)' : (isOr ? '📷 ଚର୍ମ ସମସ୍ୟାର ଫଟୋ ନିଅନ୍ତୁ (Skin Photo)' : '📷 Take skin photo (Skin Photo)');
 
     // Refresh chips to current language
     renderChips();
 
     // Landing Page / Auth View complete separation
     if ($('authTitle')) {
-      $('authTitle').textContent = isOr ? 'ତୁରନ୍ତ ଏବଂ ବିଶ୍ୱସନୀୟ ସ୍ୱାସ୍ଥ୍ୟ ପରାମର୍ଶ' : 'Instant, Trusted Health Answers';
+      $('authTitle').textContent = isHi ? 'तुरंत और विश्वसनीय स्वास्थ्य सलाह' : (isOr ? 'ତୁରନ୍ତ ଏବଂ ବିଶ୍ୱସନୀୟ ସ୍ୱାସ୍ଥ୍ୟ ପରାମର୍ଶ' : 'Instant, Trusted Health Answers');
     }
     const heroDesc = document.querySelector('.hero > p');
     if (heroDesc) {
-      heroDesc.textContent = isOr
-        ? 'ସାଧାରଣ ରୋଗ ଲକ୍ଷଣ, ରୋଗ ପ୍ରତିରୋଧ, ଶିଶୁ ଟିକାଦାନ, ଗର୍ଭବତୀ ଯତ୍ନ ଓ ଜରୁରୀକାଳୀନ ପ୍ରାଥମିକ ଚିକିତ୍ସା ବିଷୟରେ ପଚାରନ୍ତୁ । ସରକାରୀ ସ୍ୱାସ୍ଥ୍ୟ ବିଭାଗ ଓ WHO ର ନିର୍ଭୁଲ ତଥ୍ୟ ।'
-        : 'Ask about everyday symptoms, disease prevention, child vaccines, pregnancy care, and emergency first aid. Clear facts from official public health authorities.';
+      heroDesc.textContent = isHi
+        ? 'दैनिक लक्षण, रोग रोकथाम, शिशु टीकाकरण, गर्भावस्था देखभाल और आपातकालीन प्राथमिक चिकित्सा के बारे में पूछें। WHO और स्वास्थ्य मंत्रालय के आधिकारिक व सत्यापित तथ्य।'
+        : (isOr
+          ? 'ସାଧାରଣ ରୋଗ ଲକ୍ଷଣ, ରୋଗ ପ୍ରତିରୋଧ, ଶିଶୁ ଟିକାଦାନ, ଗର୍ଭବତୀ ଯତ୍ନ ଓ ଜରୁରୀକାଳୀନ ପ୍ରାଥମିକ ଚିକିତ୍ସା ବିଷୟରେ ପଚାରନ୍ତୁ । ସରକାରୀ ସ୍ୱାସ୍ଥ୍ୟ ବିଭାଗ ଓ WHO ର ନିର୍ଭୁଲ ତଥ୍ୟ ।'
+          : 'Ask about everyday symptoms, disease prevention, child vaccines, pregnancy care, and emergency first aid. Clear facts from official public health authorities.');
     }
     const heroPill = document.querySelector('.hero-pill');
     if (heroPill) {
-      heroPill.textContent = isOr ? 'ଯାଞ୍ଚ ହୋଇଥିବା ସ୍ୱାସ୍ଥ୍ୟ ପରାମର୍ଶ ଓ ପ୍ରତିରୋଧ' : 'Verified Health Guidance & Prevention';
+      heroPill.textContent = isHi ? 'सत्यापित स्वास्थ्य सलाह और रोकथाम' : (isOr ? 'ଯାଞ୍ଚ ହୋଇଥିବା ସ୍ୱାସ୍ଥ୍ୟ ପରାମର୍ଶ ଓ ପ୍ରତିରୋଧ' : 'Verified Health Guidance & Prevention');
     }
     const heroChatBtn = $('heroChatBtn');
     if (heroChatBtn) {
-      heroChatBtn.textContent = isOr ? '💬 ସ୍ୱାସ୍ଥ୍ୟ ଚାଟ୍ ଆରମ୍ଭ କରନ୍ତୁ →' : '💬 Open Health Chat Assistant →';
+      heroChatBtn.textContent = isHi ? '💬 स्वास्थ्य चैट शुरू करें →' : (isOr ? '💬 ସ୍ୱାସ୍ଥ୍ୟ ଚାଟ୍ ଆରମ୍ଭ କରନ୍ତୁ →' : '💬 Open Health Chat Assistant →');
     }
     const cardChatBtn = $('cardChatBtn');
     if (cardChatBtn) {
-      cardChatBtn.textContent = isOr ? '💬 ସ୍ୱାସ୍ଥ୍ୟ ଚାଟ୍ ଖୋଲନ୍ତୁ →' : '💬 Open Health Chat →';
+      cardChatBtn.textContent = isHi ? '💬 स्वास्थ्य चैट खोलें →' : (isOr ? '💬 ସ୍ୱାସ୍ଥ୍ୟ ଚାଟ୍ ଖୋଲନ୍ତୁ →' : '💬 Open Health Chat →');
     }
     const navChatBtn = $('navChatBtn');
     if (navChatBtn) {
-      navChatBtn.textContent = isOr ? '💬 ପରାମର୍ଶ' : '💬 Chat';
+      navChatBtn.textContent = isHi ? '💬 परामर्श' : (isOr ? '💬 ପରାମର୍ଶ' : '💬 Chat');
     }
-    if ($('tabSignIn')) $('tabSignIn').textContent = isOr ? 'ଲଗ୍ ଇନ୍' : 'Sign In';
-    if ($('tabSignUp')) $('tabSignUp').textContent = isOr ? 'ନୂଆ ଆକାଉଣ୍ଟ' : 'Create Account';
+    if ($('tabSignIn')) $('tabSignIn').textContent = isHi ? 'लॉग इन' : (isOr ? 'ଲଗ୍ ଇନ୍' : 'Sign In');
+    if ($('tabSignUp')) $('tabSignUp').textContent = isHi ? 'नया खाता' : (isOr ? 'ନୂଆ ଆକାଉଣ୍ଟ' : 'Create Account');
     if ($('authSubmit')) {
       const isUp = $('tabSignUp')?.classList.contains('active');
-      $('authSubmit').textContent = isOr ? (isUp ? 'ଆକାଉଣ୍ଟ ଖୋଲନ୍ତୁ' : 'ଲଗ୍ ଇନ୍ କରନ୍ତୁ') : (isUp ? 'Create account' : 'Sign in');
+      $('authSubmit').textContent = isHi
+        ? (isUp ? 'खाता बनाएं' : 'लॉग इन करें')
+        : (isOr ? (isUp ? 'ଆକାଉଣ୍ଟ ଖୋଲନ୍ତୁ' : 'ଲଗ୍ ଇନ୍ କରନ୍ତୁ') : (isUp ? 'Create account' : 'Sign in'));
     }
     const emailLabel = document.querySelector('label[for="email"]');
-    if (emailLabel) emailLabel.textContent = isOr ? 'ଇମେଲ୍ ଠିକଣା' : 'Email Address';
+    if (emailLabel) emailLabel.textContent = isHi ? 'ईमेल पता' : (isOr ? 'ଇମେଲ୍ ଠିକଣା' : 'Email Address');
     const pwLabel = document.querySelector('label[for="password"]');
-    if (pwLabel) pwLabel.textContent = isOr ? 'ପାସୱାର୍ଡ' : 'Password';
+    if (pwLabel) pwLabel.textContent = isHi ? 'पासवर्ड' : (isOr ? 'ପାସୱାର୍ଡ' : 'Password');
     const pwHint = $('pwHint');
-    if (pwHint) pwHint.textContent = isOr ? '(ଅତିକମରେ ୮ ଅକ୍ଷର)' : '(at least 8 characters)';
+    if (pwHint) pwHint.textContent = isHi ? '(कम से कम 8 अक्षर)' : (isOr ? '(ଅତିକମରେ ୮ ଅକ୍ଷର)' : '(at least 8 characters)');
 
     // Feature items on landing page
     const featItems = document.querySelectorAll('.features-grid .feat-item');
     if (featItems.length >= 4) {
       const f1 = featItems[0].querySelector('div');
-      if (f1) f1.innerHTML = isOr
-        ? '<strong>ଓଡ଼ିଆ ଭଏସ୍ ପରାମର୍ଶ</strong><small>ନିଜ ଲକ୍ଷଣ ସିଧାସଳଖ ଓଡ଼ିଆରେ କହି ତୁରନ୍ତ ଘରୋଇ ଓ ଡାକ୍ତରୀ ପରାମର୍ଶ ପାଆନ୍ତୁ ।</small>'
-        : '<strong>Odia Voice Consultation</strong><small>Speak your symptoms directly in Odia to receive instant regional care guidance.</small>';
+      if (f1) f1.innerHTML = isHi
+        ? '<strong>हिन्दी और क्षेत्रीय वॉयस परामर्श</strong><small>अपने लक्षण सीधे बोलकर बताएं और तुरंत प्रमाणित स्वास्थ्य सलाह पाएं।</small>'
+        : (isOr
+          ? '<strong>ଓଡ଼ିଆ ଭଏସ୍ ପରାମର୍ଶ</strong><small>ନିଜ ଲକ୍ଷଣ ସିଧାସଳଖ ଓଡ଼ିଆରେ କହି ତୁରନ୍ତ ଘରୋଇ ଓ ଡାକ୍ତରୀ ପରାମର୍ଶ ପାଆନ୍ତୁ ।</small>'
+          : '<strong>Regional Voice Consultation</strong><small>Speak your symptoms directly in your language to receive instant regional care guidance.</small>');
 
       const f2 = featItems[1].querySelector('div');
-      if (f2) f2.innerHTML = isOr
-        ? '<strong>ଡାକ୍ତର କେବେ ଦେଖାଇବେ</strong><small>ଘରୋଇ ଯତ୍ନ ବନାମ ବିପଦ ଲକ୍ଷଣ ଜାଣନ୍ତୁ ଯାହା ପାଇଁ ଡାକ୍ତରଖାନା ଯିବା ଆବଶ୍ୟକ ।</small>'
-        : '<strong>When to See a Doctor</strong><small>Learn mild home care vs. danger signs that need hospital visits.</small>';
+      if (f2) f2.innerHTML = isHi
+        ? '<strong>डॉक्टर को कब दिखाएं</strong><small>सामान्य घरेलू देखभाल बनाम खतरे के लक्षण समझें जिनके लिए अस्पताल जाना जरूरी है।</small>'
+        : (isOr
+          ? '<strong>ଡାକ୍ତର କେବେ ଦେଖାଇବେ</strong><small>ଘରୋଇ ଯତ୍ନ ବନାମ ବିପଦ ଲକ୍ଷଣ ଜାଣନ୍ତୁ ଯାହା ପାଇଁ ଡାକ୍ତରଖାନା ଯିବା ଆବଶ୍ୟକ ।</small>'
+          : '<strong>When to See a Doctor</strong><small>Learn mild home care vs. danger signs that need hospital visits.</small>');
 
       const f3 = featItems[2].querySelector('div');
-      if (f3) f3.innerHTML = isOr
-        ? '<strong>ଯାଞ୍ଚ ହୋଇଥିବା ଡାକ୍ତରୀ ତଥ୍ୟ</strong><small>WHO ଏବଂ ଭାରତ ସରକାରଙ୍କ ସ୍ୱାସ୍ଥ୍ୟ ମନ୍ତ୍ରଣାଳୟର ସଠିକ୍ ତଥ୍ୟ ଉପରେ ଆଧାରିତ ।</small>'
-        : '<strong>Verified Medical Sources</strong><small>Guidance backed by official WHO and Ministry of Health data.</small>';
+      if (f3) f3.innerHTML = isHi
+        ? '<strong>सत्यापित चिकित्सा स्रोत</strong><small>WHO और भारत सरकार के स्वास्थ्य मंत्रालय के प्रमाणित तथ्यों पर आधारित।</small>'
+        : (isOr
+          ? '<strong>ଯାଞ୍ଚ ହୋଇଥିବା ଡାକ୍ତରୀ ତଥ୍ୟ</strong><small>WHO ଏବଂ ଭାରତ ସରକାରଙ୍କ ସ୍ୱାସ୍ଥ୍ୟ ମନ୍ତ୍ରଣାଳୟର ସଠିକ୍ ତଥ୍ୟ ଉପରେ ଆଧାରିତ ।</small>'
+          : '<strong>Verified Medical Sources</strong><small>Guidance backed by official WHO and Ministry of Health data.</small>');
 
       const f4 = featItems[3].querySelector('div');
-      if (f4) f4.innerHTML = isOr
-        ? '<strong>ସମ୍ପୂର୍ଣ୍ଣ ଗୋପନୀୟ ଓ ସୁରକ୍ଷିତ</strong><small>ଆପଣଙ୍କ ସ୍ୱାସ୍ଥ୍ୟ ପ୍ରଶ୍ନ କେବେହେଲେ ଆପଣଙ୍କ ନାମ ସହିତ ସଂରକ୍ଷିତ ହୁଏନାହିଁ ।</small>'
-        : '<strong>Confidential & Private</strong><small>Your health questions are never saved with your name.</small>';
+      if (f4) f4.innerHTML = isHi
+        ? '<strong>पूर्णतः गोपनीय और सुरक्षित</strong><small>आपके स्वास्थ्य संबंधी सवाल कभी भी आपके नाम के साथ सुरक्षित नहीं किए जाते।</small>'
+        : (isOr
+          ? '<strong>ସମ୍ପୂର୍ଣ୍ଣ ଗୋପନୀୟ ଓ ସୁରକ୍ଷିତ</strong><small>ଆପଣଙ୍କ ସ୍ୱାସ୍ଥ୍ୟ ପ୍ରଶ୍ନ କେବେହେଲେ ଆପଣଙ୍କ ନାମ ସହିତ ସଂରକ୍ଷିତ ହୁଏନାହିଁ ।</small>'
+          : '<strong>Confidential & Private</strong><small>Your health questions are never saved with your name.</small>');
     }
 
     // Update static UI strings in DOM for Consultation / Chat view
     const emergencySpan = $('emergencyText');
     if (emergencySpan) {
-      emergencySpan.innerHTML = isOr
-        ? '<strong>ଡାକ୍ତରୀ ଜରୁରୀକାଳୀନ ପରିସ୍ଥିତି?</strong> ପ୍ରବଳ ଛାତି ଯନ୍ତ୍ରଣା, ନିଶ୍ୱାସ କଷ୍ଟ କିମ୍ବା ରକ୍ତସ୍ରାବ ହେଉଛି? ତୁରନ୍ତ <a href="tel:108">108</a> (ଆମ୍ବୁଲାନ୍ସ) କିମ୍ବା <a href="tel:112">112</a> କୁ କଲ୍ କରନ୍ତୁ ।'
-        : '<strong>Medical Emergency?</strong> Severe chest pain, trouble breathing, or heavy bleeding? Call <a href="tel:108">108</a> (Ambulance) or <a href="tel:112">112</a> immediately.';
+      emergencySpan.innerHTML = isHi
+        ? '<strong>चिकित्सा आपातकाल?</strong> सीने में तेज दर्द, सांस लेने में तकलीफ या गंभीर रक्तस्राव? तुरंत <a href="tel:108">108</a> (एम्बुलेंस) या <a href="tel:112">112</a> पर कॉल करें।'
+        : (isOr
+          ? '<strong>ଡାକ୍ତରୀ ଜରୁରୀକାଳୀନ ପରିସ୍ଥିତି?</strong> ପ୍ରବଳ ଛାତି ଯନ୍ତ୍ରଣା, ନିଶ୍ୱାସ କଷ୍ଟ କିମ୍ବା ରକ୍ତସ୍ରାବ ହେଉଛି? ତୁରନ୍ତ <a href="tel:108">108</a> (ଆମ୍ବୁଲାନ୍ସ) କିମ୍ବା <a href="tel:112">112</a> କୁ କଲ୍ କରନ୍ତୁ ।'
+          : '<strong>Medical Emergency?</strong> Severe chest pain, trouble breathing, or heavy bleeding? Call <a href="tel:108">108</a> (Ambulance) or <a href="tel:112">112</a> immediately.');
     }
 
     const questionInput = $('question');
     if (questionInput) {
-      questionInput.placeholder = isOr
-        ? 'ଆପଣଙ୍କ ସ୍ୱାସ୍ଥ୍ୟ ସମସ୍ୟା ବା ଲକ୍ଷଣ ଲେଖନ୍ତୁ...'
-        : 'Express your symptoms or health problem...';
+      questionInput.placeholder = isHi
+        ? 'अपनी स्वास्थ्य समस्या या लक्षण लिखें...'
+        : (isOr ? 'ଆପଣଙ୍କ ସ୍ୱାସ୍ଥ୍ୟ ସମସ୍ୟା ବା ଲକ୍ଷଣ ଲେଖନ୍ତୁ...' : 'Express your symptoms or health problem...');
     }
 
     const brandBadge = document.querySelector('.brand-badge');
     if (brandBadge) {
-      brandBadge.textContent = isOr ? 'ଓଡ଼ିଶା ଜନସ୍ୱାସ୍ଥ୍ୟ ସହାୟକ' : 'Public Health Assistant';
+      brandBadge.textContent = isHi ? 'सार्वजनिक स्वास्थ्य सहायक' : (isOr ? 'ଓଡ଼ିଶା ଜନସ୍ୱାସ୍ଥ୍ୟ ସହାୟକ' : 'Public Health Assistant');
     }
 
     const guidanceText = document.querySelector('.guidance-btn-text');
     if (guidanceText) {
-      guidanceText.textContent = isOr ? 'ଜରୁରୀ ସ୍ୱାସ୍ଥ୍ୟ ସୂଚନା' : 'Important Medical Notice';
+      guidanceText.textContent = isHi ? 'महत्वपूर्ण स्वास्थ्य सूचना' : (isOr ? 'ଜରୁରୀ ସ୍ୱାସ୍ଥ୍ୟ ସୂଚନା' : 'Important Medical Notice');
     }
 
-    // Guidance Modal Content in Odia vs English
-    if ($('modalTitle')) $('modalTitle').textContent = isOr ? 'ଜରୁରୀ ସ୍ୱାସ୍ଥ୍ୟ ଓ ଡାକ୍ତରୀ ସୂଚନା' : 'Important Health & Doctor Notice';
+    // Guidance Modal Content in Hindi vs Odia vs English
+    if ($('modalTitle')) $('modalTitle').textContent = isHi ? 'महत्वपूर्ण स्वास्थ्य और डॉक्टरी सूचना' : (isOr ? 'ଜରୁରୀ ସ୍ୱାସ୍ଥ୍ୟ ଓ ଡାକ୍ତରୀ ସୂଚନା' : 'Important Health & Doctor Notice');
     if ($('modalNoticeCard')) {
-      $('modalNoticeCard').innerHTML = isOr
-        ? '<strong>⚠️ ସ୍ୱାସ୍ଥ୍ୟ AI କେବଳ ଏକ ସୂଚନାକାରୀ ସହାୟକ, କୌଣସି ଡାକ୍ତର ନୁହେଁ</strong><p>ଏହି ସେବା କେବଳ ସଚେତନତା ଓ ସାଧାରଣ ସ୍ୱାସ୍ଥ୍ୟ ପରାମର୍ଶ ପାଇଁ ଉଦ୍ଦିଷ୍ଟ । ଏହା ଡାକ୍ତରୀ ଶାରୀରିକ ପରୀକ୍ଷା, ରକ୍ତ ପରୀକ୍ଷା କିମ୍ବା ଔଷଧ ପ୍ରେସକ୍ରିପସନର ବିକଳ୍ପ ନୁହେଁ ।</p>'
-        : '<strong>⚠️ Swasth AI is an Informational Guide, Not a Doctor</strong><p>This service provides educational public health advice and symptom awareness. It cannot replace a clinical physical examination, diagnostic blood tests, or prescribed medication from a licensed medical professional.</p>';
+      $('modalNoticeCard').innerHTML = isHi
+        ? '<strong>⚠️ स्वास्थ्य AI केवल एक सूचनात्मक मार्गदर्शक है, कोई डॉक्टर नहीं</strong><p>यह सेवा केवल स्वास्थ्य जागरूकता और सामान्य सलाह के लिए है। यह किसी डॉक्टर की शारीरिक जांच, लैब टेस्ट या दवा के नुस्खे (प्रिस्क्रिप्शन) का विकल्प नहीं है।</p>'
+        : (isOr
+          ? '<strong>⚠️ ସ୍ୱାସ୍ଥ୍ୟ AI କେବଳ ଏକ ସୂଚନାକାରୀ ସହାୟକ, କୌଣସି ଡାକ୍ତର ନୁହେଁ</strong><p>ଏହି ସେବା କେବଳ ସଚେତନତା ଓ ସାଧାରଣ ସ୍ୱାସ୍ଥ୍ୟ ପରାମର୍ଶ ପାଇଁ ଉଦ୍ଦିଷ୍ଟ । ଏହା ଡାକ୍ତରୀ ଶାରୀରିକ ପରୀକ୍ଷା, ରକ୍ତ ପରୀକ୍ଷା କିମ୍ବା ଔଷଧ ପ୍ରେସକ୍ରିପସନର ବିକଳ୍ପ ନୁହେଁ ।</p>'
+          : '<strong>⚠️ Swasth AI is an Informational Guide, Not a Doctor</strong><p>This service provides educational public health advice and symptom awareness. It cannot replace a clinical physical examination, diagnostic blood tests, or prescribed medication from a licensed medical professional.</p>');
     }
-    if ($('modalStep1Title')) $('modalStep1Title').textContent = isOr ? 'ଲକ୍ଷଣଗୁଡ଼ିକ ସ୍ପଷ୍ଟ ଭାବେ କୁହନ୍ତୁ' : 'Ask Symptoms Clearly';
-    if ($('modalStep1P')) $('modalStep1P').textContent = isOr ? 'ଆପଣ ବା ପରିବାର ଲୋକଙ୍କର କେଉଁ ସମସ୍ୟା ହେଉଛି (ଯଥା: ଜ୍ୱର କେତେ ଦିନରୁ, ମୁଣ୍ଡ ବିନ୍ଧା, ବାନ୍ତି, କାଶ ବା କୁକୁର କାମୁଡ଼ା) ତାହା ସ୍ପଷ୍ଟ ଭାବେ କୁହନ୍ତୁ ।' : 'Describe clearly what you or a family member are experiencing (e.g. fever duration, headache, vomiting, rash, or animal bite) for accurate health guidance.';
-    if ($('modalStep2Title')) $('modalStep2Title').textContent = isOr ? 'ତୁରନ୍ତ ଡାକ୍ତରଙ୍କ ପରାମର୍ଶ ନିଅନ୍ତୁ ଯଦି:' : 'Immediately Consult a Doctor If:';
-    if ($('modalStep2P')) $('modalStep2P').textContent = isOr ? 'ରୋଗ ବଢ଼ିଯାଏ, ଜ୍ୱର ୩ ଦିନରୁ ଅଧିକ ରହେ, ବାରମ୍ବାର ବାନ୍ତି ହୁଏ ବା ନିଶ୍ୱାସ ନେବାରେ କଷ୍ଟ ହୁଏ, ତେବେ ବିଳମ୍ବ ନକରି ନିକଟସ୍ଥ CHC ଡାକ୍ତରଖାନା ଯାଆନ୍ତୁ ।' : 'Symptoms worsen, fever exceeds 3 days, there is persistent vomiting, intense pain, breathing difficulty, or confusion. Visit your nearest Community Health Centre (CHC) or Medical Officer immediately.';
-    if ($('modalStep3Title')) $('modalStep3Title').textContent = isOr ? 'ନିଜ ମନମୁତାବକ ଔଷଧ ଖାଆନ୍ତୁ ବା ବନ୍ଦ କରନ୍ତୁ ନାହିଁ' : 'Never Self-Medicate or Skip Treatment';
-    if ($('modalStep3P')) $('modalStep3P').textContent = isOr ? 'ଡାକ୍ତରଙ୍କ ବିନା ପରାମର୍ଶରେ ଆଣ୍ଟିବାୟୋଟିକ୍, ପ୍ରେସର ବା ଡାଇବେଟିସ୍ ଔଷଧ କେବେହେଲେ ବନ୍ଦ କରନ୍ତୁ ନାହିଁ ।' : 'Do not start, stop, or change prescribed antibiotics, insulin, or blood pressure medicines on your own. Always consult a qualified doctor or pharmacist.';
-    if ($('modalStep4Title')) $('modalStep4Title').textContent = isOr ? '୨୪/୭ ମାଗଣା ଜରୁରୀକାଳୀନ ହେଲ୍ପଲାଇନ୍ ନମ୍ବର' : '24/7 National Emergency Helplines';
-    if ($('modalStep4P')) $('modalStep4P').innerHTML = isOr ? '• ଆମ୍ବୁଲାନ୍ସ: <strong>୧୦୮</strong><br>• ଜାତୀୟ ଜରୁରୀ ସେବା: <strong>୧୧୨</strong><br>• ମାନସିକ ସ୍ୱାସ୍ଥ୍ୟ ସହାୟତା (Tele-MANAS): <strong>୧୪୪୧୬</strong> (Toll-Free)' : '• Medical Ambulance: <strong>108</strong><br>• National Emergency: <strong>112</strong><br>• Tele-MANAS Mental Health Support: <strong>14416</strong> (Toll-Free)';
+    if ($('modalStep1Title')) $('modalStep1Title').textContent = isHi ? 'लक्षण स्पष्ट रूप से बताएं' : (isOr ? 'ଲକ୍ଷଣଗୁଡ଼ିକ ସ୍ପଷ୍ଟ ଭାବେ କୁହନ୍ତୁ' : 'Ask Symptoms Clearly');
+    if ($('modalStep1P')) $('modalStep1P').textContent = isHi
+      ? 'आपको या परिवार के सदस्य को क्या परेशानी हो रही है (जैसे: बुखार कितने दिन से है, सिरदर्द, उल्टी, खांसी या कुत्ते का काटना) यह स्पष्ट बताएं।'
+      : (isOr ? 'ଆପଣ ବା ପରିବାର ଲୋକଙ୍କର କେଉଁ ସମସ୍ୟା ହେଉଛି (ଯଥା: ଜ୍ୱର କେତେ ଦିନରୁ, ମୁଣ୍ଡ ବିନ୍ଧା, ବାନ୍ତି, କାଶ ବା କୁକୁର କାମୁଡ଼ା) ତାହା ସ୍ପଷ୍ଟ ଭାବେ କୁହନ୍ତୁ ।' : 'Describe clearly what you or a family member are experiencing (e.g. fever duration, headache, vomiting, rash, or animal bite) for accurate health guidance.');
+    if ($('modalStep2Title')) $('modalStep2Title').textContent = isHi ? 'तुरंत डॉक्टर से परामर्श लें यदि:' : (isOr ? 'ତୁରନ୍ତ ଡାକ୍ତରଙ୍କ ପରାମର୍ଶ ନିଅନ୍ତୁ ଯଦି:' : 'Immediately Consult a Doctor If:');
+    if ($('modalStep2P')) $('modalStep2P').textContent = isHi
+      ? 'लक्षण बिगड़ते हैं, बुखार 3 दिन से अधिक रहता है, लगातार उल्टी हो रही है या सांस लेने में परेशानी हो रही है, तो बिना देर किए नजदीकी अस्पताल (CHC) जाएं।'
+      : (isOr ? 'ରୋଗ ବଢ଼ିଯାଏ, ଜ୍ୱର ୩ ଦିନରୁ ଅଧିକ ରହେ, ବାରମ୍ବାର ବାନ୍ତି ହୁଏ ବା ନିଶ୍ୱାସ ନେବାରେ କଷ୍ଟ ହୁଏ, ତେବେ ବିଳମ୍ବ ନକରି ନିକଟସ୍ଥ CHC ଡାକ୍ତରଖାନା ଯାଆନ୍ତୁ ।' : 'Symptoms worsen, fever exceeds 3 days, there is persistent vomiting, intense pain, breathing difficulty, or confusion. Visit your nearest Community Health Centre (CHC) or Medical Officer immediately.');
+    if ($('modalStep3Title')) $('modalStep3Title').textContent = isHi ? 'अपनी मर्जी से दवा न लें या बंद न करें' : (isOr ? 'ନିଜ ମନମୁତାବକ ଔଷଧ ଖାଆନ୍ତୁ ବା ବନ୍ଦ କରନ୍ତୁ ନାହିଁ' : 'Never Self-Medicate or Skip Treatment');
+    if ($('modalStep3P')) $('modalStep3P').textContent = isHi
+      ? 'डॉक्टर की सलाह के बिना एंटीबायोटिक, बीपी या डायबिटीज की दवाएं कभी बंद न करें या खुराक न बदलें।'
+      : (isOr ? 'ଡାକ୍ତରଙ୍କ ବିନା ପରାମର୍ଶରେ ଆଣ୍ଟିବାୟୋଟିକ୍, ପ୍ରେସର ବା ଡାଇବେଟିସ୍ ଔଷଧ କେବେହେଲେ ବନ୍ଦ କରନ୍ତୁ ନାହିଁ ।' : 'Do not start, stop, or change prescribed antibiotics, insulin, or blood pressure medicines on your own. Always consult a qualified doctor or pharmacist.');
+    if ($('modalStep4Title')) $('modalStep4Title').textContent = isHi ? '24/7 निःशुल्क राष्ट्रीय आपातकालीन हेल्पलाइन नंबर' : (isOr ? '୨୪/୭ ମାଗଣା ଜରୁରୀକାଳୀନ ହେଲ୍ପଲାଇନ୍ ନମ୍ବର' : '24/7 National Emergency Helplines');
+    if ($('modalStep4P')) $('modalStep4P').innerHTML = isHi
+      ? '• मेडिकल एम्बुलेंस: <strong>108</strong><br>• राष्ट्रीय आपातकालीन सेवा: <strong>112</strong><br>• मानसिक स्वास्थ्य सहायता (Tele-MANAS): <strong>14416</strong> (टोल-फ्री)'
+      : (isOr ? '• ଆମ୍ବୁଲାନ୍ସ: <strong>୧୦୮</strong><br>• ଜାତୀୟ ଜରୁରୀ ସେବା: <strong>୧୧୨</strong><br>• ମାନସିକ ସ୍ୱାସ୍ଥ୍ୟ ସହାୟତା (Tele-MANAS): <strong>୧୪୪୧୬</strong> (Toll-Free)' : '• Medical Ambulance: <strong>108</strong><br>• National Emergency: <strong>112</strong><br>• Tele-MANAS Mental Health Support: <strong>14416</strong> (Toll-Free)');
 
     // User bar buttons
-    if ($('signOut')) $('signOut').textContent = isOr ? 'ଲଗ୍ ଆଉଟ୍' : 'Sign out';
-    if ($('navDeleteAccountBtn')) $('navDeleteAccountBtn').textContent = isOr ? '🗑️ ଡିଲିଟ୍' : '🗑️ Delete';
+    if ($('signOut')) $('signOut').textContent = isHi ? 'लॉग आउट' : (isOr ? 'ଲଗ୍ ଆଉଟ୍' : 'Sign out');
+    if ($('navDeleteAccountBtn')) $('navDeleteAccountBtn').textContent = isHi ? '🗑️ हटाएं' : (isOr ? '🗑️ ଡିଲିଟ୍' : '🗑️ Delete');
 
     // Delete account modal
-    if ($('deleteModalTitle')) $('deleteModalTitle').textContent = isOr ? '⚠️ ଆପଣଙ୍କ ଆକାଉଣ୍ଟ ଡିଲିଟ୍ କରିବେ କି?' : '⚠️ Delete Your Account?';
-    if ($('cancelDeleteBtn')) $('cancelDeleteBtn').textContent = isOr ? 'ବାତିଲ୍' : 'Cancel';
-    if ($('confirmDeleteBtn')) $('confirmDeleteBtn').textContent = isOr ? 'ହଁ, ସ୍ଥାୟୀ ଭାବେ ଡିଲିଟ୍ କରନ୍ତୁ' : 'Yes, Permanently Delete';
+    if ($('deleteModalTitle')) $('deleteModalTitle').textContent = isHi ? '⚠️ क्या आप अपना खाता हटाना चाहते हैं?' : (isOr ? '⚠️ ଆପଣଙ୍କ ଆକାଉଣ୍ଟ ଡିଲିଟ୍ କରିବେ କି?' : '⚠️ Delete Your Account?');
+    if ($('cancelDeleteBtn')) $('cancelDeleteBtn').textContent = isHi ? 'रद्द करें' : (isOr ? 'ବାତିଲ୍' : 'Cancel');
+    if ($('confirmDeleteBtn')) $('confirmDeleteBtn').textContent = isHi ? 'हाँ, स्थायी रूप से हटाएं' : (isOr ? 'ହଁ, ସ୍ଥାୟୀ ଭାବେ ଡିଲିଟ୍ କରନ୍ତୁ' : 'Yes, Permanently Delete');
 
     const statusText = document.querySelector('.status-indicator span:last-child') || $('chatStatusText');
     if (statusText) {
-      statusText.textContent = isOr
-        ? 'ଯାଞ୍ଚ ହୋଇଥିବା ସ୍ୱାସ୍ଥ୍ୟ ପରାମର୍ଶ ସକ୍ରିୟ • ଜରୁରୀକାଳୀନ ୧୦୮ ପ୍ରୋଟୋକଲ'
-        : 'Verified Health Guidance Active • Emergency Referral Protocol';
+      statusText.textContent = isHi
+        ? 'सत्यापित स्वास्थ्य सलाह सक्रिय • आपातकालीन 108 प्रोटोकॉल'
+        : (isOr
+          ? 'ଯାଞ୍ଚ ହୋଇଥିବା ସ୍ୱାସ୍ଥ୍ୟ ପରାମର୍ଶ ସକ୍ରିୟ • ଜରୁରୀକାଳୀନ ୧୦୮ ପ୍ରୋଟୋକଲ'
+          : 'Verified Health Guidance Active • Emergency Referral Protocol');
     }
 
     // Update initial welcome bubble if it is the only bubble in chat
     const bubbles = document.querySelectorAll('.bubble');
     if (bubbles.length === 1 && bubbles[0].classList.contains('bot')) {
-      bubbles[0].textContent = isOr
-        ? 'ନମସ୍କାର! ମୁଁ ସ୍ୱାସ୍ଥ୍ୟ AI, ଓଡ଼ିଶାର ଜନସ୍ୱାସ୍ଥ୍ୟ ସହାୟକ । ଆପଣଙ୍କର ସ୍ୱାସ୍ଥ୍ୟ ସମସ୍ୟା କହିବା ପାଇଁ ତଳେ ଥିବା ବଡ଼ ମାଇକ୍ ବଟନ୍ ଦବାନ୍ତୁ । ମୁଁ କେବଳ WHO ଏବଂ ସ୍ୱାସ୍ଥ୍ୟ ମନ୍ତ୍ରଣାଳୟର ସଠିକ୍ ତଥ୍ୟ ଅନୁଯାୟୀ ଘରୋଇ ଉପଚାର ଓ ଡାକ୍ତରୀ ପରାମର୍ଶ ଦେବି ।'
-        : 'Namaskar! I am Swasth AI, your public health assistant for Odisha. Describe your symptoms or ask a health question. I answer only using verified WHO and Ministry of Health sources.';
+      bubbles[0].textContent = isHi
+        ? 'नमस्ते! मैं स्वास्थ्य AI, आपका स्वास्थ्य सहायक। अपने लक्षण या स्वास्थ्य प्रश्न पूछें या नीचे माइक बटन दबाकर बोलें। मैं केवल WHO और स्वास्थ्य मंत्रालय के आधिकारिक व सत्यापित स्रोतों से सलाह देता हूँ।'
+        : (isOr
+          ? 'ନମସ୍କାର! ମୁଁ ସ୍ୱାସ୍ଥ୍ୟ AI, ଓଡ଼ିଶାର ଜନସ୍ୱାସ୍ଥ୍ୟ ସହାୟକ । ଆପଣଙ୍କର ସ୍ୱାସ୍ଥ୍ୟ ସମସ୍ୟା କହିବା ପାଇଁ ତଳେ ଥିବା ବଡ଼ ମାଇକ୍ ବଟନ୍ ଦବାନ୍ତୁ । ମୁଁ କେବଳ WHO ଏବଂ ସ୍ୱାସ୍ଥ୍ୟ ମନ୍ତ୍ରଣାଳୟର ସଠିକ୍ ତଥ୍ୟ ଅନୁଯାୟୀ ଘରୋଇ ଉପଚାର ଓ ଡାକ୍ତରୀ ପରାମର୍ଶ ଦେବି ।'
+          : 'Namaskar! I am Swasth AI, your public health assistant for Odisha. Describe your symptoms or ask a health question. I answer only using verified WHO and Ministry of Health sources.');
     }
 
     const footDisclaimer = $('footDisclaimer');
     if (footDisclaimer) {
-      footDisclaimer.innerHTML = isOr
-        ? 'ସ୍ୱାସ୍ଥ୍ୟ AI କେବଳ ସୂଚନାକାରୀ ପରାମର୍ଶ ଦେଇଥାଏ । ଏହା କୌଣସି ଔଷଧର ପ୍ରେସକ୍ରିପସନ୍ ଦିଏନାହିଁ । ଜରୁରୀ ପରିସ୍ଥିତିରେ <strong>108</strong> କିମ୍ବା <strong>112</strong> କୁ କଲ୍ କରନ୍ତୁ ।'
-        : 'Swasth AI provides public health guidance from verified WHO & Ministry of Health sources. It is <strong>not</strong> a medical doctor and cannot issue prescriptions. In an emergency, call <strong>108</strong> or <strong>112</strong>.';
+      footDisclaimer.innerHTML = isHi
+        ? 'स्वास्थ्य AI केवल सूचनात्मक स्वास्थ्य मार्गदर्शन प्रदान करता है। यह कोई डॉक्टरी नुस्खा नहीं देता। आपातकालीन स्थिति में <strong>108</strong> या <strong>112</strong> पर कॉल करें।'
+        : (isOr
+          ? 'ସ୍ୱାସ୍ଥ୍ୟ AI କେବଳ ସୂଚନାକାରୀ ପରାମର୍ଶ ଦେଇଥାଏ । ଏହା କୌଣସି ଔଷଧର ପ୍ରେସକ୍ରିପସନ୍ ଦିଏନାହିଁ । ଜରୁରୀ ପରିସ୍ଥିତିରେ <strong>108</strong> କିମ୍ବା <strong>112</strong> କୁ କଲ୍ କରନ୍ତୁ ।'
+          : 'Swasth AI provides public health guidance from verified WHO & Ministry of Health sources. It is <strong>not</strong> a medical doctor and cannot issue prescriptions. In an emergency, call <strong>108</strong> or <strong>112</strong>.');
     }
 
     const footCombined = $('footCopyrightCombined') || $('footCopyrightSmall') || $('footCopyrightMain');
     if (footCombined) {
-      footCombined.innerHTML = isOr
-        ? '&copy; ୨୦୨୬ ସ୍ୱାସ୍ଥ୍ୟ AI &bull; ସମସ୍ତ ଅଧିକାର ସଂରକ୍ଷିତ &bull; ଓଡ଼ିଶା ଜନସ୍ୱାସ୍ଥ୍ୟ ସହାୟକ &bull; F-204 DEMO PROJECT'
-        : '&copy; 2026 Swasth AI &bull; All Rights Reserved &bull; Odisha Public Health Assistant &bull; F-204 DEMO PROJECT';
+      footCombined.innerHTML = isHi
+        ? '&copy; 2026 स्वास्थ्य AI &bull; सर्वाधिकार सुरक्षित &bull; सार्वजनिक स्वास्थ्य सहायक &bull; F-204 DEMO PROJECT'
+        : (isOr
+          ? '&copy; ୨୦୨୬ ସ୍ୱାସ୍ଥ୍ୟ AI &bull; ସମସ୍ତ ଅଧିକାର ସଂରକ୍ଷିତ &bull; ଓଡ଼ିଶା ଜନସ୍ୱାସ୍ଥ୍ୟ ସହାୟକ &bull; F-204 DEMO PROJECT'
+          : '&copy; 2026 Swasth AI &bull; All Rights Reserved &bull; Odisha Public Health Assistant &bull; F-204 DEMO PROJECT');
     }
   }
 
@@ -612,9 +674,12 @@
     if (started) return;
     started = true;
     const isOr = currentLang === 'or';
-    const welcome = isOr
-      ? 'ନମସ୍କାର! ମୁଁ ସ୍ୱାସ୍ଥ୍ୟ AI, ଓଡ଼ିଶାର ଜନସ୍ୱାସ୍ଥ୍ୟ ସହାୟକ । ଆପଣଙ୍କର ସ୍ୱାସ୍ଥ୍ୟ ସମସ୍ୟା କହିବା ପାଇଁ ତଳେ ଥିବା ବଡ଼ ମାଇକ୍ ବଟନ୍ ଦବାନ୍ତୁ । ମୁଁ କେବଳ WHO ଏବଂ ସ୍ୱାସ୍ଥ୍ୟ ମନ୍ତ୍ରଣାଳୟର ସଠିକ୍ ତଥ୍ୟ ଅନୁଯାୟୀ ଘରୋଇ ଉପଚାର ଓ ଡାକ୍ତରୀ ପରାମର୍ଶ ଦେବି ।'
-      : 'Namaskar! I am Swasth AI, your public health assistant for Odisha. Describe your symptoms or ask a health question. I answer only using verified WHO and Ministry of Health sources.';
+    const isHi = currentLang === 'hi';
+    const welcome = isHi
+      ? 'नमस्ते! मैं स्वास्थ्य AI, आपका स्वास्थ्य सहायक। अपने लक्षण या स्वास्थ्य प्रश्न पूछें या नीचे माइक बटन दबाकर बोलें। मैं केवल WHO और स्वास्थ्य मंत्रालय के आधिकारिक व सत्यापित स्रोतों से सलाह देता हूँ।'
+      : (isOr
+        ? 'ନମସ୍କାର! ମୁଁ ସ୍ୱାସ୍ଥ୍ୟ AI, ଓଡ଼ିଶାର ଜନସ୍ୱାସ୍ଥ୍ୟ ସହାୟକ । ଆପଣଙ୍କର ସ୍ୱାସ୍ଥ୍ୟ ସମସ୍ୟା କହିବା ପାଇଁ ତଳେ ଥିବା ବଡ଼ ମାଇକ୍ ବଟନ୍ ଦବାନ୍ତୁ । ମୁଁ କେବଳ WHO ଏବଂ ସ୍ୱାସ୍ଥ୍ୟ ମନ୍ତ୍ରଣାଳୟର ସଠିକ୍ ତଥ୍ୟ ଅନୁଯାୟୀ ଘରୋଇ ଉପଚାର ଓ ଡାକ୍ତରୀ ପରାମର୍ଶ ଦେବି ।'
+        : 'Namaskar! I am Swasth AI, your public health assistant for Odisha. Describe your symptoms or ask a health question. I answer only using verified WHO and Ministry of Health sources.');
     addBubble('bot', welcome);
     renderChips();
     applyLanguage(currentLang);
@@ -664,17 +729,22 @@
     if (activeSpeakBtn) {
       activeSpeakBtn.classList.remove('speaking');
       const label = activeSpeakBtn.querySelector('.speak-label');
-      if (label) label.textContent = currentLang === 'or' ? '🔊 ଶୁଣନ୍ତୁ' : '🔊 Listen';
+      if (label) {
+        label.textContent = currentLang === 'hi' ? '🔊 सुनें' : (currentLang === 'or' ? '🔊 ଶୁଣନ୍ତୁ' : '🔊 Listen');
+      }
       activeSpeakBtn = null;
     }
     if (typeof window !== 'undefined') window._activeSpeechUtterance = null;
   }
 
-  function findOdiaVoice(voices) {
+  function findVoiceByLang(voices, langCode) {
     if (!Array.isArray(voices)) return null;
     return voices.find((v) => {
       const lang = (v.lang || '').toLowerCase().replace(/_/g, '-');
       const name = (v.name || '').toLowerCase();
+      if (langCode === 'hi') {
+        return lang === 'hi-in' || lang === 'hi' || lang.startsWith('hi-') || name.includes('hindi');
+      }
       return (
         lang === 'or-in' ||
         lang === 'or' ||
@@ -688,17 +758,18 @@
     }) || null;
   }
 
-  function fallbackBrowserSpeech(clean, btn, isOdia) {
+  function fallbackBrowserSpeech(clean, btn, targetLang) {
     if (typeof window === 'undefined' || !('speechSynthesis' in window)) {
       stopSpeaking();
       return;
     }
     try {
       const voices = window.speechSynthesis.getVoices() || [];
-      const nativeOdiaVoice = findOdiaVoice(voices);
-      const englishVoice = voices.find((v) => v.lang === 'en-IN' || v.lang.startsWith('en'));
+      const isOdia = targetLang === 'or' || /[\u0B00-\u0B7F]/.test(clean);
+      const isHindi = targetLang === 'hi' || /[\u0900-\u097F]/.test(clean);
 
       if (isOdia) {
+        const nativeOdiaVoice = findVoiceByLang(voices, 'or');
         if (!nativeOdiaVoice) {
           stopSpeaking();
           const label = btn.querySelector('.speak-label');
@@ -724,7 +795,32 @@
 
         if (window.speechSynthesis.paused) window.speechSynthesis.resume();
         window.speechSynthesis.speak(utterance);
+      } else if (isHindi) {
+        const hindiVoice = findVoiceByLang(voices, 'hi');
+        const utterance = new SpeechSynthesisUtterance(clean);
+        utterance.lang = hindiVoice ? (hindiVoice.lang || 'hi-IN') : 'hi-IN';
+        if (hindiVoice) utterance.voice = hindiVoice;
+        utterance.rate = 0.90;
+        utterance.pitch = 1.0;
+
+        window._activeSpeechUtterance = utterance;
+        const label = btn.querySelector('.speak-label');
+        if (label) label.textContent = '⏹️ रोकें';
+
+        utterance.onend = () => stopSpeaking();
+        utterance.onerror = () => {
+          stopSpeaking();
+          const label = btn.querySelector('.speak-label');
+          if (label) {
+            label.textContent = '⚠️ ऑडियो उपलब्ध नहीं';
+            setTimeout(() => { if (label) label.textContent = '🔊 सुनें'; }, 3000);
+          }
+        };
+
+        if (window.speechSynthesis.paused) window.speechSynthesis.resume();
+        window.speechSynthesis.speak(utterance);
       } else {
+        const englishVoice = voices.find((v) => v.lang === 'en-IN' || v.lang.startsWith('en'));
         const utterance = new SpeechSynthesisUtterance(clean);
         utterance.lang = englishVoice ? englishVoice.lang : 'en-US';
         if (englishVoice) utterance.voice = englishVoice;
@@ -752,8 +848,10 @@
       stopSpeaking();
       const label = btn.querySelector('.speak-label');
       if (label) {
-        label.textContent = isOdia ? '⚠️ ଅଡିଓ ସଂଯୋଗ ହେଉନାହିଁ' : '⚠️ Audio not available';
-        setTimeout(() => { if (label) label.textContent = isOdia ? '🔊 ଶୁଣନ୍ତୁ' : '🔊 Listen'; }, 3000);
+        const isHi = targetLang === 'hi' || /[\u0900-\u097F]/.test(clean);
+        const isOr = targetLang === 'or' || /[\u0B00-\u0B7F]/.test(clean);
+        label.textContent = isHi ? '⚠️ ऑडियो उपलब्ध नहीं' : (isOr ? '⚠️ ଅଡିଓ ସଂଯୋଗ ହେଉନାହିଁ' : '⚠️ Audio not available');
+        setTimeout(() => { if (label) label.textContent = isHi ? '🔊 सुनें' : (isOr ? '🔊 ଶୁଣନ୍ତୁ' : '🔊 Listen'); }, 3000);
       }
     }
   }
@@ -771,9 +869,42 @@
   // Cache pre-generated audio for zero-lag instant playback (stores { blobUrl, arrayBuffer })
   const audioCache = new Map();
 
-  async function fetchServerAudio(clean) {
+  function prepareSpokenText(rawText, maxLen = 400) {
+    if (!rawText) return '';
+    let clean = String(rawText)
+      .replace(/[\u{1F300}-\u{1F9FF}\u{2600}-\u{26FF}\u{2700}-\u{27BF}]/gu, '')
+      .replace(/[📘🏠⚠️🏥🚨✨💡🗑️🦟🐕💧🤰☀️🔍📷]/g, '')
+      .replace(/[*_#`~[\]()]/g, ' ')
+      .replace(/^[ \t]*[-•]\s*/gm, '')
+      .replace(/\s+/g, ' ')
+      .trim();
+
+    if (clean.length > maxLen) {
+      let cutIdx = -1;
+      const candidates = ['. ', '। ', '? ', '! ', '\n', ' '];
+      for (const sep of candidates) {
+        const last = clean.lastIndexOf(sep, maxLen);
+        if (last > cutIdx && last > maxLen * 0.5) {
+          cutIdx = last;
+          break;
+        }
+      }
+      if (cutIdx > 0) {
+        clean = clean.slice(0, cutIdx);
+      } else {
+        clean = clean.slice(0, maxLen);
+      }
+    }
+    // Clean trailing combining diacritics in Odia / Hindi or dangling punctuation
+    clean = clean.replace(/[\u0B01-\u0B03\u0B3E-\u0B57\u0901-\u0903\u093E-\u094F\u0951-\u0957\s,;:.-]+$/u, '').trim();
+    return clean;
+  }
+
+  async function fetchServerAudio(clean, lang) {
     if (!clean) return null;
-    if (audioCache.has(clean)) return audioCache.get(clean);
+    const l = lang || currentLang;
+    const cacheKey = l + ':' + clean;
+    if (audioCache.has(cacheKey)) return audioCache.get(cacheKey);
 
     try {
       let { data } = await sb.auth.getSession();
@@ -794,7 +925,7 @@
           const res = await fetch('/api/tts', {
             method: 'POST',
             headers: { 'Content-Type': 'application/json', Authorization: 'Bearer ' + token },
-            body: JSON.stringify({ text: clean })
+            body: JSON.stringify({ text: clean, lang: l })
           });
           if (res.ok) {
             const out = await res.json();
@@ -803,7 +934,7 @@
               const blob = new Blob([arrayBuffer], { type: out.mimeType || 'audio/wav' });
               const blobUrl = URL.createObjectURL(blob);
               const cached = { blobUrl, arrayBuffer, mimeType: out.mimeType || 'audio/wav' };
-              audioCache.set(clean, cached);
+              audioCache.set(cacheKey, cached);
               return cached;
             }
           } else if (res.status === 401 && attempt === 1) {
@@ -825,23 +956,18 @@
 
   async function preloadAudioForAnswer(rawText) {
     if (!rawText) return;
-    const isOdia = /[\u0B00-\u0B7F]/.test(rawText);
-    if (!isOdia) return;
+    const isRegional = /[\u0B00-\u0B7F\u0900-\u097F]/.test(rawText);
+    if (!isRegional) return;
 
-    const clean = String(rawText || '')
-      .replace(/[📘🏠⚠️🏥🚨✨💡🗑️🦟🐕💧🤰☀️]/g, '')
-      .replace(/[*_#`~]/g, '')
-      .replace(/^[ \t]*[-•]\s*/gm, '')
-      .slice(0, 420)
-      .trim();
-
-    if (!clean || audioCache.has(clean)) return;
+    const clean = prepareSpokenText(rawText, 380);
+    const cacheKey = currentLang + ':' + clean;
+    if (!clean || audioCache.has(cacheKey)) return;
     try {
-      await fetchServerAudio(clean);
+      await fetchServerAudio(clean, currentLang);
     } catch {}
   }
 
-  async function playWithWebAudio(arrayBuffer, btn, isOdia) {
+  async function playWithWebAudio(arrayBuffer, btn, langCode) {
     const ctx = getAudioContext();
     if (!ctx) return false;
     try {
@@ -855,7 +981,9 @@
       activeAudioSource = source;
 
       const label = btn.querySelector('.speak-label');
-      if (label) label.textContent = isOdia ? '⏹️ ବନ୍ଦ କରନ୍ତୁ' : '⏹️ Stop';
+      if (label) {
+        label.textContent = langCode === 'hi' ? '⏹️ रोकें' : (langCode === 'or' ? '⏹️ ବନ୍ଦ କରନ୍ତୁ' : '⏹️ Stop');
+      }
 
       source.onended = () => {
         if (activeAudioSource === source) {
@@ -881,35 +1009,35 @@
     // Unlock Web Audio Context immediately in the click gesture so laptop browsers never block playback
     getAudioContext();
 
-    const clean = String(rawText || '')
-      .replace(/[📘🏠⚠️🏥🚨✨💡🗑️🦟🐕💧🤰☀️]/g, '')
-      .replace(/[*_#`~]/g, '')
-      .replace(/^[ \t]*[-•]\s*/gm, '')
-      .slice(0, 420)
-      .trim();
-
+    const clean = prepareSpokenText(rawText, 400);
     if (!clean) return;
 
     btn.classList.add('speaking');
     const label = btn.querySelector('.speak-label');
     const isOdia = /[\u0B00-\u0B7F]/.test(clean);
+    const isHindi = /[\u0900-\u097F]/.test(clean);
+    const langCode = isHindi ? 'hi' : (isOdia ? 'or' : 'en');
     activeSpeakBtn = btn;
-    if (label) label.textContent = isOdia ? '⏳ ଅଡିଓ ପ୍ରସ୍ତୁତ...' : '⏳ Loading...';
+    if (label) {
+      label.textContent = isHindi ? '⏳ ऑडियो तैयार...' : (isOdia ? '⏳ ଅଡିଓ ପ୍ରସ୍ତୁତ...' : '⏳ Loading...');
+    }
 
     try {
-      const audioData = await fetchServerAudio(clean);
+      const audioData = await fetchServerAudio(clean, langCode);
       if (audioData) {
         let played = false;
         try {
           const audio = new Audio(audioData.blobUrl);
           activeAudio = audio;
-          if (label) label.textContent = isOdia ? '⏹️ ବନ୍ଦ କରନ୍ତୁ' : '⏹️ Stop';
+          if (label) {
+            label.textContent = isHindi ? '⏹️ रोकें' : (isOdia ? '⏹️ ବନ୍ଦ କରନ୍ତୁ' : '⏹️ Stop');
+          }
 
           audio.onended = () => stopSpeaking();
           audio.onerror = async () => {
             console.warn('HTML5 audio error, falling back to WebAudio decoder');
-            played = await playWithWebAudio(audioData.arrayBuffer, btn, isOdia);
-            if (!played) fallbackBrowserSpeech(clean, btn, isOdia);
+            played = await playWithWebAudio(audioData.arrayBuffer, btn, langCode);
+            if (!played) fallbackBrowserSpeech(clean, btn, langCode);
           };
 
           const playPromise = audio.play();
@@ -919,17 +1047,17 @@
           }
         } catch (playErr) {
           console.warn('HTML5 play rejected (e.g. autoplay policy), falling back to WebAudio:', playErr);
-          played = await playWithWebAudio(audioData.arrayBuffer, btn, isOdia);
+          played = await playWithWebAudio(audioData.arrayBuffer, btn, langCode);
         }
         if (played) return;
       }
 
       // If server audio failed after retries, try browser SpeechSynthesis fallback
-      fallbackBrowserSpeech(clean, btn, isOdia);
+      fallbackBrowserSpeech(clean, btn, langCode);
     } catch (e) {
       console.warn('Speech playback unexpected error:', e);
       stopSpeaking();
-      fallbackBrowserSpeech(clean, btn, isOdia);
+      fallbackBrowserSpeech(clean, btn, langCode);
     }
   }
 
@@ -946,6 +1074,32 @@
     return d;
   }
 
+  function scanningIndicator() {
+    const d = document.createElement('div');
+    d.className = 'bubble bot scanning-bubble';
+    d.setAttribute('aria-label', 'Swasth AI is scanning skin photo');
+
+    const box = document.createElement('div');
+    box.className = 'scan-laser-box';
+    const beam = document.createElement('div');
+    beam.className = 'scan-laser-beam';
+    box.appendChild(beam);
+
+    const txt = document.createElement('div');
+    txt.className = 'scanning-text';
+    const isOr = currentLang === 'or';
+    const isHi = currentLang === 'hi';
+    txt.textContent = isHi
+      ? '🔍 AI त्वचा विशेषज्ञ द्वारा फोटो का विश्लेषण जारी है...'
+      : (isOr ? '🔍 AI ଚର୍ମ ବିଶେଷଜ୍ଞଙ୍କ ଦ୍ୱାରା ଫଟୋ ପରୀକ୍ଷା ଚାଲିଛି...' : '🔍 AI Dermatologist is analyzing your skin photo...');
+
+    d.appendChild(box);
+    d.appendChild(txt);
+    $('messages').appendChild(d);
+    d.scrollIntoView({ block: 'end' });
+    return d;
+  }
+
   function renderAnswer(data) {
     const kind = ['emergency', 'blocked', 'no_answer'].includes(data.kind) ? data.kind : '';
     const d = addBubble('bot ' + kind, data.answer || '');
@@ -953,7 +1107,7 @@
     // Preload audio in background for instant 0ms playback when user clicks Listen
     if (data.answer) preloadAudioForAnswer(data.answer);
 
-    // Voice Output Audio Speaker Button (Step 3: Listen aloud in Odia / English)
+    // Voice Output Audio Speaker Button (Step 3: Listen aloud in Hindi / Odia / English)
     if (data.answer && typeof window !== 'undefined' && 'speechSynthesis' in window) {
       const speakBar = document.createElement('div');
       speakBar.className = 'speak-bar';
@@ -961,12 +1115,15 @@
       speakBtn.type = 'button';
       speakBtn.className = 'speak-btn';
       const isOr = currentLang === 'or';
-      speakBtn.title = isOr ? '🔊 ଶୁଣନ୍ତୁ' : '🔊 Listen';
-      speakBtn.setAttribute('aria-label', isOr ? 'ଶୁଣନ୍ତୁ' : 'Listen');
+      const isHi = currentLang === 'hi';
+      const btnTitle = isHi ? '🔊 सुनें' : (isOr ? '🔊 ଶୁଣନ୍ତୁ' : '🔊 Listen');
+      const btnAria = isHi ? 'सुनें' : (isOr ? 'ଶୁଣନ୍ତୁ' : 'Listen');
+      speakBtn.title = btnTitle;
+      speakBtn.setAttribute('aria-label', btnAria);
 
       const spkLabel = document.createElement('span');
       spkLabel.className = 'speak-label';
-      spkLabel.textContent = isOr ? '🔊 ଶୁଣନ୍ତୁ' : '🔊 Listen';
+      spkLabel.textContent = btnTitle;
       speakBtn.appendChild(spkLabel);
 
       speakBtn.addEventListener('click', () => speakText(data.answer, speakBtn));
@@ -977,7 +1134,8 @@
     if (Array.isArray(data.sources) && data.sources.length) {
       const s = document.createElement('div');
       s.className = 'sources';
-      s.appendChild(document.createTextNode(currentLang === 'or' ? 'ଯାଞ୍ଚ ହୋଇଥିବା ଉତ୍ସ: ' : 'Verified Source: '));
+      const srcTitle = currentLang === 'hi' ? 'सत्यापित स्रोत: ' : (currentLang === 'or' ? 'ଯାଞ୍ଚ ହୋଇଥିବା ଉତ୍ସ: ' : 'Verified Source: ');
+      s.appendChild(document.createTextNode(srcTitle));
       data.sources.forEach((src, i) => {
         if (i) s.appendChild(document.createTextNode('; '));
         if (src.url && /^https?:\/\//.test(src.url)) {
@@ -993,9 +1151,11 @@
       });
       d.appendChild(s);
     }
-    const discText = currentLang === 'or'
-      ? (data.disclaimer && /[\u0B00-\u0B7F]/.test(data.disclaimer) ? data.disclaimer : 'ଏହା ଏକ ସାଧାରଣ ସ୍ୱାସ୍ଥ୍ୟ ସୂଚନା, କୌଣସି ଡାକ୍ତରୀ ପ୍ରେସକ୍ରିପସନ୍ ନୁହେଁ । ଯେକୌଣସି ସ୍ୱାସ୍ଥ୍ୟ ସମସ୍ୟା ପାଇଁ ନିକଟସ୍ଥ ଡାକ୍ତରଖାନା ଯାଆନ୍ତୁ ।')
-      : (data.disclaimer && !/[\u0B00-\u0B7F]/.test(data.disclaimer) ? data.disclaimer : 'This is general health information, not a diagnosis. For any health problem, please see a doctor or your nearest health worker.');
+    const discText = currentLang === 'hi'
+      ? (data.disclaimer && /[\u0900-\u097F]/.test(data.disclaimer) ? data.disclaimer : 'यह सामान्य स्वास्थ्य जानकारी है, कोई डॉक्टरी नुस्खा नहीं। किसी भी स्वास्थ्य समस्या के लिए कृपया डॉक्टर या नजदीकी स्वास्थ्य केंद्र से संपर्क करें।')
+      : (currentLang === 'or'
+        ? (data.disclaimer && /[\u0B00-\u0B7F]/.test(data.disclaimer) ? data.disclaimer : 'ଏହା ଏକ ସାଧାରଣ ସ୍ୱାସ୍ଥ୍ୟ ସୂଚନା, କୌଣସି ଡାକ୍ତରୀ ପ୍ରେସକ୍ରିପସନ୍ ନୁହେଁ । ଯେକୌଣସି ସ୍ୱାସ୍ଥ୍ୟ ସମସ୍ୟା ପାଇଁ ନିକଟସ୍ଥ ଡାକ୍ତରଖାନା ଯାଆନ୍ତୁ ।')
+        : (data.disclaimer && !/[\u0B00-\u0B7F\u0900-\u097F]/.test(data.disclaimer) ? data.disclaimer : 'This is general health information, not a diagnosis. For any health problem, please see a doctor or your nearest health worker.'));
     const p = document.createElement('div');
     p.className = 'disc';
     p.textContent = discText;
@@ -1006,18 +1166,108 @@
   function setRemaining(n) {
     if ($('remaining')) {
       $('remaining').textContent = typeof n === 'number'
-        ? (currentLang === 'or' ? `ଆଜି ଆଉ ${n} ଟି ପ୍ରଶ୍ନ ପଚାରିପାରିବେ` : `${n} question${n === 1 ? '' : 's'} left today`)
+        ? (currentLang === 'hi'
+          ? `आज आप ${n} और प्रश्न पूछ सकते हैं`
+          : (currentLang === 'or' ? `ଆଜି ଆଉ ${n} ଟି ପ୍ରଶ୍ନ ପଚାରିପାରିବେ` : `${n} question${n === 1 ? '' : 's'} left today`))
         : '';
+    }
+  }
+
+  // ---------- Skin Photo / Camera Integration ----------
+  let pendingSkinImage = null; // { data: base64, mimeType: string, previewUrl: string }
+
+  function clearPendingImage() {
+    pendingSkinImage = null;
+    const tray = $('imagePreviewTray');
+    if (tray) tray.hidden = true;
+    const thumb = $('imagePreviewThumb');
+    if (thumb) thumb.remove();
+    const input = $('cameraInput');
+    if (input) input.value = '';
+  }
+
+  function compressAndSetImage(file) {
+    if (!file || !file.type.startsWith('image/')) return;
+    const reader = new FileReader();
+    reader.onload = (e) => {
+      const img = new Image();
+      img.onload = () => {
+        const canvas = document.createElement('canvas');
+        const MAX_DIM = 800;
+        let width = img.width;
+        let height = img.height;
+        if (width > height) {
+          if (width > MAX_DIM) {
+            height = Math.round((height * MAX_DIM) / width);
+            width = MAX_DIM;
+          }
+        } else {
+          if (height > MAX_DIM) {
+            width = Math.round((width * MAX_DIM) / height);
+            height = MAX_DIM;
+          }
+        }
+        canvas.width = width;
+        canvas.height = height;
+        const ctx = canvas.getContext('2d');
+        ctx.drawImage(img, 0, 0, width, height);
+        const compressedDataUrl = canvas.toDataURL('image/jpeg', 0.82);
+        const base64Data = compressedDataUrl.split(',')[1];
+        pendingSkinImage = {
+          data: base64Data,
+          mimeType: 'image/jpeg',
+          previewUrl: compressedDataUrl
+        };
+        let thumb = $('imagePreviewThumb');
+        if (!thumb) {
+          thumb = document.createElement('img');
+          thumb.id = 'imagePreviewThumb';
+          thumb.className = 'image-preview-thumb';
+          thumb.alt = 'Skin symptom preview';
+          $('imagePreviewThumbBox')?.appendChild(thumb);
+        }
+        thumb.src = compressedDataUrl;
+        const tray = $('imagePreviewTray');
+        if (tray) tray.hidden = false;
+        $('question')?.focus();
+      };
+      img.src = e.target.result;
+    };
+    reader.readAsDataURL(file);
+  }
+
+  function initCameraControl() {
+    const cameraInput = $('cameraInput');
+    const cameraBtn = $('cameraBtn');
+    const regionalCameraBtn = $('regionalCameraBtn');
+    const removeBtn = $('removeImageBtn');
+
+    if (cameraBtn && cameraInput) {
+      cameraBtn.addEventListener('click', () => cameraInput.click());
+    }
+    if (regionalCameraBtn && cameraInput) {
+      regionalCameraBtn.addEventListener('click', () => cameraInput.click());
+    }
+    if (removeBtn) {
+      removeBtn.addEventListener('click', () => clearPendingImage());
+    }
+    if (cameraInput) {
+      cameraInput.addEventListener('change', (e) => {
+        const file = e.target.files?.[0];
+        if (file) compressAndSetImage(file);
+      });
     }
   }
 
   async function send(raw) {
     const text = (raw || '').trim();
-    if (!text || busy) return;
+    if ((!text && !pendingSkinImage) || busy) return;
     if (text.length > MAX) {
-      addBubble('error', currentLang === 'or'
-        ? `ଦୟାକରି ଆପଣଙ୍କ ପ୍ରଶ୍ନ ${MAX} ଅକ୍ଷର ମଧ୍ୟରେ ସୀମିତ ରଖନ୍ତୁ ।`
-        : `Please keep your question under ${MAX} characters.`);
+      addBubble('error', currentLang === 'hi'
+        ? `कृपया अपना प्रश्न ${MAX} अक्षरों के भीतर रखें।`
+        : (currentLang === 'or'
+          ? `ଦୟାକରି ଆପଣଙ୍କ ପ୍ରଶ୍ନ ${MAX} ଅକ୍ଷର ମଧ୍ୟରେ ସୀମିତ ରଖନ୍ତୁ ।`
+          : `Please keep your question under ${MAX} characters.`));
       return;
     }
     busy = true;
@@ -1027,50 +1277,89 @@
       document.body.classList.add('chat-has-results');
       const cv = $('chatView'); if (cv) cv.classList.add('chat-has-results');
     }
-    addBubble('user', text);
+
+    const activeImage = pendingSkinImage;
+    clearPendingImage();
+
+    const userBubbleText = text || (currentLang === 'hi'
+      ? '📷 त्वचा की जांच के लिए फोटो भेजी गई'
+      : (currentLang === 'or' ? '📷 ଚର୍ମ ପରୀକ୍ଷା ପାଇଁ ଫଟୋ ପଠାଗଲା' : '📷 Skin photo sent for assessment'));
+    const userBubble = addBubble('user', userBubbleText);
+    if (activeImage && activeImage.previewUrl) {
+      const card = document.createElement('div');
+      card.className = 'user-sent-image-card';
+      const imgEl = document.createElement('img');
+      imgEl.src = activeImage.previewUrl;
+      imgEl.className = 'user-sent-image';
+      imgEl.alt = 'Uploaded skin photo';
+      const badge = document.createElement('span');
+      badge.className = 'user-image-badge';
+      badge.textContent = currentLang === 'hi'
+        ? '📷 त्वचा फोटो'
+        : (currentLang === 'or' ? '📷 ଚର୍ମ ଫଟୋ' : '📷 Skin Photo');
+      card.appendChild(imgEl);
+      card.appendChild(badge);
+      userBubble.prepend(card);
+    }
+
     $('question').value = '';
     resizeInput();
     updateCounter();
-    const wait = typing();
+    const wait = activeImage ? scanningIndicator() : typing();
 
     try {
       const { data } = await sb.auth.getSession();
       const session = data && data.session;
       if (!session) {
         wait.remove();
-        addBubble('error', currentLang === 'or'
-          ? 'ଆପଣଙ୍କ ସେସନ୍ ସମାପ୍ତ ହୋଇଛି । ଦୟାକରି ପୁଣି ଲଗ୍ ଇନ୍ କରନ୍ତୁ ।'
-          : 'Your session has ended. Please sign in again.');
+        addBubble('error', currentLang === 'hi'
+          ? 'आपका सत्र समाप्त हो गया है। कृपया पुनः लॉग इन करें।'
+          : (currentLang === 'or'
+            ? 'ଆପଣଙ୍କ ସେସନ୍ ସମାପ୍ତ ହୋଇଛି । ଦୟାକରି ପୁଣି ଲଗ୍ ଇନ୍ କରନ୍ତୁ ।'
+            : 'Your session has ended. Please sign in again.'));
         await sb.auth.signOut();
         return;
       }
-      const res = await fetch('/api/chat', {
+
+      const endpoint = activeImage ? '/api/vision-skin' : '/api/chat';
+      const payload = activeImage
+        ? { image: activeImage.data, mimeType: activeImage.mimeType, symptoms: text, lang: currentLang }
+        : { message: text, lang: currentLang };
+
+      const res = await fetch(endpoint, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
           Authorization: 'Bearer ' + session.access_token
         },
-        body: JSON.stringify({ message: text, lang: currentLang })
+        body: JSON.stringify(payload)
       });
       let body = {};
       try { body = await res.json(); } catch (e) {}
       wait.remove();
       if (res.ok) {
         renderAnswer(body);
-        setRemaining(body.remaining);
+        if (body.remaining !== undefined) setRemaining(body.remaining);
       } else if (res.status === 401) {
-        addBubble('error', currentLang === 'or'
-          ? 'ଆପଣଙ୍କ ସେସନ୍ ସମାପ୍ତ ହୋଇଛି । ଦୟାକରି ପୁଣି ଲଗ୍ ଇନ୍ କରନ୍ତୁ ।'
-          : 'Your session has ended. Please sign in again.');
+        addBubble('error', currentLang === 'hi'
+          ? 'आपका सत्र समाप्त हो गया है। कृपया पुनः लॉग इन करें।'
+          : (currentLang === 'or'
+            ? 'ଆପଣଙ୍କ ସେସନ୍ ସମାପ୍ତ ହୋଇଛି । ଦୟାକରି ପୁଣି ଲଗ୍ ଇନ୍ କରନ୍ତୁ ।'
+            : 'Your session has ended. Please sign in again.'));
         await sb.auth.signOut();
       } else {
-        addBubble('error', body.message || (currentLang === 'or' ? 'କିଛି ତ୍ରୁଟି ଘଟିଲା । ଦୟାକରି ପୁଣି ଚେଷ୍ଟା କରନ୍ତୁ ।' : 'Something went wrong. Please try again.'));
+        const defaultErr = currentLang === 'hi'
+          ? 'कुछ गलत हो गया। कृपया पुनः प्रयास करें।'
+          : (currentLang === 'or' ? 'କିଛି ତ୍ରୁଟି ଘଟିଲା । ଦୟାକରି ପୁଣି ଚେଷ୍ଟା କରନ୍ତୁ ।' : 'Something went wrong. Please try again.');
+        addBubble('error', body.message || defaultErr);
       }
     } catch (e) {
       wait.remove();
-      addBubble('error', currentLang === 'or'
-        ? 'ସର୍ଭର ସହ ସଂଯୋଗ ହୋଇପାରିଲା ନାହିଁ । ଇଣ୍ଟରନେଟ୍ ଯାଞ୍ଚ କରି ପୁଣି ଚେଷ୍ଟା କରନ୍ତୁ ।'
-        : 'Could not reach the server. Check your internet and try again.');
+      addBubble('error', currentLang === 'hi'
+        ? 'सर्वर से संपर्क नहीं हो सका। कृपया अपना इंटरनेट जांचें और पुनः प्रयास करें।'
+        : (currentLang === 'or'
+          ? 'ସର୍ଭର ସହ ସଂଯୋଗ ହୋଇପାରିଲା ନାହିଁ । ଇଣ୍ଟରନେଟ୍ ଯାଞ୍ଚ କରି ପୁଣି ଚେଷ୍ଟା କରନ୍ତୁ ।'
+          : 'Could not reach the server. Check your internet and try again.'));
     } finally {
       busy = false;
       $('sendBtn').disabled = false;
@@ -1120,8 +1409,16 @@
     if (mainBtn) mainBtn.classList.remove('recording');
     const mainText = $('odiaVoiceMainText');
     const subText = $('odiaVoiceSubText');
-    if (mainText) mainText.textContent = '🎙️ ଆପଣଙ୍କ ସମସ୍ୟା କୁହନ୍ତୁ';
-    if (subText) subText.textContent = 'ଏଠାରେ ଟ୍ୟାପ୍ କରି ଓଡ଼ିଆରେ କୁହନ୍ତୁ (Tap to speak in Odia)';
+    if (mainText) {
+      mainText.textContent = currentLang === 'hi'
+        ? '🎙️ अपनी समस्या बोलकर बताएं'
+        : (currentLang === 'or' ? '🎙️ ଆପଣଙ୍କ ସମସ୍ୟା କୁହନ୍ତୁ' : '🎙️ Speak your symptoms');
+    }
+    if (subText) {
+      subText.textContent = currentLang === 'hi'
+        ? 'यहाँ टैप करके हिन्दी में बोलें'
+        : (currentLang === 'or' ? 'ଏଠାରେ ଟ୍ୟାପ୍ କରି ଓଡ଼ିଆରେ କୁହନ୍ତୁ' : 'Tap to speak');
+    }
   }
 
   function initOdiaVoiceControl() {
@@ -1139,7 +1436,9 @@
       }
 
       if (typeof navigator === 'undefined' || !navigator.mediaDevices || !navigator.mediaDevices.getUserMedia) {
-        alert('ମାଇକ୍ରୋଫୋନ୍ ସମର୍ଥନ ଏହି ବ୍ରାଉଜରରେ ଉପଲବ୍ଧ ନାହିଁ । (Microphone not supported in this browser)');
+        alert(currentLang === 'hi'
+          ? 'इस ब्राउज़र में माइक्रोफ़ोन समर्थित नहीं है।'
+          : 'ମାଇକ୍ରୋଫୋନ୍ ସମର୍ଥନ ଏହି ବ୍ରାଉଜରରେ ଉପଲବ୍ଧ ନାହିଁ । (Microphone not supported in this browser)');
         return;
       }
 
@@ -1161,8 +1460,16 @@
           mainBtn.classList.add('recording');
           const mainText = $('odiaVoiceMainText');
           const subText = $('odiaVoiceSubText');
-          if (mainText) mainText.textContent = '🔴 ଶୁଣୁଛି... କୁହନ୍ତୁ (Listening)';
-          if (subText) subText.textContent = 'ସରିଲେ ଏଠାରେ ଟ୍ୟାପ୍ କରନ୍ତୁ (Tap when done)';
+          if (mainText) {
+            mainText.textContent = currentLang === 'hi'
+              ? '🔴 सुन रहा हूँ... बोलिए (Listening)'
+              : '🔴 ଶୁଣୁଛି... କୁହନ୍ତୁ (Listening)';
+          }
+          if (subText) {
+            subText.textContent = currentLang === 'hi'
+              ? 'पूरा होने पर यहाँ टैप करें (Tap when done)'
+              : 'ସରିଲେ ଏଠାରେ ଟ୍ୟାପ୍ କରନ୍ତୁ (Tap when done)';
+          }
         };
 
         odiaMediaRecorder.onstop = async () => {
@@ -1172,8 +1479,16 @@
 
           const mainText = $('odiaVoiceMainText');
           const subText = $('odiaVoiceSubText');
-          if (mainText) mainText.textContent = '⏳ ସ୍ୱର ଯାଞ୍ଚ ହେଉଛି (Recognizing)...';
-          if (subText) subText.textContent = 'ଡାକ୍ତରୀ ପରାମର୍ଶ ଖୋଜା ଚାଲିଛି...';
+          if (mainText) {
+            mainText.textContent = currentLang === 'hi'
+              ? '⏳ आवाज़ की जाँच हो रही है (Recognizing)...'
+              : '⏳ ସ୍ୱର ଯାଞ୍ଚ ହେଉଛି (Recognizing)...';
+          }
+          if (subText) {
+            subText.textContent = currentLang === 'hi'
+              ? 'डॉक्टर की सलाह खोजी जा रही है...'
+              : 'ଡାକ୍ତରୀ ପରାମର୍ଶ ଖୋଜା ଚାଲିଛି...';
+          }
 
           if (!odiaAudioChunks.length) {
             resetOdiaVoiceBtn();
@@ -1195,14 +1510,16 @@
               const token = data?.session?.access_token;
               if (!token) {
                 resetOdiaVoiceBtn();
-                addBubble('error', 'ଆପଣଙ୍କ ସେସନ୍ ସମାପ୍ତ ହୋଇଛି । ଦୟାକରି ପୁନର୍ବାର ଲଗଇନ୍ କରନ୍ତୁ ।');
+                addBubble('error', currentLang === 'hi'
+                  ? 'आपका सत्र समाप्त हो गया है। कृपया पुनः लॉग इन करें।'
+                  : 'ଆପଣଙ୍କ ସେସନ୍ ସମାପ୍ତ ହୋଇଛି । ଦୟାକରି ପୁନର୍ବାର ଲଗଇନ୍ କରନ୍ତୁ ।');
                 return;
               }
 
               const res = await fetch('/api/transcribe', {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json', Authorization: 'Bearer ' + token },
-                body: JSON.stringify({ audio: base64Audio, mimeType })
+                body: JSON.stringify({ audio: base64Audio, mimeType, lang: currentLang })
               });
 
               resetOdiaVoiceBtn();
@@ -1210,19 +1527,25 @@
               if (res.ok) {
                 const out = await res.json();
                 if (out.text && out.text.trim()) {
-                  // Show the transcribed Odia question on screen and fetch clinical guidance
+                  // Show the transcribed question on screen and fetch clinical guidance
                   send(out.text.trim());
                 } else {
-                  addBubble('error', 'ସ୍ୱର ସ୍ପଷ୍ଟ ଶୁଣାଗଲା ନାହିଁ । ଦୟାକରି ପୁଣି ଥରେ କୁହନ୍ତୁ । (Could not hear clearly, please try speaking again).');
+                  addBubble('error', currentLang === 'hi'
+                    ? 'आवाज़ स्पष्ट सुनाई नहीं दी। कृपया फिर से बोलें। (Could not hear clearly, please try speaking again).'
+                    : 'ସ୍ୱର ସ୍ପଷ୍ଟ ଶୁଣାଗଲା ନାହିଁ । ଦୟାକରି ପୁଣି ଥରେ କୁହନ୍ତୁ । (Could not hear clearly, please try speaking again).');
                 }
               } else {
-                addBubble('error', 'ସ୍ୱର ଯାଞ୍ଚ ସେବା ବର୍ତ୍ତମାନ ବ୍ୟସ୍ତ ଅଛି । ଦୟାକରି ଆଉଥରେ ଚେଷ୍ଟା କରନ୍ତୁ ।');
+                addBubble('error', currentLang === 'hi'
+                  ? 'आवाज़ पहचान सेवा इस समय व्यस्त है। कृपया पुनः प्रयास करें।'
+                  : 'ସ୍ୱର ଯାଞ୍ଚ ସେବା ବର୍ତ୍ତମାନ ବ୍ୟସ୍ତ ଅଛି । ଦୟାକରି ଆଉଥରେ ଚେଷ୍ଟା କରନ୍ତୁ ।');
               }
             };
           } catch (err) {
             console.error('Audio transcribe error:', err);
             resetOdiaVoiceBtn();
-            addBubble('error', 'ଅଡିଓ ଯାଞ୍ଚରେ ତ୍ରୁଟି ହେଲା । ଦୟାକରି ପୁଣି ଥରେ କୁହନ୍ତୁ ।');
+            addBubble('error', currentLang === 'hi'
+              ? 'ऑडियो प्रसंस्करण में त्रुटि हुई। कृपया फिर से बोलें।'
+              : 'ଅଡିଓ ଯାଞ୍ଚରେ ତ୍ରୁଟି ହେଲା । ଦୟାକରି ପୁଣି ଥରେ କୁହନ୍ତୁ ।');
           }
         };
 
@@ -1236,13 +1559,15 @@
 
       } catch (err) {
         console.error('Mic permission error:', err);
-        alert('ମାଇକ୍ରୋଫୋନ୍ ଅନୁମତି ମିଳିଲା ନାହିଁ । ଦୟାକରି ମାଇକ୍ ଅନୁମତି ଦିଅନ୍ତୁ । (Microphone permission was not granted)');
+        alert(currentLang === 'hi'
+          ? 'माइक्रोफ़ोन की अनुमति नहीं मिली। कृपया माइक की अनुमति दें।'
+          : 'ମାଇକ୍ରୋଫୋନ୍ ଅନୁମତି ମିଳିଲା ନାହିଁ । ଦୟାକରି ମାଇକ୍ ଅନୁମତି ଦିଅନ୍ତୁ । (Microphone permission was not granted)');
         resetOdiaVoiceBtn();
       }
     });
   }
 
-  // ---------- English Mic Button (Composer) ----------
+  // ---------- English / Hindi Mic Button (Composer) ----------
   const micBtn = $('micBtn');
   const SpeechRecognition = typeof window !== 'undefined' ? (window.SpeechRecognition || window.webkitSpeechRecognition) : null;
   if (micBtn) {
@@ -1254,7 +1579,7 @@
         recognition = new SpeechRecognition();
         recognition.continuous = false;
         recognition.interimResults = false;
-        recognition.lang = 'en-IN';
+        recognition.lang = currentLang === 'hi' ? 'hi-IN' : (currentLang === 'or' ? 'or-IN' : 'en-IN');
 
         recognition.onresult = (event) => {
           const transcript = event.results?.[0]?.[0]?.transcript;
@@ -1286,7 +1611,9 @@
 
     micBtn.addEventListener('click', () => {
       if (!recognition) {
-        alert('Speech recognition is not supported in this browser. Please type your question.');
+        alert(currentLang === 'hi'
+          ? 'इस ब्राउज़र में स्पीच रिकग्निशन समर्थित नहीं है। कृपया अपना प्रश्न टाइप करें।'
+          : 'Speech recognition is not supported in this browser. Please type your question.');
         return;
       }
       if (recording) {
@@ -1296,6 +1623,7 @@
         return;
       }
       try {
+        recognition.lang = currentLang === 'hi' ? 'hi-IN' : (currentLang === 'or' ? 'or-IN' : 'en-IN');
         recognition.start();
         recording = true;
         micBtn.classList.add('recording');
@@ -1309,10 +1637,13 @@
   // ---------- Language Switcher Setup ----------
   const langEnBtn = $('langEnBtn');
   const langOrBtn = $('langOrBtn');
+  const langHiBtn = $('langHiBtn');
   if (langEnBtn) langEnBtn.addEventListener('click', () => applyLanguage('en'));
   if (langOrBtn) langOrBtn.addEventListener('click', () => applyLanguage('or'));
+  if (langHiBtn) langHiBtn.addEventListener('click', () => applyLanguage('hi'));
 
   initOdiaVoiceControl();
+  initCameraControl();
 
   // ---------- Boot / Init ----------
   sb.auth.onAuthStateChange((_event, session) => route(session));

@@ -46,7 +46,11 @@ export async function onRequestPost({ request, env }) {
 
     const primaryModel = env.GEMINI_AUDIO_MODEL || 'gemini-3.5-transcribe';
     const modelsToTry = [primaryModel, 'gemini-3.5-flash'];
-    const prompt = 'The user is speaking in the Odia language (or mixed Odia with medical symptoms) from Odisha, India. Transcribe the audio accurately into clear Odia script (ଓଡ଼ିଆ). If English medical terms are pronounced, transcribe them accurately. Output ONLY the exact transcribed text in Odia script, nothing else.';
+    const reqLang = typeof body?.lang === 'string' ? body.lang.toLowerCase() : 'or';
+    const isHi = reqLang === 'hi';
+    const prompt = isHi
+      ? 'The user is speaking in the Hindi language (हिन्दी) about medical symptoms. Transcribe the audio accurately into clear Devanagari script (हिन्दी). If English medical terms are pronounced, transcribe them accurately. Output ONLY the exact transcribed text in Devanagari script, nothing else.'
+      : 'The user is speaking in the Odia language (or mixed Odia with medical symptoms) from Odisha, India. Transcribe the audio accurately into clear Odia script (ଓଡ଼ିଆ). If English medical terms are pronounced, transcribe them accurately. Output ONLY the exact transcribed text in Odia script, nothing else.';
 
     let transcribed = '';
     for (const model of modelsToTry) {

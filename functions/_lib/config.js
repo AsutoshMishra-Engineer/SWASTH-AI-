@@ -19,3 +19,4 @@ export const MODELS = (env = {}) => ({
 });
 export const DISCLAIMER = 'This is general health information, not a diagnosis. For any health problem, please see a doctor or your nearest health worker.';
 export const DISCLAIMER_OR = 'ଏହା କେବଳ ସାଧାରଣ ସ୍ୱାସ୍ଥ୍ୟ ସୂଚନା, କୌଣସି ଡାକ୍ତରୀ ରୋଗ ନିର୍ଣ୍ଣୟ ନୁହେଁ । ଯେକୌଣସି ସ୍ୱାସ୍ଥ୍ୟ ସମସ୍ୟା ପାଇଁ ଡାକ୍ତର କିମ୍ବା ସ୍ୱାସ୍ଥ୍ୟକର୍ମୀଙ୍କ ପରାମର୍ଶ ନିଅନ୍ତୁ ।';
+export const DISCLAIMER_HI = 'यह सामान्य स्वास्थ्य जानकारी है, कोई डॉक्टरी निदान या पर्चा नहीं। किसी भी स्वास्थ्य समस्या के लिए कृपया डॉक्टर या नजदीकी स्वास्थ्य कार्यकर्ता से परामर्श लें।';

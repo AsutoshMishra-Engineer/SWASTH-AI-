@@ -1,19 +1,30 @@
-import { getLimits, DISCLAIMER, DISCLAIMER_OR } from './config.js';
-import { classify, MESSAGES, MESSAGES_OR, looksLikeDosage, cleanAnswer } from './safety.js';
+import { getLimits, DISCLAIMER, DISCLAIMER_OR, DISCLAIMER_HI } from './config.js';
+import { classify, MESSAGES, MESSAGES_OR, MESSAGES_HI, looksLikeDosage, cleanAnswer } from './safety.js';
 import { getUser, bumpUsage, matchKnowledge, embedQuery, generateAnswer, UpstreamError } from './upstream.js';
 
 const json = (obj, status = 200) =>
   new Response(JSON.stringify(obj), { status, headers: { 'Content-Type': 'application/json; charset=utf-8', 'Cache-Control': 'no-store' } });
-const fixed = (kind, isOdia = false, extra = {}) =>
-  json({
+
+const fixed = (kind, langOrCode = false, extra = {}) => {
+  let answer = MESSAGES[kind] || '';
+  let disclaimer = DISCLAIMER;
+  if (langOrCode === 'hi') {
+    answer = MESSAGES_HI[kind] || MESSAGES[kind];
+    disclaimer = DISCLAIMER_HI;
+  } else if (langOrCode === 'or' || langOrCode === true) {
+    answer = MESSAGES_OR[kind] || MESSAGES[kind];
+    disclaimer = DISCLAIMER_OR;
+  }
+  return json({
     kind,
-    answer: (isOdia ? MESSAGES_OR[kind] : MESSAGES[kind]) || MESSAGES[kind],
+    answer,
     sources: [],
-    disclaimer: isOdia ? DISCLAIMER_OR : DISCLAIMER,
+    disclaimer,
     ...extra
   });
+};
 
-export const SYSTEM_PROMPT = `You are Swasth AI, a trusted public-health assistant for people in Odisha, India.
+export const SYSTEM_PROMPT = `You are Swasth AI, a trusted public-health assistant for people in Odisha and across India.
 Rules:
 1. Answer ONLY using facts inside <context>. Do not use outside knowledge.
 2. Structure every symptom and health inquiry answer strictly in this four-section layout:
@@ -53,6 +64,24 @@ Use these 4 Odia section headers:
 🏠 ଘରୋଇ ଉପଚାର ଓ ଯତ୍ନ:
 ⚠️ ବିପଦର ଲକ୍ଷଣ:
 🏥 ଡାକ୍ତରଙ୍କ ପରାମର୍ଶ:
+
+8. Hindi Regional Language Rule:
+If the user communicates in Hindi script (हिन्दी) or requests Hindi:
+Provide the complete answer in 100% pure, natural, empathetic everyday conversational Hindi (आम बोलचाल की हिन्दी).
+CRITICAL RULES FOR HINDI:
+- NEVER mix English letters or English words in Hindi mode. Every single word must be in Devanagari Hindi script.
+- Do NOT use difficult, hyper-formal Sanskritized words (कठिन शब्द न लिखें).
+- Use simple words that every common citizen easily understands:
+  * For hydration: "बार-बार उबला हुआ पानी, नींबू पानी या ओआरएस का घोल पिएं"
+  * For rest: "घर पर पूरा आराम करें"
+  * For fever: "माथे पर साफ गीले कपड़े की पट्टी रखें"
+  * For warning signs: "यदि 3 दिन से अधिक तेज बुखार रहे, सांस लेने में तकलीफ हो या बार-बार उल्टी हो"
+  * For hospital: "देरी न करें, तुरंत नजदीकी सरकारी अस्पताल (सामुदायिक स्वास्थ्य केंद्र) जाएं या 108 एम्बुलेंस बुलाएं"
+Use these 4 Hindi section headers:
+📘 संभावित कारण:
+🏠 सुरक्षित घरेलू देखभाल और तरल पदार्थ:
+⚠️ खतरे के लक्षण (चेतावनी संकेत):
+🏥 डॉक्टर से परामर्श:
 Keep the answer concise (under 75 words), warm, respectful, and crystal-clear.`;
 
 const ODIA_KEYWORD_MAP = [
@@ -79,10 +108,43 @@ const ODIA_KEYWORD_MAP = [
   [/ଶିଶୁ|ପିଲା|ନବଜାତ/, 'child infant newborn breastfeeding'],
 ];
 
+const HINDI_KEYWORD_MAP = [
+  [/सिर\s*(दर्द|घूमना)|माइग्रेन/, 'headache migraine'],
+  [/बुखार|तापमान|फीवर|तप/, 'fever temperature high fever'],
+  [/पेट\s*(दर्द|खराब|मरोड़|ऐंठन)/, 'abdominal stomach pain colic cramps'],
+  [/दस्त|पेचिश|पतला\s*शौच|लूज\s*मोशन/, 'diarrhoea loose motion dehydration'],
+  [/उल्टी|मतली|जी\s*मिचलाना/, 'vomiting nausea'],
+  [/खांसी|कफ|बलगम/, 'cough respiratory'],
+  [/जुकाम|सर्दी|नाक\s*बहना/, 'cold flu running nose'],
+  [/गले\s*में\s*(दर्द|खराश|सूजन)/, 'sore throat pharyngitis throat infection'],
+  [/आंख\s*(लाल|पानी|दर्द)/, 'eye conjunctivitis red eye discharge'],
+  [/पेशाब\s*(में\s*जलन|कम)/, 'urinary tract infection UTI dehydration burning urination'],
+  [/जोड़ों\s*में\s*दर्द|गठिया|घुटने/, 'joint pain arthritis chikungunya swelling'],
+  [/एसिडिटी|सीने\s*में\s*जलन|गैस/, 'acidity heartburn GERD reflux indigestion'],
+  [/डेंगू/, 'dengue mosquito fever'],
+  [/मलेरिया/, 'malaria chills fever'],
+  [/कुत्ते\s*ने\s*काटा|रेबीज/, 'dog bite rabies animal bite wash with soap'],
+  [/सांप\s*काटा|बिच्छू/, 'snake bite scorpion sting venom poison first aid'],
+  [/गर्भावस्था|गर्भवती|प्रसव/, 'pregnancy maternal antenatal danger signs'],
+  [/लू\s*लगना|गर्मी|धूप/, 'heat stroke sunstroke dehydration heat exhaustion'],
+  [/खुजली|दाद|चकत्ते|त्वचा/, 'skin rash itching allergy'],
+  [/ओआरएस|पानी|तरल|घोल/, 'ORS hydration clean drinking water fluids'],
+  [/बच्चा|शिशु|नवजात/, 'child infant newborn breastfeeding'],
+];
+
 export function normalizeOdiaQuery(text) {
   if (!/[\u0B00-\u0B7F]/.test(text)) return text;
   const extras = [];
   for (const [regex, terms] of ODIA_KEYWORD_MAP) {
+    if (regex.test(text)) extras.push(terms);
+  }
+  return extras.length ? `${text} ${extras.join(' ')}` : text;
+}
+
+export function normalizeHindiQuery(text) {
+  if (!/[\u0900-\u097F]/.test(text)) return text;
+  const extras = [];
+  for (const [regex, terms] of HINDI_KEYWORD_MAP) {
     if (regex.test(text)) extras.push(terms);
   }
   return extras.length ? `${text} ${extras.join(' ')}` : text;
@@ -118,10 +180,14 @@ export async function handleChat(request, env) {
     if (message.length > L.MAX_MESSAGE_CHARS)
       return json({ error: 'too_long', message: `Please keep your question under ${L.MAX_MESSAGE_CHARS} characters.` }, 400);
 
-    // 3) Safety router (no AI, no quota used).
-    const isOdia = (typeof body?.lang === 'string' && body.lang === 'or') || /[\u0B00-\u0B7F]/.test(message);
+    // 3) Language Detection & Safety router (no AI, no quota used).
+    const reqLang = typeof body?.lang === 'string' ? body.lang.toLowerCase() : '';
+    const isHindi = reqLang === 'hi' || /[\u0900-\u097F]/.test(message);
+    const isOdia = !isHindi && (reqLang === 'or' || /[\u0B00-\u0B7F]/.test(message));
+    const langCode = isHindi ? 'hi' : (isOdia ? 'or' : 'en');
+
     const verdict = classify(message);
-    if (verdict.type !== 'ok') return fixed(verdict.type, isOdia);
+    if (verdict.type !== 'ok') return fixed(verdict.type, langCode);
 
     // 4) Daily limits (protect free quotas).
     const u = await bumpUsage(env, `user:${user.id}`, L.USER_DAILY_LIMIT, L);
@@ -131,24 +197,32 @@ export async function handleChat(request, env) {
     const remaining = L.USER_DAILY_LIMIT - u;
 
     // 5) Retrieve verified knowledge.
-    const searchMsg = normalizeOdiaQuery(message);
+    const searchMsg = isHindi ? normalizeHindiQuery(message) : (isOdia ? normalizeOdiaQuery(message) : message);
     const embedding = await embedQuery(env, searchMsg, L);
     const chunks = await matchKnowledge(env, embedding, L);
-    if (!Array.isArray(chunks) || chunks.length === 0) return fixed('no_answer', isOdia, { remaining });
+    if (!Array.isArray(chunks) || chunks.length === 0) return fixed('no_answer', langCode, { remaining });
 
     // 6) Generate, then check the output.
-    const userPrompt = isOdia
-      ? `Question (Please respond strictly in 100% pure Odia language as per Odisha regional rules with zero English words):\n${message}`
-      : `Question (Please respond strictly in 100% clear English with zero Odia script):\n${message}`;
+    let userPrompt;
+    if (isHindi) {
+      userPrompt = `Question (Please respond strictly in 100% pure, natural Hindi language with zero English words or other scripts as per guidelines):\n${message}`;
+    } else if (isOdia) {
+      userPrompt = `Question (Please respond strictly in 100% pure Odia language as per Odisha regional rules with zero English words):\n${message}`;
+    } else {
+      userPrompt = `Question (Please respond strictly in 100% clear English with zero Odia or Hindi script):\n${message}`;
+    }
+
     const raw = await generateAnswer(env, buildPrompt(chunks), userPrompt, L);
     const answer = cleanAnswer(raw);
-    if (!answer || /NO_ANSWER/.test(answer) || looksLikeDosage(answer)) return fixed('no_answer', isOdia, { remaining });
+    if (!answer || /NO_ANSWER/.test(answer) || looksLikeDosage(answer)) return fixed('no_answer', langCode, { remaining });
 
     // Sources come from our database, never from the model.
     const seen = new Set();
     const sources = chunks.filter((c) => !seen.has(c.source_name) && seen.add(c.source_name))
       .map((c) => ({ name: c.source_name, url: /^https?:\/\//.test(c.source_url || '') ? c.source_url : null, date: c.source_date || null }));
-    return json({ kind: 'answer', answer, sources, disclaimer: isOdia ? DISCLAIMER_OR : DISCLAIMER, remaining });
+    
+    const disclaimer = isHindi ? DISCLAIMER_HI : (isOdia ? DISCLAIMER_OR : DISCLAIMER);
+    return json({ kind: 'answer', answer, sources, disclaimer, remaining });
   } catch (e) {
     if (e instanceof UpstreamError) {
       console.error('upstream error', e.where, e.status, e.detail || '');
