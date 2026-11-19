@@ -1147,8 +1147,31 @@
   }
 
   function renderAnswer(data) {
-    const kind = ['emergency', 'blocked', 'no_answer'].includes(data.kind) ? data.kind : '';
+    const isVision = data.kind === 'vision_skin';
+    const kind = ['emergency', 'blocked', 'no_answer'].includes(data.kind) ? data.kind : (isVision ? 'vision-skin' : '');
     const d = addBubble('bot ' + kind, data.answer || '');
+
+    if (isVision) {
+      const dermaHeader = document.createElement('div');
+      dermaHeader.className = 'derma-card-header';
+      const isOr = currentLang === 'or';
+      const isHi = currentLang === 'hi';
+      const title = isHi
+        ? '🔬 त्वचा रोग विशेषज्ञ मूल्यांकन (Dermatology Triage)'
+        : (isOr ? '🔬 ଚର୍ମ ରୋଗ ବିଭାଗ ପରୀକ୍ଷା (Dermatology Triage)' : '🔬 AI Clinical Dermatology Assessment');
+      const subtitle = isHi
+        ? 'केस 608: रिंगवर्म, एलर्जी व स्टेरॉयड सुरक्षा प्रोटोकॉल'
+        : (isOr ? 'କେସ୍ 608: ଦାଦ, ଆଲର୍ଜି ଓ ଷ୍ଟେରଏଡ୍ ସୁରକ୍ଷା ଯାଞ୍ଚ' : 'Case 608: Allergy, Ringworm & Steroid Safety Protocol');
+
+      dermaHeader.innerHTML = `
+        <div class="derma-head-icon">🔬</div>
+        <div class="derma-head-content">
+          <div class="derma-head-title">${title}</div>
+          <div class="derma-head-sub">${subtitle}</div>
+        </div>
+      `;
+      d.prepend(dermaHeader);
+    }
 
     // Preload audio in background for instant 0ms playback when user clicks Listen
     if (data.answer) preloadAudioForAnswer(data.answer);
