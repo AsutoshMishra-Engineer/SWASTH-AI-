@@ -1,21 +1,30 @@
-MIT License
+PROPRIETARY SOURCE-AVAILABLE LICENSE
 
-Copyright (c) 2026 Asutosh Mishra
+Copyright (c) 2026 Asutosh Mishra. All Rights Reserved.
 
-Permission is hereby granted, free of charge, to any person obtaining a copy
-of this software and associated documentation files (the "Software"), to deal
-in the Software without restriction, including without limitation the rights
-to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
-copies of the Software, and to permit persons to whom the Software is
-furnished to do so, subject to the following conditions:
+This software and its associated documentation, source files, design assets, and architecture ("the Software") are made publicly viewable for evaluation, educational reference, and portfolio demonstration purposes only.
 
-The above copyright notice and this permission notice shall be included in all
-copies or substantial portions of the Software.
+TERMS AND CONDITIONS
 
-THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
-IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
-FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
-AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
-LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
-OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
-SOFTWARE.
+1. PERMITTED USE (VIEWING & INSPECTION ONLY)
+   You may view, inspect, and evaluate the source code of the Software solely through its official public GitHub repository for personal study, review, and educational purposes.
+
+2. STRICT PROHIBITIONS (NO COPYING, REDISTRIBUTION, OR MODIFICATION)
+   Except as explicitly authorized in writing by the copyright holder (Asutosh Mishra), you are strictly prohibited from:
+   a. Copying, cloning, replicating, duplicating, or downloading the Software for use in any other private or public repository, platform, application, or service.
+   b. Modifying, adapting, altering, translating, or creating derivative works based upon the Software in whole or in part.
+   c. Distributing, publishing, transferring, sublicensing, leasing, lending, or selling the Software or any portion thereof.
+   d. Using the Software, its clinical prompts, safety guardrails, multimodal architecture, or RAG embeddings for any commercial purpose, monetization, hackathon entry by third parties, or competitive product.
+   e. Using the Software or its codebase to train, fine-tune, or benchmark commercial machine learning or artificial intelligence models without explicit written permission.
+
+3. INTELLECTUAL PROPERTY RIGHTS
+   The Software is and remains the intellectual property of Asutosh Mishra. No title, ownership, or intellectual property rights are transferred to any viewer or user. The name "SWASTH AI" and associated brand identities are proprietary.
+
+4. PERMISSION & INQUIRIES
+   To request written authorization for licensing, collaboration, academic research, or deployment in public health initiatives, contact:
+   - Author: Asutosh Mishra
+   - Email: asutoshm359@gmail.com
+   - GitHub: https://github.com/AsutoshMishra-Engineer
+
+5. DISCLAIMER OF WARRANTY
+   THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE, AND NONINFRINGEMENT. IN NO EVENT SHALL THE COPYRIGHT HOLDER BE LIABLE FOR ANY CLAIM, DAMAGES, OR OTHER LIABILITY ARISING FROM OR IN CONNECTION WITH THE SOFTWARE.
