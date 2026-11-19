@@ -389,14 +389,15 @@
     const d = document.createElement('div');
     d.className = 'bubble ' + kind;
     // Format bold headers safely without allowing HTML injection
-    if (kind.startsWith('bot') && (text.includes('📘') || text.includes('🏠') || text.includes('⚠️') || text.includes('🏥') || text.includes('**'))) {
+    if (kind.startsWith('bot') && (text.includes('📘') || text.includes('🏠') || text.includes('⚠️') || text.includes('🏥') || text.includes('🚨') || text.includes('**'))) {
       const escape = (s) => s.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
       let formatted = escape(text)
         .replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>')
-        .replace(/^[ \t]*(📘\s*(?:ସମ୍ଭାବ୍ୟ କାରଣ|Possible Condition):?)/gim, '<strong>$1</strong>')
-        .replace(/^[ \t]*(🏠\s*(?:ଘରୋଇ ଉପଚାର ଓ ଯତ୍ନ|Safe Home Care (?:&amp;|&|and) Relief):?)/gim, '<strong>$1</strong>')
-        .replace(/^[ \t]*(⚠️\s*(?:ବିପଦର ଲକ୍ଷଣ|Warning Signs to Watch):?)/gim, '<strong>$1</strong>')
-        .replace(/^[ \t]*(🏥\s*(?:ଡାକ୍ତରଙ୍କ ପରାମର୍ଶ|When to See a Doctor):?)/gim, '<strong>$1</strong>');
+        .replace(/^[ \t]*(📘[^\n:]+:?)/gim, '<strong style="color:var(--primary-dark); display:block; margin-top:8px; margin-bottom:3px;">$1</strong>')
+        .replace(/^[ \t]*(🏠[^\n:]+:?)/gim, '<strong style="color:#0369a1; display:block; margin-top:8px; margin-bottom:3px;">$1</strong>')
+        .replace(/^[ \t]*(⚠️[^\n:]+:?)/gim, '<strong style="color:#b45309; display:block; margin-top:8px; margin-bottom:3px;">$1</strong>')
+        .replace(/^[ \t]*(🏥[^\n:]+:?)/gim, '<strong style="color:#0f766e; display:block; margin-top:8px; margin-bottom:3px;">$1</strong>')
+        .replace(/^[ \t]*(🚨[^\n:]+:?)/gim, '<strong style="color:#b91c1c; display:block; margin-top:8px; margin-bottom:3px;">$1</strong>');
       d.innerHTML = formatted;
     } else {
       d.textContent = text;
@@ -491,6 +492,11 @@
     if (imagePreviewHint) imagePreviewHint.textContent = isHi ? 'लक्षण लिखें या भेजें दबाएं' : (isOr ? 'ଲକ୍ଷଣ ଲେଖନ୍ତୁ ବା ପଠାନ୍ତୁ ଦବାନ୍ତୁ' : 'Describe symptoms or tap Send');
     const regionalCameraText = $('regionalCameraText');
     if (regionalCameraText) regionalCameraText.textContent = isHi ? '📷 त्वचा की फोटो खींचें (Skin Photo)' : (isOr ? '📷 ଚର୍ମ ସମସ୍ୟାର ଫଟୋ ନିଅନ୍ତୁ (Skin Photo)' : '📷 Take skin photo (Skin Photo)');
+
+    const pwaBtn = $('pwaInstallBtn');
+    if (pwaBtn && !pwaBtn.hidden) {
+      pwaBtn.textContent = isHi ? '📲 ऐप इंस्टॉल करें' : (isOr ? '📲 ଆପ୍ ଇନଷ୍ଟଲ୍' : '📲 Install App');
+    }
 
     // Refresh chips to current language
     renderChips();
@@ -1081,20 +1087,34 @@
 
     const box = document.createElement('div');
     box.className = 'scan-laser-box';
+    const icon = document.createElement('span');
+    icon.textContent = '🔬';
+    icon.style.fontSize = '18px';
     const beam = document.createElement('div');
     beam.className = 'scan-laser-beam';
+    box.appendChild(icon);
     box.appendChild(beam);
 
-    const txt = document.createElement('div');
-    txt.className = 'scanning-text';
+    const txtGroup = document.createElement('div');
+    txtGroup.className = 'scan-text-group';
+    const title = document.createElement('span');
+    title.className = 'scan-title';
+    const sub = document.createElement('span');
+    sub.className = 'scan-sub';
+
     const isOr = currentLang === 'or';
     const isHi = currentLang === 'hi';
-    txt.textContent = isHi
-      ? '🔍 AI त्वचा विशेषज्ञ द्वारा फोटो का विश्लेषण जारी है...'
-      : (isOr ? '🔍 AI ଚର୍ମ ବିଶେଷଜ୍ଞଙ୍କ ଦ୍ୱାରା ଫଟୋ ପରୀକ୍ଷା ଚାଲିଛି...' : '🔍 AI Dermatologist is analyzing your skin photo...');
+    title.textContent = isHi
+      ? 'त्वचा फोटो विश्लेषण जारी है...'
+      : (isOr ? 'ଚର୍ମ ଫଟୋ ପରୀକ୍ଷା ଚାଲିଛି...' : 'AI Dermatologist Analyzing...');
+    sub.textContent = isHi
+      ? 'रिंगवर्म, संक्रमण व सुरक्षित उपाय जाँचे जा रहे हैं'
+      : (isOr ? 'ଦାଦ, ସଂକ୍ରମଣ ଓ ଘରୋଇ ଯତ୍ନ ଯାଞ୍ଚ ହେଉଛି' : 'Scanning lesion borders & clinical safety');
 
+    txtGroup.appendChild(title);
+    txtGroup.appendChild(sub);
     d.appendChild(box);
-    d.appendChild(txt);
+    d.appendChild(txtGroup);
     $('messages').appendChild(d);
     d.scrollIntoView({ block: 'end' });
     return d;
@@ -1463,12 +1483,12 @@
           if (mainText) {
             mainText.textContent = currentLang === 'hi'
               ? '🔴 सुन रहा हूँ... बोलिए (Listening)'
-              : '🔴 ଶୁଣୁଛି... କୁହନ୍ତୁ (Listening)';
+              : (currentLang === 'or' ? '🔴 ଶୁଣୁଛି... କୁହନ୍ତୁ (Listening)' : '🔴 Listening... Speak now');
           }
           if (subText) {
             subText.textContent = currentLang === 'hi'
               ? 'पूरा होने पर यहाँ टैप करें (Tap when done)'
-              : 'ସରିଲେ ଏଠାରେ ଟ୍ୟାପ୍ କରନ୍ତୁ (Tap when done)';
+              : (currentLang === 'or' ? 'ସରିଲେ ଏଠାରେ ଟ୍ୟାପ୍ କରନ୍ତୁ (Tap when done)' : 'Tap when done speaking');
           }
         };
 
@@ -1482,12 +1502,12 @@
           if (mainText) {
             mainText.textContent = currentLang === 'hi'
               ? '⏳ आवाज़ की जाँच हो रही है (Recognizing)...'
-              : '⏳ ସ୍ୱର ଯାଞ୍ଚ ହେଉଛି (Recognizing)...';
+              : (currentLang === 'or' ? '⏳ ସ୍ୱର ଯାଞ୍ଚ ହେଉଛି (Recognizing)...' : '⏳ Processing voice...');
           }
           if (subText) {
             subText.textContent = currentLang === 'hi'
               ? 'डॉक्टर की सलाह खोजी जा रही है...'
-              : 'ଡାକ୍ତରୀ ପରାମର୍ଶ ଖୋଜା ଚାଲିଛି...';
+              : (currentLang === 'or' ? 'ଡାକ୍ତରୀ ପରାମର୍ଶ ଖୋଜା ଚାଲିଛି...' : 'Finding verified medical guidance...');
           }
 
           if (!odiaAudioChunks.length) {
@@ -1611,9 +1631,15 @@
 
     micBtn.addEventListener('click', () => {
       if (!recognition) {
+        // Smooth fallback to MediaRecorder voice input if Web Speech Recognition is not supported in mobile browser
+        const regionalVoice = $('odiaVoiceMainBtn');
+        if (regionalVoice) {
+          regionalVoice.click();
+          return;
+        }
         alert(currentLang === 'hi'
           ? 'इस ब्राउज़र में स्पीच रिकग्निशन समर्थित नहीं है। कृपया अपना प्रश्न टाइप करें।'
-          : 'Speech recognition is not supported in this browser. Please type your question.');
+          : (currentLang === 'or' ? 'ଏହି ବ୍ରାଉଜରରେ ସ୍ୱର ଚିହ୍ନଟ ସମର୍ଥିତ ନୁହେଁ ।' : 'Speech recognition is not supported in this browser. Please type your question.'));
         return;
       }
       if (recording) {
@@ -1644,6 +1670,48 @@
 
   initOdiaVoiceControl();
   initCameraControl();
+
+  // ---------- PWA & Service Worker Registration ----------
+  if (typeof window !== 'undefined' && 'serviceWorker' in navigator) {
+    window.addEventListener('load', () => {
+      navigator.serviceWorker.register('/sw.js').then((reg) => {
+        console.log('Swasth AI PWA ServiceWorker active:', reg.scope);
+      }).catch((err) => {
+        console.warn('ServiceWorker registration error:', err);
+      });
+    });
+  }
+
+  // ---------- 1-Tap PWA Mobile App Install Prompt ----------
+  let deferredPrompt = null;
+  if (typeof window !== 'undefined') {
+    window.addEventListener('beforeinstallprompt', (e) => {
+      e.preventDefault();
+      deferredPrompt = e;
+      const installBtn = $('pwaInstallBtn');
+      if (installBtn) {
+        installBtn.hidden = false;
+        const isOr = currentLang === 'or';
+        const isHi = currentLang === 'hi';
+        installBtn.textContent = isHi ? '📲 ऐप इंस्टॉल करें' : (isOr ? '📲 ଆପ୍ ଇନଷ୍ଟଲ୍' : '📲 Install App');
+        installBtn.onclick = async () => {
+          installBtn.hidden = true;
+          if (deferredPrompt) {
+            deferredPrompt.prompt();
+            const { outcome } = await deferredPrompt.userChoice;
+            console.log('User PWA install response:', outcome);
+            deferredPrompt = null;
+          }
+        };
+      }
+    });
+
+    window.addEventListener('appinstalled', () => {
+      const installBtn = $('pwaInstallBtn');
+      if (installBtn) installBtn.hidden = true;
+      console.log('Swasth AI successfully installed on home screen!');
+    });
+  }
 
   // ---------- Boot / Init ----------
   sb.auth.onAuthStateChange((_event, session) => route(session));

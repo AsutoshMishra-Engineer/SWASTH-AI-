@@ -1,6 +1,7 @@
 # SWASTH AI (ସ୍ୱାସ୍ଥ୍ୟ AI / स्वास्थ्य AI)
 
 [![Live Platform](https://img.shields.io/badge/Live-swasth--ai.pages.dev-0d9488?style=for-the-badge&logo=cloudflare)](https://swasth-ai.pages.dev)
+[![Install App](https://img.shields.io/badge/Mobile%20App-1--Tap%20Install%20(PWA)-success?style=for-the-badge&logo=android)](https://swasth-ai.pages.dev)
 [![Tests Passing](https://img.shields.io/badge/Tests-120%20Passing-brightgreen?style=for-the-badge&logo=node.js)](https://swasth-ai.pages.dev)
 [![Languages](https://img.shields.io/badge/Languages-English%20%7C%20ଓଡ଼ିଆ%20%7C%20हिन्दी-blue?style=for-the-badge)](#-trilingual-accessibility-english-odia-hindi)
 [![Vision AI](https://img.shields.io/badge/Vision%20AI-Clinical%20Dermatology-f59e0b?style=for-the-badge)](#-multimodal-skin-vision-dermatology-scanner)
@@ -10,6 +11,33 @@
 
 > **A Trilingual, Voice-Enabled Public Health Intelligence & Multimodal Clinical Triage Platform**  
 > Engineered for grassroots accessibility across rural and semi-urban communities — bridging language, literacy, and medical consultation divides through Retrieval-Augmented Generation (RAG), authentic Indian voice synthesis, and real-time clinical dermatology visual assessment.
+
+---
+
+## 📲 Install & Download Swasth AI Mobile App (PWA & Android Lite)
+
+Anyone can immediately download and install the **Swasth AI Mobile Application** onto their smartphone or computer in **5 seconds** without needing the Google Play Store or heavy 100+ MB downloads:
+
+### 🚀 Direct App Installation Link:
+👉 **[https://swasth-ai.pages.dev](https://swasth-ai.pages.dev)**
+
+### 📱 Quick 3-Step Installation Guide for Everyone:
+
+* **Android Smartphone Users (Chrome / Edge / Samsung Internet)**:
+  1. Open **[https://swasth-ai.pages.dev](https://swasth-ai.pages.dev)** on your Android phone.
+  2. Tap the **📲 "Install App"** button in the top navigation bar (or tap the **3 dots (⋮) ➔ "Install app" / "Add to Home screen"**).
+  3. Tap **Install** — Swasth AI is now installed on your phone home screen just like *Instagram Lite*!
+  4. Launch the app from your home screen: It runs **full-screen with zero browser address bars**, instant camera capture, and offline speed.
+
+* **Apple iPhone / iPad Users (Safari)**:
+  1. Open **[https://swasth-ai.pages.dev](https://swasth-ai.pages.dev)** in Safari.
+  2. Tap the **Share button (⎋ with arrow)** at the bottom of the screen.
+  3. Scroll down and tap **"Add to Home Screen" ➔ Add**.
+  4. The standalone Swasth AI app icon will appear directly on your iOS home screen!
+
+* **Desktop / Laptop Users (Windows / Mac / Linux - Chrome & Edge)**:
+  1. Open **[https://swasth-ai.pages.dev](https://swasth-ai.pages.dev)**.
+  2. Click the **Install icon (🖥️)** in the browser's address bar to install it as a lightweight standalone desktop desktop app.
 
 ---
 

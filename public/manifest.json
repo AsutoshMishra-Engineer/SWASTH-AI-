@@ -1,0 +1,33 @@
+{
+  "name": "Swasth AI (ସ୍ୱାସ୍ଥ୍ୟ AI / स्वास्थ्य AI)",
+  "short_name": "Swasth AI",
+  "description": "Voice-enabled public health assistant with AI skin disease scanner for Odisha & India.",
+  "start_url": "/",
+  "scope": "/",
+  "display": "standalone",
+  "background_color": "#0f766e",
+  "theme_color": "#0d9488",
+  "orientation": "portrait",
+  "lang": "en",
+  "categories": ["medical", "health", "lifestyle"],
+  "icons": [
+    {
+      "src": "/icons/icon-192.png",
+      "sizes": "192x192",
+      "type": "image/png",
+      "purpose": "any maskable"
+    },
+    {
+      "src": "/icons/icon-512.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "any maskable"
+    },
+    {
+      "src": "/icons/icon.svg",
+      "sizes": "512x512",
+      "type": "image/svg+xml",
+      "purpose": "any"
+    }
+  ]
+}
