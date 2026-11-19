@@ -523,16 +523,16 @@
     const photoBoxSub = $('photoBoxSub');
 
     if (voiceBoxTitle) {
-      voiceBoxTitle.textContent = isHi ? '🎙️ आवाज़ से बोलें (Voice Message)' : (isOr ? '🎙️ ଭଏସ୍ ମେସେଜ୍ (Voice Message)' : '🎙️ Voice Message');
+      voiceBoxTitle.textContent = isHi ? '🎙️ आवाज़ (Voice)' : (isOr ? '🎙️ ଭଏସ୍ (Voice)' : '🎙️ Voice Message');
     }
     if (voiceBoxSub) {
-      voiceBoxSub.textContent = isHi ? 'यहाँ टैप करें और बोलकर बताएं' : (isOr ? 'ଏଠାରେ ଟ୍ୟାପ୍ କରି ଓଡ଼ିଆରେ କୁହନ୍ତୁ' : 'Tap to speak your health issue');
+      voiceBoxSub.textContent = isHi ? 'बोलकर पूछें' : (isOr ? 'ଓଡ଼ିଆରେ କୁହନ୍ତୁ' : 'Tap to speak');
     }
     if (photoBoxTitle) {
-      photoBoxTitle.textContent = isHi ? '📷 फोटो / गैलरी अपलोड (Upload Photo)' : (isOr ? '📷 ଫଟୋ / ଗ୍ୟାଲେରୀ ଅପ୍‌ଲୋଡ୍ (Upload Photo)' : '📷 Upload Photo / Gallery');
+      photoBoxTitle.textContent = isHi ? '📷 फोटो (Photo)' : (isOr ? '📷 ଫଟୋ (Photo)' : '📷 Upload Photo');
     }
     if (photoBoxSub) {
-      photoBoxSub.textContent = isHi ? 'कैमरा या गैलरी से फोटो चुनें' : (isOr ? 'କ୍ୟାମେରା କିମ୍ବା ଗ୍ୟାଲେରୀରୁ ଫଟୋ ବାଛନ୍ତୁ' : 'Camera or choose from gallery');
+      photoBoxSub.textContent = isHi ? 'कैमरा या गैलरी' : (isOr ? 'କ୍ୟାମେରା ବା ଗ୍ୟାଲେରୀ' : 'Camera or Gallery');
     }
 
     const imagePreviewLabel = $('imagePreviewLabel');
@@ -1550,10 +1550,10 @@
     const voiceBoxTitle = $('voiceBoxTitle');
     const voiceBoxSub = $('voiceBoxSub');
     if (voiceBoxTitle) {
-      voiceBoxTitle.textContent = isHi ? '🎙️ आवाज़ से बोलें (Voice Message)' : (isOr ? '🎙️ ଭଏସ୍ ମେସେଜ୍ (Voice Message)' : '🎙️ Voice Message');
+      voiceBoxTitle.textContent = isHi ? '🎙️ आवाज़ (Voice)' : (isOr ? '🎙️ ଭଏସ୍ (Voice)' : '🎙️ Voice Message');
     }
     if (voiceBoxSub) {
-      voiceBoxSub.textContent = isHi ? 'यहाँ टैप करें और बोलकर बताएं' : (isOr ? 'ଏଠାରେ ଟ୍ୟାପ୍ କରି ଓଡ଼ିଆରେ କୁହନ୍ତୁ' : 'Tap to speak your health issue');
+      voiceBoxSub.textContent = isHi ? 'बोलकर पूछें' : (isOr ? 'ଓଡ଼ିଆରେ କୁହନ୍ତୁ' : 'Tap to speak');
     }
   }
 

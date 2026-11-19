@@ -162,21 +162,24 @@ public class MainActivity extends AppCompatActivity {
                     takePictureIntent = null;
                 }
 
+                List<Intent> intentList = new ArrayList<>();
+
+                if (takePictureIntent != null) {
+                    intentList.add(takePictureIntent);
+                }
+
                 Intent contentSelectionIntent = new Intent(Intent.ACTION_GET_CONTENT);
                 contentSelectionIntent.addCategory(Intent.CATEGORY_OPENABLE);
                 contentSelectionIntent.setType("image/*");
+                intentList.add(contentSelectionIntent);
 
-                Intent[] intentArray;
-                if (takePictureIntent != null) {
-                    intentArray = new Intent[]{takePictureIntent};
-                } else {
-                    intentArray = new Intent[0];
-                }
+                Intent galleryIntent = new Intent(Intent.ACTION_PICK, MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
+                galleryIntent.setType("image/*");
 
                 Intent chooserIntent = new Intent(Intent.ACTION_CHOOSER);
-                chooserIntent.putExtra(Intent.EXTRA_INTENT, contentSelectionIntent);
-                chooserIntent.putExtra(Intent.EXTRA_TITLE, "Capture Skin Photo or Choose from Gallery");
-                chooserIntent.putExtra(Intent.EXTRA_INITIAL_INTENTS, intentArray);
+                chooserIntent.putExtra(Intent.EXTRA_INTENT, galleryIntent);
+                chooserIntent.putExtra(Intent.EXTRA_TITLE, "Upload Photo");
+                chooserIntent.putExtra(Intent.EXTRA_INITIAL_INTENTS, intentList.toArray(new Intent[0]));
 
                 startActivityForResult(chooserIntent, FILE_CHOOSER_REQUEST_CODE);
                 return true;
