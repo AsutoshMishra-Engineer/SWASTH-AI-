@@ -1154,17 +1154,38 @@
     if (isVision) {
       const dermaHeader = document.createElement('div');
       dermaHeader.className = 'derma-card-header';
+      const dept = data.department || 'derma';
       const isOr = currentLang === 'or';
       const isHi = currentLang === 'hi';
-      const title = isHi
-        ? '🔬 त्वचा रोग विशेषज्ञ मूल्यांकन (Dermatology Triage)'
-        : (isOr ? '🔬 ଚର୍ମ ରୋଗ ବିଭାଗ ପରୀକ୍ଷା (Dermatology Triage)' : '🔬 AI Clinical Dermatology Assessment');
-      const subtitle = isHi
-        ? 'केस 608: रिंगवर्म, एलर्जी व स्टेरॉयड सुरक्षा प्रोटोकॉल'
-        : (isOr ? 'କେସ୍ 608: ଦାଦ, ଆଲର୍ଜି ଓ ଷ୍ଟେରଏଡ୍ ସୁରକ୍ଷା ଯାଞ୍ଚ' : 'Case 608: Allergy, Ringworm & Steroid Safety Protocol');
+
+      let icon = '🔬';
+      let title = isHi ? '🔬 त्वचा रोग विशेषज्ञ मूल्यांकन (Dermatology Triage)' : (isOr ? '🔬 ଚର୍ମ ରୋଗ ବିଭାଗ ପରୀକ୍ଷା' : '🔬 AI Clinical Dermatology Assessment');
+      let subtitle = isHi ? 'केस 608: रिंगवर्म, एलर्जी व स्टेरॉयड सुरक्षा प्रोटोकॉल' : (isOr ? 'କେସ୍ 608: ଦାଦ, ଆଲର୍ଜି ଓ ଷ୍ଟେରଏଡ୍ ସୁରକ୍ଷା ଯାଞ୍ଚ' : 'Case 608: Allergy, Ringworm & Steroid Safety Protocol');
+
+      if (dept === 'eye') {
+        icon = '👁️';
+        title = isHi ? '👁️ नेत्र चिकित्सा व दृष्टि मूल्यांकन (Ophthalmology Triage)' : (isOr ? '👁️ ନେତ୍ର ଚିକିତ୍ସା ଓ ଦୃଷ୍ଟି ପରୀକ୍ଷା (Ophthalmology Triage)' : '👁️ Clinical Ophthalmology & Eye Assessment');
+        subtitle = isHi ? 'कंजक्टिवाइटिस, लाल आँख व आपातकालीन जांच' : (isOr ? 'କଞ୍ଜକ୍ଟିଭାଇଟିସ୍, ଲାଲ୍ ଆଖି ଓ ଜରୁରୀ ପରାମର୍ଶ' : 'Conjunctivitis, Stye & Red Eye Triage Protocol');
+      } else if (dept === 'oral') {
+        icon = '👄';
+        title = isHi ? '👄 मुख स्वास्थ्य व कैंसर पूर्व जांच (Oral Health Triage)' : (isOr ? '👄 ମୁଖ ସ୍ୱାସ୍ଥ୍ୟ ଓ କର୍କଟ ପୂର୍ବ ଯାଞ୍ଚ (Oral Health Triage)' : '👄 Oral Health & Pre-Cancer Screening');
+        subtitle = isHi ? 'मुँह के छाले, तंबाकू व ल्यूकोप्लाकिया सुरक्षा जांच' : (isOr ? 'ତମାଖୁ, ଗୁଟ୍‌ଖା, ପାନ ଓ ଘା\' ଯାଞ୍ଚ ପ୍ରୋଟୋକଲ୍' : 'Aphthous Ulcer & Tobacco Leukoplakia Triage');
+      } else if (dept === 'pediatric') {
+        icon = '👶';
+        title = isHi ? '👶 शिशु स्वास्थ्य व नवजात मूल्यांकन (Pediatric Triage)' : (isOr ? '👶 ଶିଶୁ ଯତ୍ନ ଓ ନବଜାତ ପରୀକ୍ଷା (Pediatric Triage)' : '👶 Pediatric & Newborn Care Triage');
+        subtitle = isHi ? 'नवजात पीलिया (Jaundice), डायपर रैश व निर्जलीकरण जांच' : (isOr ? 'କାମଳ (Jaundice), ଡାଏପର ରାସ୍ ଓ ଶିଶୁ ସୁରକ୍ଷା' : 'Neonatal Jaundice & Dehydration Triage');
+      } else if (dept === 'wound') {
+        icon = '🩹';
+        title = isHi ? '🩹 घाव, जलन व काटने की प्राथमिक चिकित्सा (Wound & Burn Triage)' : (isOr ? '🩹 ଘା\', ପୋଡ଼ାଜଳା ଓ କାମୁଡ଼ା ପ୍ରାଥମିକ ଚିକିତ୍ସା (Wound & Burn Triage)' : '🩹 Wound, Burn & Bite Emergency Triage');
+        subtitle = isHi ? 'कुत्ता काटने पर 15 मिनट पानी से धोने व रेबीज सुरक्षा प्रोटोकॉल' : (isOr ? 'କୁକୁର କାମୁଡ଼ା ରେବିସ୍ ସୁରକ୍ଷା ଓ ଘା\' ପରିଷ୍କାର ପ୍ରୋଟୋକଲ୍' : 'Burn Depth & 15-Minute Rabies Wash Protocol');
+      } else if (dept === 'nail') {
+        icon = '💅';
+        title = isHi ? '💅 नाखून व एनीमिया जांच (Nail & Anemia Screening)' : (isOr ? '💅 ନଖ ଓ ରକ୍ତହୀନତା ପରୀକ୍ଷା (Nail & Anemia Screening)' : '💅 Nail & Anemia Visual Assessment');
+        subtitle = isHi ? 'रक्तहीनता (Pallor), ऑक्सीजन स्तर व पोषण जांच' : (isOr ? 'ରକ୍ତହୀନତା (Pallor), ଅକ୍ସିଜେନ୍ ଓ ପୋଷଣ ଯାଞ୍ଚ' : 'Koilonychia Pallor & Nutritional Triage');
+      }
 
       dermaHeader.innerHTML = `
-        <div class="derma-head-icon">🔬</div>
+        <div class="derma-head-icon">${icon}</div>
         <div class="derma-head-content">
           <div class="derma-head-title">${title}</div>
           <div class="derma-head-sub">${subtitle}</div>
@@ -1242,11 +1263,27 @@
     }
   }
 
-  // ---------- Skin Photo / Camera Integration ----------
+  // ---------- Skin Photo / Camera & 6-Department Integration ----------
   let pendingSkinImage = null; // { data: base64, mimeType: string, previewUrl: string }
+  let selectedDepartment = 'auto';
+
+  function initDeptPills() {
+    const pills = document.querySelectorAll('.dept-pill');
+    pills.forEach((p) => {
+      p.addEventListener('click', (e) => {
+        e.preventDefault();
+        pills.forEach((x) => x.classList.remove('active'));
+        p.classList.add('active');
+        selectedDepartment = p.getAttribute('data-dept') || 'auto';
+      });
+    });
+  }
 
   function clearPendingImage() {
     pendingSkinImage = null;
+    selectedDepartment = 'auto';
+    const pills = document.querySelectorAll('.dept-pill');
+    pills.forEach((x, i) => x.classList.toggle('active', i === 0));
     const tray = $('imagePreviewTray');
     if (tray) tray.hidden = true;
     const thumb = $('imagePreviewThumb');
@@ -1348,6 +1385,7 @@
     }
 
     const activeImage = pendingSkinImage;
+    const activeDept = selectedDepartment;
     clearPendingImage();
 
     const userBubbleText = text || (currentLang === 'hi'
@@ -1392,7 +1430,7 @@
 
       const endpoint = activeImage ? '/api/vision-skin' : '/api/chat';
       const payload = activeImage
-        ? { image: activeImage.data, mimeType: activeImage.mimeType, symptoms: text, lang: currentLang }
+        ? { image: activeImage.data, mimeType: activeImage.mimeType, symptoms: text, lang: currentLang, department: activeDept }
         : { message: text, lang: currentLang };
 
       const res = await fetch(endpoint, {
@@ -1719,6 +1757,7 @@
 
   initOdiaVoiceControl();
   initCameraControl();
+  initDeptPills();
 
   // ---------- PWA & Service Worker Registration ----------
   if (typeof window !== 'undefined' && 'serviceWorker' in navigator) {

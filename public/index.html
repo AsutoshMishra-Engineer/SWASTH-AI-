@@ -108,34 +108,40 @@
         <p>Ask about everyday symptoms, disease prevention, child vaccines, pregnancy care, and emergency first aid. Clear facts from official public health authorities.</p>
         
         <div class="features-grid">
+          <div class="feat-item feat-item-highlight">
+            <span class="feat-icon" aria-hidden="true">📸</span>
+            <div>
+              <strong>6-Department Visual AI Scanner (ଫଟୋ ଡାକ୍ତରୀ ପରୀକ୍ଷା)</strong>
+              <small>Upload clinical photos for instant triage: Dermatology (Ringworm/Allergy), Eye (Conjunctivitis/Cataract), Oral Pre-Cancer, Pediatric Jaundice, Wounds & Burns, and Nails (Anemia).</small>
+            </div>
+          </div>
           <div class="feat-item">
             <span class="feat-icon" aria-hidden="true">🎙️</span>
             <div>
-              <strong>Odia Voice Consultation (ଓଡ଼ିଆ ଭଏସ୍)</strong>
-              <small>Speak your symptoms directly in Odia to receive instant regional care guidance.</small>
+              <strong>Odia & Hindi Voice Consultation (ଓଡ଼ିଆ ଭଏସ୍)</strong>
+              <small>Speak your symptoms naturally to receive instant spoken voice guidance in native Odia, Hindi, or English.</small>
             </div>
           </div>
           <div class="feat-item">
             <span class="feat-icon" aria-hidden="true">🏥</span>
             <div>
-              <strong>When to See a Doctor</strong>
-              <small>Learn mild home care vs. danger signs that need hospital visits.</small>
+              <strong>When to See a Doctor & 0ms Emergency</strong>
+              <small>Learn mild home care vs. danger signs that need hospital visits. Emergency chest pain triggers 108 ambulance referral with 0ms latency.</small>
             </div>
           </div>
           <div class="feat-item">
             <span class="feat-icon" aria-hidden="true">📋</span>
             <div>
-              <strong>Verified Medical Sources</strong>
-              <small>Guidance backed by official WHO and Ministry of Health data.</small>
+              <strong>608 Grounded Clinical Medical Cases</strong>
+              <small>Guidance strictly backed by official WHO and Ministry of Health (MoHFW) validated clinical protocols.</small>
             </div>
           </div>
-          <div class="feat-item">
-            <span class="feat-icon" aria-hidden="true">🔒</span>
-            <div>
-              <strong>Confidential & Private</strong>
-              <small>Your health questions are never saved with your name.</small>
-            </div>
-          </div>
+        </div>
+
+        <div class="pdf-compendium-banner">
+          <a href="/docs/Swasth_AI_Medical_Cases_and_Dermatology_Compendium.pdf" target="_blank" rel="noopener noreferrer" class="btn text small pdf-download-btn">
+            📄 <strong>Download Clinical Cases & Testing Compendium (PDF)</strong> →
+          </a>
         </div>
       </div>
 
@@ -196,13 +202,22 @@
       <!-- EXAMPLE SUGGESTION CHIPS -->
       <div id="chips" class="chips" aria-label="Example health questions"></div>
 
-      <!-- SKIN PHOTO PREVIEW TRAY -->
+      <!-- CLINICAL PHOTO PREVIEW & 6-DEPARTMENT SELECTOR TRAY -->
       <div id="imagePreviewTray" class="image-preview-tray" hidden>
         <div class="image-preview-card">
           <div id="imagePreviewThumbBox" class="image-preview-thumb-box"></div>
           <div class="image-preview-meta">
-            <span id="imagePreviewLabel" class="image-preview-label">📷 Skin photo selected</span>
-            <span id="imagePreviewHint" class="image-preview-hint">Describe symptoms or tap Send</span>
+            <span id="imagePreviewLabel" class="image-preview-label">📷 Clinical Photo Attached</span>
+            <div id="deptPillRow" class="dept-pill-row" role="group" aria-label="Select Clinical Department">
+              <button class="dept-pill active" type="button" data-dept="auto" title="Auto-Detect Department">🌐 Auto</button>
+              <button class="dept-pill" type="button" data-dept="derma" title="Skin & Allergy">🔬 Skin</button>
+              <button class="dept-pill" type="button" data-dept="eye" title="Eye & Vision">👁️ Eye</button>
+              <button class="dept-pill" type="button" data-dept="oral" title="Oral & Pre-Cancer">👄 Oral</button>
+              <button class="dept-pill" type="button" data-dept="pediatric" title="Baby & Pediatrics">👶 Baby</button>
+              <button class="dept-pill" type="button" data-dept="wound" title="Wounds, Burns & Bites">🩹 Wound</button>
+              <button class="dept-pill" type="button" data-dept="nail" title="Nails & Anemia">💅 Nails</button>
+            </div>
+            <span id="imagePreviewHint" class="image-preview-hint">Type symptoms or tap Send to analyze</span>
           </div>
           <button id="removeImageBtn" class="remove-image-btn" type="button" aria-label="Remove photo" title="Remove photo">✕</button>
         </div>

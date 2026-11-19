@@ -1048,6 +1048,69 @@ body.chat-active.chat-has-results .messages {
   font-size: 0.76rem;
   color: var(--muted);
 }
+
+/* 6-Department Selector Pills inside Clinical Preview Tray */
+.dept-pill-row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+  margin: 6px 0 4px;
+}
+.dept-pill {
+  background: var(--surface);
+  border: 1px solid var(--line);
+  color: var(--ink-secondary);
+  padding: 4px 10px;
+  border-radius: var(--radius-full);
+  font-size: 0.72rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: var(--transition);
+  display: inline-flex;
+  align-items: center;
+  gap: 3px;
+}
+.dept-pill:hover {
+  border-color: var(--primary);
+  color: var(--primary);
+  background: var(--primary-light);
+}
+.dept-pill.active {
+  background: var(--primary);
+  border-color: var(--primary);
+  color: #fff;
+  box-shadow: 0 2px 6px rgba(13, 148, 136, 0.25);
+}
+
+/* Home Page PDF Compendium Banner */
+.pdf-compendium-banner {
+  margin: 16px 0 6px;
+}
+.pdf-download-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  background: #f0fdfa !important;
+  border: 1.5px solid var(--primary) !important;
+  color: var(--primary-hover) !important;
+  padding: 9px 16px !important;
+  border-radius: var(--radius) !important;
+  text-decoration: none;
+  font-size: 0.88rem;
+  font-weight: 700;
+  transition: var(--transition);
+  box-shadow: var(--shadow-sm);
+}
+.pdf-download-btn:hover {
+  background: #ccfbf1 !important;
+  transform: translateY(-1px);
+  box-shadow: var(--shadow);
+}
+.feat-item-highlight {
+  border: 1.5px solid var(--primary-glow) !important;
+  background: rgba(13, 148, 136, 0.03) !important;
+}
+
 .regional-camera-btn {
   display: inline-flex;
   align-items: center;

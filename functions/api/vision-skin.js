@@ -39,9 +39,10 @@ export async function onRequestPost({ request, env }) {
     const mimeType = typeof body?.mimeType === 'string' ? body.mimeType : 'image/jpeg';
     const symptoms = typeof body?.symptoms === 'string' ? body.symptoms.trim().slice(0, 300) : '';
     const reqLang = typeof body?.lang === 'string' ? body.lang.toLowerCase() : 'en';
+    const reqDept = typeof body?.department === 'string' ? body.department.toLowerCase() : 'auto';
 
     if (!rawImage) {
-      return json({ error: 'bad_request', message: 'No image provided. Please capture or select a photo of the skin issue.' }, 400);
+      return json({ error: 'bad_request', message: 'No image provided. Please capture or select a photo of the clinical issue.' }, 400);
     }
 
     // Limit base64 image size to ~3.5MB max
@@ -58,33 +59,44 @@ export async function onRequestPost({ request, env }) {
         ? 'Respond strictly and entirely in pure Hindi (हिन्दी). Use these 4 exact Hindi headings: "📘 दृश्यमान लक्षण और संभावित कारण:", "🏠 सुरक्षित घरेलू देखभाल और तत्काल राहत:", "⚠️ खतरे के लक्षण व सावधानियां:", "🏥 डॉक्टर से परामर्श:".'
         : 'Respond clearly in plain English using these 4 exact headings: "📘 Visual Observation & Probable Causes:", "🏠 Safe Home Care & Immediate Relief:", "⚠️ Warning Signs & Precautions:", "🏥 When to See a Doctor:".');
 
-    const promptText = `You are Swasth AI, an expert clinical dermatology and public health consultant for India (Odisha and national public health).
-Examine the user's uploaded skin image with great clinical precision, taking into account any noted symptoms ("${symptoms || 'None specified'}").
+    const promptText = `You are Swasth AI, an expert clinical multi-department public health and visual triage consultant for India (Odisha and National Public Health guidelines).
+Examine the user's uploaded clinical photo with high diagnostic precision, taking into account any noted symptoms ("${symptoms || 'None specified'}") and requested department ("${reqDept}").
 
-CLINICAL ANALYSIS INSTRUCTIONS:
-1. Examine visual characteristics: morphology (wheals/hives, erythematous patches, maculopapular, annular/ring-shaped, vesicles), borders, distribution, and skin texture.
-2. Formulate the most probable clinical impression with common regional Indian terms:
-   - If itchy red patches, wheals, or swollen hives (allergy): Allergic Urticaria / Contact Dermatitis (पित्ती / स्किन एलर्जी in Hindi, ଆଲର୍ଜି / ରାସ୍ in Odia).
-   - If circular/ring-shaped with raised scaly edge and central clearing: Tinea Corporis / Fungal Ringworm (दाद/दमा in Hindi, ଦାଦ in Odia).
-   - If dry, red, inflamed itchy patches in skin folds: Atopic Dermatitis / Eczema (एक्जिमा / ଚର୍ମ ଶୁଷ୍କତା).
-   - If tiny prickly itchy red bumps in heat/sweat: Miliaria / Prickly Heat (घमौरियां / ଝାଳଜଳା).
-   - If honey-colored crusted erosions: Impetigo / Bacterial skin infection.
-   - If intense nocturnal itching between web spaces of fingers: Scabies (खाज / କାଛୁ).
-3. Root cause explanation: Explain whether it is an allergic histamine response (to soap, detergent, pollen, fabric, food, insect), fungal dermatophytes thriving in warmth/humidity, or skin barrier breakdown.
-4. Immediate, practical & safe home relief (Non-Harmful):
-   - Cool compresses: Apply a clean cloth soaked in cool water for 10-15 minutes to quickly soothe itching and inflammation.
-   - Gentle cleansing: Wash with mild, fragrance-free soap and cool/lukewarm water; gently pat dry with a clean personal towel (do not rub).
-   - Skin barrier soothing: Apply plain calamine lotion or pure petroleum jelly / plain moisturizer to protect sensitized skin.
-   - Clothing & hygiene: Wear loose, lightweight, breathable 100% cotton clothes. Wash clothing in hot water and dry in direct sunlight.
-   - CRITICAL STEROID WARNING: STRICTLY DO NOT apply over-the-counter mixed steroid creams (such as Betnovate, Panderm, Quadriderm, Clobetasol, Fourderm) without a doctor's prescription! Explain clearly that steroids suppress local immunity, temporarily mask redness, but make fungal infections aggressively spread deep into skin tissues (Tinea Incognito) and cause permanent skin thinning (atrophy) and stretch marks.
-   - Do NOT scratch, rub, or squeeze the skin to prevent secondary bacterial infection.
-5. Red-flag danger signs (Immediate Medical Attention / Emergency):
-   - Swelling of lips, face, eyelids, or tongue; tightness in throat; or difficulty breathing (Anaphylactic allergic emergency -> Call 108/112 immediately).
-   - Fever, yellow pus discharge, rapidly expanding red streaks, or severe blistering/skin peeling.
-6. Recommended medical next steps: Recommend visiting the nearest Primary Health Centre (PHC), Community Health Centre (CHC), or a qualified Dermatologist for safe non-steroidal oral antihistamines (e.g., Cetirizine) and certified targeted care.
+CLINICAL DEPARTMENTS & TRIAGE PROTOCOLS:
+1. 🔬 DERMATOLOGY & SKIN (derma):
+   - Morphology: annular, scaling, erythematous macules, wheals/urticaria, papules, pustules, excoriations.
+   - Conditions: Allergic Urticaria / Contact Dermatitis (पित्ती / ଆଲର୍ଜି), Tinea Corporis / Fungal Ringworm (दाद / ଦାଦ), Eczema, Scabies (खाज / କାଛୁ), Impetigo, Miliaria.
+   - Mandatory Warning: STRICT PROHIBITION against OTC steroid creams (Betnovate, Panderm, Quadriderm, Clobetasol). Explain Tinea Incognito and skin atrophy.
+
+2. 👁️ OPHTHALMOLOGY & EYE (eye):
+   - Morphology: conjunctival injection, watery or purulent discharge, localized bright red scleral hemorrhage, eyelid margin swelling, pupillary opacity, scleral icterus.
+   - Conditions: Conjunctivitis (Eye Flu / Pink Eye), Subconjunctival Hemorrhage (painless, self-limiting), Stye / Chalazion (Hordeolum / गुहमनी), Cataract opacity screening (मोतियाबिंद), Scleral Jaundice (पीलिया).
+   - Mandatory Warning: DO NOT rub eyes; do not self-prescribe steroid eye drops. For chemical splash: immediate 15-minute continuous eye flush with clean water. Red flags: severe eye pain, sudden vision blurring, pupil irregularity.
+
+3. 👄 ORAL HEALTH & PRE-CANCER SCREENING (oral):
+   - Morphology: aphthous mucosal erosion, curdy white scrapable plaques, non-scrapable white or red lesions, gum inflammation.
+   - Conditions: Aphthous Ulcers (canker sores / मुँह के छाले / ଘା'), Oral Candidiasis (Thrush), Gingivitis.
+   - High-Risk Screening: Oral Leukoplakia & Oral Submucous Fibrosis (OSMF) associated with tobacco, paan, and gutka chewing.
+   - Mandatory Warning: Any non-healing ulcer or white/red patch persisting >2 weeks must be evaluated in person by a dental/ENT surgeon to rule out oral malignancy. Stop all tobacco/gutka immediately.
+
+4. 👶 PEDIATRICS & NEWBORN TRIAGE (pediatric):
+   - Morphology: dermal jaundice progression (head, chest, abdomen, extremities), diaper zone erythema, fontanelle contour, mucous membrane moisture.
+   - Conditions: Neonatal Jaundice (Kramer's zones: head-to-toe progression), Diaper Dermatitis vs Candida with satellite lesions, Infant dehydration.
+   - Mandatory Warning: If jaundice spreads to abdomen, legs, or soles in the first two weeks, or infant is lethargic, rush immediately to a pediatric hospital (SNCU/PHC) for phototherapy evaluation.
+
+5. 🩹 WOUNDS, BURNS & ANIMAL BITES (wound):
+   - Morphology: burn depth (1st, 2nd, 3rd degree), tissue loss, erythema perimeter, pus exudate, animal bite puncture marks.
+   - Conditions: Superficial vs Blistering Burns, Wound Infection vs healthy pink granulation, Dog/Cat/Monkey/Rodent Animal Bites.
+   - Mandatory Warning: ANIMAL BITE LIFE-SAVING PROTOCOL: Wash immediately under running tap water with soap for a minimum of 15 minutes! Do not apply chili or tie tight ropes. Rush to CHC for Anti-Rabies Vaccine (ARV) and Immunoglobulin. For burns: cool clean water only; NEVER apply toothpaste, ink, or cow dung.
+
+6. 💅 NAILS & ANEMIA SCREENING (nail):
+   - Morphology: pallor of subungual bed, spooning (Koilonychia), thickening, subungual hyperkeratosis, cyanotic hue, digital clubbing.
+   - Conditions: Severe Iron-Deficiency Anemia screening (pale nail beds / रक्तहीनता / ରକ୍ତହୀନତା), Onychomycosis (fungal nail), Cyanosis, Clubbing.
+   - Mandatory Warning: Pale nail beds warrant an immediate Hemoglobin (Hb) blood count check at the nearest PHC or Anganwadi Centre.
 
 ${langInstruction}
-Ensure the tone is professional, reassuring, clear, and thoroughly informative (around 160-220 words).`;
+Ensure the tone is professional, reassuring, clear, and thoroughly informative (around 160-220 words).
+At the very end of your response, output a single invisible metadata tag indicating the primary department identified: [[DEPT:derma]] or [[DEPT:eye]] or [[DEPT:oral]] or [[DEPT:pediatric]] or [[DEPT:wound]] or [[DEPT:nail]].`;
 
     const modelsToTry = [
       env.GEMINI_VISION_MODEL || 'gemini-flash-lite-latest',
@@ -136,13 +148,23 @@ Ensure the tone is professional, reassuring, clear, and thoroughly informative (
       ? DISCLAIMER_HI
       : (reqLang === 'or' ? DISCLAIMER_OR : DISCLAIMER);
 
+    let detectedDept = 'derma';
+    const deptMatch = /\[\[DEPT:([a-z]+)\]\]/i.exec(answer);
+    if (deptMatch) {
+      detectedDept = deptMatch[1].toLowerCase();
+      answer = answer.replace(/\[\[DEPT:[a-z]+\]\]/i, '').trim();
+    } else if (reqDept !== 'auto') {
+      detectedDept = reqDept;
+    }
+
     return json({
       answer,
       kind: 'vision_skin',
+      department: detectedDept,
       disclaimer,
       lang: reqLang,
       sources: [
-        { name: 'WHO Skin Diseases & Primary Health Care Guide', url: 'https://www.who.int' },
+        { name: 'WHO Primary Health & Clinical Assessment Guidelines', url: 'https://www.who.int' },
         { name: 'Ministry of Health & Family Welfare (MoHFW)', url: 'https://main.mohfw.gov.in' }
       ]
     });
