@@ -871,8 +871,8 @@ body.lang-hi .composer-foot {
 
 /* THE 2 CLEAN ACTION BOXES (VOICE MESSAGE & PHOTO UPLOAD) */
 .dual-action-area {
-  display: grid;
-  grid-template-columns: 1fr 1fr;
+  display: grid !important;
+  grid-template-columns: 1fr 1fr !important;
   gap: 10px;
   width: 100%;
   margin-top: 8px;
@@ -961,8 +961,8 @@ body.lang-hi .composer-foot {
 
 /* HERO MODE (WHEN IN ODIA OR HINDI) - 2 CLEAN SIDE-BY-SIDE HERO BOXES (ONE BY ONE SIDE, NOT UP AND DOWN) */
 .dual-action-area.hero-mode {
-  display: grid;
-  grid-template-columns: 1fr 1fr;
+  display: grid !important;
+  grid-template-columns: 1fr 1fr !important;
   gap: 12px;
   margin-top: 14px;
   margin-bottom: 6px;
@@ -1836,6 +1836,30 @@ body.lang-hi .composer-foot {
   body.chat-active:not(.chat-has-results) .composer {
     flex-shrink: 0;
     padding: 4px 0 2px;
+  }
+  body.chat-active:not(.chat-has-results) .dual-action-area {
+    flex-shrink: 0;
+    display: grid !important;
+    grid-template-columns: 1fr 1fr !important;
+    gap: 8px;
+    margin-top: 4px;
+    margin-bottom: 2px;
+    padding: 0;
+  }
+  body.chat-active:not(.chat-has-results) .dual-action-area.hero-mode .action-box {
+    padding: 12px 8px;
+    min-height: 95px;
+    gap: 6px;
+  }
+  body.chat-active:not(.chat-has-results) .dual-action-area.hero-mode .action-box-icon {
+    width: 38px;
+    height: 38px;
+  }
+  body.chat-active:not(.chat-has-results) .dual-action-area.hero-mode .action-box-text strong {
+    font-size: 0.95rem;
+  }
+  body.chat-active:not(.chat-has-results) .dual-action-area.hero-mode .action-box-text span {
+    font-size: 0.72rem;
   }
   body.chat-active:not(.chat-has-results) .odia-voice-area {
     flex-shrink: 0;

@@ -523,13 +523,13 @@
     const photoBoxSub = $('photoBoxSub');
 
     if (voiceBoxTitle) {
-      voiceBoxTitle.textContent = isHi ? '🎙️ आवाज़ (Voice)' : (isOr ? '🎙️ ଭଏସ୍ (Voice)' : '🎙️ Voice Message');
+      voiceBoxTitle.textContent = isHi ? '🎙️ बोलकर बताएं' : (isOr ? '🎙️ ଭଏସ୍ ମେସେଜ୍' : '🎙️ Voice Message');
     }
     if (voiceBoxSub) {
       voiceBoxSub.textContent = isHi ? 'बोलकर पूछें' : (isOr ? 'ଓଡ଼ିଆରେ କୁହନ୍ତୁ' : 'Tap to speak');
     }
     if (photoBoxTitle) {
-      photoBoxTitle.textContent = isHi ? '📷 फोटो (Photo)' : (isOr ? '📷 ଫଟୋ (Photo)' : '📷 Upload Photo');
+      photoBoxTitle.textContent = isHi ? '📷 फोटो अपलोड' : (isOr ? '📷 ଫଟୋ ଅପ୍‌ଲୋଡ୍' : '📷 Upload Photo');
     }
     if (photoBoxSub) {
       photoBoxSub.textContent = isHi ? 'कैमरा या गैलरी' : (isOr ? 'କ୍ୟାମେରା ବା ଗ୍ୟାଲେରୀ' : 'Camera or Gallery');
@@ -715,11 +715,12 @@
 
     const footCombined = $('footCopyrightCombined') || $('footCopyrightSmall') || $('footCopyrightMain');
     if (footCombined) {
+      const siteLink = '&bull; <a href="https://swasth-ai.pages.dev" target="_blank" rel="noopener noreferrer" style="color:var(--primary);font-weight:700;text-decoration:underline;">swasth-ai.pages.dev</a>';
       footCombined.innerHTML = isHi
-        ? '&copy; 2026 स्वास्थ्य AI &bull; सर्वाधिकार सुरक्षित &bull; सार्वजनिक स्वास्थ्य सहायक &bull; F-204 DEMO PROJECT'
+        ? `&copy; 2026 स्वास्थ्य AI &bull; सर्वाधिकार सुरक्षित &bull; सार्वजनिक स्वास्थ्य सहायक &bull; F-204 DEMO PROJECT ${siteLink}`
         : (isOr
-          ? '&copy; ୨୦୨୬ ସ୍ୱାସ୍ଥ୍ୟ AI &bull; ସମସ୍ତ ଅଧିକାର ସଂରକ୍ଷିତ &bull; ଓଡ଼ିଶା ଜନସ୍ୱାସ୍ଥ୍ୟ ସହାୟକ &bull; F-204 DEMO PROJECT'
-          : '&copy; 2026 Swasth AI &bull; All Rights Reserved &bull; Odisha Public Health Assistant &bull; F-204 DEMO PROJECT');
+          ? `&copy; ୨୦୨୬ ସ୍ୱାସ୍ଥ୍ୟ AI &bull; ସମସ୍ତ ଅଧିକାର ସଂରକ୍ଷିତ &bull; ଓଡ଼ିଶା ଜନସ୍ୱାସ୍ଥ୍ୟ ସହାୟକ &bull; F-204 DEMO PROJECT ${siteLink}`
+          : `&copy; 2026 Swasth AI &bull; All Rights Reserved &bull; Odisha Public Health Assistant &bull; F-204 DEMO PROJECT ${siteLink}`);
     }
   }
 
@@ -1183,10 +1184,10 @@
       let title = isHi ? '📸 क्लिनिकल फोटो मूल्यांकन (Clinical Assessment)' : (isOr ? '📸 ଡାକ୍ତରୀ ଫଟୋ ପରୀକ୍ଷା' : '📸 AI Clinical Photo Assessment');
       let subtitle = isHi ? 'त्वचा, आँख, मुँह, घाव व बाल स्वास्थ्य जांच प्रोटोकॉल' : (isOr ? 'ଚର୍ମ, ଆଖି, ମୁଖ, ଘା\' ଓ ଶିଶୁ ସୁରକ୍ଷା ଯାଞ୍ଚ' : 'Multi-Condition Clinical Triage & Safety Protocol');
 
-      if (dept === 'derma') {
+      if (dept === 'derma' || dept === 'photo') {
         icon = '📸';
-        title = isHi ? '📸 क्लिनिकल फोटो मूल्यांकन (Skin & Allergy)' : (isOr ? '📸 ଫଟୋ ପରୀକ୍ଷା (ଚର୍ମ ଓ ଆଲର୍ଜି)' : '📸 AI Clinical Photo (Skin & Allergy)');
-        subtitle = isHi ? 'रिंगवर्म, एलर्जी व स्टेरॉयड सुरक्षा प्रोटोकॉल' : (isOr ? 'ଦାଦ, ଆଲର୍ଜି ଓ ଷ୍ଟେରଏଡ୍ ସୁରକ୍ଷା ଯାଞ୍ଚ' : 'Allergy, Ringworm & Steroid Safety Protocol');
+        title = isHi ? '📸 क्लिनिकल फोटो मूल्यांकन' : (isOr ? '📸 ଡାକ୍ତରୀ ଫଟୋ ପରୀକ୍ଷା' : '📸 AI Clinical Photo Assessment');
+        subtitle = isHi ? 'लक्षण, प्राथमिक उपचार व सुरक्षा प्रोटोकॉल' : (isOr ? 'ଲକ୍ଷଣ, ସୁରକ୍ଷା ଓ ପ୍ରାଥମିକ ଚିକିତ୍ସା ଯାଞ୍ଚ' : 'Clinical Triage, First Aid & Safety Protocol');
       } else if (dept === 'eye') {
         icon = '👁️';
         title = isHi ? '👁️ नेत्र चिकित्सा व दृष्टि मूल्यांकन (Ophthalmology Triage)' : (isOr ? '👁️ ନେତ୍ର ଚିକିତ୍ସା ଓ ଦୃଷ୍ଟି ପରୀକ୍ଷା (Ophthalmology Triage)' : '👁️ Clinical Ophthalmology & Eye Assessment');

@@ -1,7 +1,7 @@
 {
   "name": "Swasth AI (ସ୍ୱାସ୍ଥ୍ୟ AI / स्वास्थ्य AI)",
   "short_name": "Swasth AI",
-  "description": "Voice-enabled public health assistant with AI skin disease scanner for Odisha & India.",
+  "description": "Voice-enabled public health assistant with AI visual clinical triage scanner for Odisha & India.",
   "start_url": "/",
   "scope": "/",
   "display": "standalone",
