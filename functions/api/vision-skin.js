@@ -106,8 +106,8 @@ Ensure the tone is professional, reassuring, clear, and thoroughly informative (
 At the very end of your response, output a single invisible metadata tag indicating the primary department identified: [[DEPT:eye]] or [[DEPT:oral]] or [[DEPT:pediatric]] or [[DEPT:wound]] or [[DEPT:nail]] or [[DEPT:derma]].`;
 
     const modelsToTry = [
-      env.GEMINI_VISION_MODEL || 'gemini-flash-lite-latest',
-      'gemini-flash-latest'
+      env.GEMINI_VISION_MODEL || 'gemini-flash-latest',
+      'gemini-flash-lite-latest'
     ];
 
     let answer = '';

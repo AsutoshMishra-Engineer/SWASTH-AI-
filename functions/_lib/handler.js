@@ -24,7 +24,7 @@ const fixed = (kind, langOrCode = false, extra = {}) => {
   });
 };
 
-export const SYSTEM_PROMPT = `You are Swasth AI, a trusted public-health assistant for people in Odisha and across India.
+export const SYSTEM_PROMPT = `You are Swasth AI, the official rural and public health medical triage assistant for Odisha and across India.
 Rules:
 1. Answer ONLY using facts inside <context>. Do not use outside knowledge.
 2. Structure every symptom and health inquiry answer strictly in this four-section layout:
@@ -33,14 +33,14 @@ Rules:
 [Simple, compassionate explanation of what matches their symptoms based on context]
 
 🏠 Safe Home Care & Relief:
-- Step 1 (e.g. hydration, cold/warm compress, rest, practical non-medicinal relief)
-- Step 2 (what to do right now)
+- Practical, evidence-based home care (e.g. clean boiled water, ORS rehydration, rest, cool cloth compress)
+- Actionable steps available in every rural home without buying random drugs
 
 ⚠️ Warning Signs to Watch:
-- Red flags that mean it is getting worse
+- Clear red flag danger signs that require urgent hospital visit
 
 🏥 When to See a Doctor:
-- Visit Community Health Centre or call 108 if danger signs appear
+- Direct them to the nearest Sub-Centre / PHC / CHC or village ASHA didi, or call 108 ambulance if danger signs appear
 
 3. If the context does not clearly relate to their question, reply with exactly: NO_ANSWER
 4. Never give a definitive diagnosis, never prescribe medicines, and never state drug doses.
@@ -54,11 +54,11 @@ CRITICAL RULES FOR ODIA:
 - NEVER do literal word-for-word translation from English.
 - NEVER use robotic Sanskritized words (do NOT use ମୌଖିକ, ଚିକିତ୍ସାଳୟ, ପ୍ରାରମ୍ଭିକ, ପୁନର୍ଜଳୀକରଣ, ଦ୍ରବଣ).
 - Use everyday colloquial Odia words that every villager, grandmother, and youth in Odisha easily understands:
-  * For hydration: "ବାରମ୍ବାର ପାଣି, ଲେମ୍ବୁ ପାଣି ବା ଓଆରଏସ ଘୋଳ ପିଅନ୍ତୁ"
+  * For hydration: "ବାରମ୍ବାର ପାଣି, ଲେମ୍ବୁ ପାଣି ବା ଓଆରଏସ (ORS) ଘୋଳ ପିଅନ୍ତୁ"
   * For rest: "ଘରେ ଭଲରେ ବିଶ୍ରାମ ନିଅନ୍ତୁ"
   * For fever: "ମଥାରେ ସଫା ଓଦା କପଡ଼ା ପଟି ପକାନ୍ତୁ"
   * For warning signs: "ଯଦି ୩ ଦିନରୁ ଅଧିକ ଜ୍ୱର ରହେ, ଛାତି କଷ୍ଟ ହୁଏ ବା ବାରମ୍ବାର ବାନ୍ତି ହୁଏ"
-  * For hospital: "ଡେରି ନକରି ପାଖ ସରକାରୀ ଡାକ୍ତରଖାନାକୁ ଯାଆନ୍ତୁ ବା ୧୦୮ ଆମ୍ବୁଲାନ୍ସ ଡାକନ୍ତୁ"
+  * For hospital: "ଡେରି ନକରି ପାଖ ପ୍ରାଥମିକ ସ୍ୱାସ୍ଥ୍ୟ କେନ୍ଦ୍ର (PHC) କିମ୍ବା ଆଶା ଦିଦିଙ୍କ ପରାମର୍ଶ ନିଅନ୍ତୁ ଏବଂ ଜରୁରୀ ପରିସ୍ଥିତିରେ ୧୦୮ ଆମ୍ବୁଲାନ୍ସ ଡାକନ୍ତୁ"
 Use these 4 Odia section headers:
 📘 ସମ୍ଭାବ୍ୟ କାରଣ:
 🏠 ଘରୋଇ ଉପଚାର ଓ ଯତ୍ନ:
@@ -76,7 +76,7 @@ CRITICAL RULES FOR HINDI:
   * For rest: "घर पर पूरा आराम करें"
   * For fever: "माथे पर साफ गीले कपड़े की पट्टी रखें"
   * For warning signs: "यदि 3 दिन से अधिक तेज बुखार रहे, सांस लेने में तकलीफ हो या बार-बार उल्टी हो"
-  * For hospital: "देरी न करें, तुरंत नजदीकी सरकारी अस्पताल (सामुदायिक स्वास्थ्य केंद्र) जाएं या 108 एम्बुलेंस बुलाएं"
+  * For hospital: "देरी न करें, तुरंत नजदीकी सरकारी अस्पताल (सामुदायिक स्वास्थ्य केंद्र) या आशा दीदी से संपर्क करें अथवा 108 एम्बुलेंस बुलाएं"
 Use these 4 Hindi section headers:
 📘 संभावित कारण:
 🏠 सुरक्षित घरेलू देखभाल और तरल पदार्थ:
@@ -85,51 +85,61 @@ Use these 4 Hindi section headers:
 Keep the answer concise (under 75 words), warm, respectful, and crystal-clear.`;
 
 const ODIA_KEYWORD_MAP = [
-  [/ମୁଣ୍ଡ\s*(ବିନ୍ଧା|ବଥା|ଘୋଳାଉଛି|ବିନ୍ଧୁଛି)/, 'headache migraine'],
-  [/ଜ୍ୱର|ତାତି|ଫିଭର/, 'fever temperature high fever'],
-  [/ପେଟ\s*(କାଟିବା|କାଟୁଛି|ବଥା|ଯନ୍ତ୍ରଣା|ମୋଡ଼ିବା)/, 'abdominal stomach pain colic cramps'],
-  [/ଝାଡ଼ା|ପତଳା\s*ଝାଡ଼ା/, 'diarrhoea loose motion dehydration'],
-  [/ବାନ୍ତି|ଓକାଳ/, 'vomiting nausea'],
-  [/କାଶ|ଖଙ୍କାର/, 'cough respiratory'],
-  [/ଥଣ୍ଡା|ସର୍ଦ୍ଦି/, 'cold flu running nose'],
-  [/ଗଳା\s*(ଯନ୍ତ୍ରଣା|ବିନ୍ଧା|କୁଣ୍ଡେଇବା)|ତଣ୍ଟି/, 'sore throat pharyngitis throat infection'],
-  [/ଆଖି\s*(ନାଲି|ରକ୍ତ|ପାଣି|କୁଣ୍ଡେଇ)/, 'eye conjunctivitis red eye discharge'],
-  [/ପରିସ୍ରା\s*(ପୋଡ଼ା|ଜଳା|କମ)/, 'urinary tract infection UTI dehydration burning urination'],
-  [/ଗଣ୍ଠି\s*(ବିନ୍ଧା|ଫୁଲିବା)|ଆଣ୍ଠୁ/, 'joint pain arthritis chikungunya swelling'],
-  [/ଏସିଡିଟି|ଛାତି\s*ପୋଡ଼ା|ଗ୍ୟାସ/, 'acidity heartburn GERD reflux indigestion'],
-  [/ଡେଙ୍ଗୁ/, 'dengue mosquito fever'],
-  [/ମ୍ୟାଲେରିଆ/, 'malaria chills fever'],
-  [/କୁକୁର\s*କାମୁଡ଼/, 'dog bite rabies animal bite wash with soap'],
-  [/ସାପ\s*କାମୁଡ଼|ବିଛା/, 'snake bite scorpion sting venom poison first aid'],
-  [/ଗର୍ଭାବସ୍ଥା|ଗର୍ଭବତୀ/, 'pregnancy maternal antenatal danger signs'],
-  [/ଅଂଶୁଘାତ|ଖରା\s*ତାତି|ଲୁ/, 'heat stroke sunstroke dehydration heat exhaustion'],
-  [/ଚର୍ମ\s*(କୁଣ୍ଡେଇ|ଫୋଟକା|ଦାଗ|ରାସ)/, 'skin rash itching allergy'],
-  [/ପାଣି|ଜଳ|ଓଆରଏସ|ଓ\.ଆର\.ଏସ/, 'ORS hydration clean drinking water fluids'],
-  [/ଶିଶୁ|ପିଲା|ନବଜାତ/, 'child infant newborn breastfeeding'],
+  [/ମୁଣ୍ଡ\s*(ବିନ୍ଧା|ବଥା|ଘୋଳାଉଛି|ବିନ୍ଧୁଛି|ବୁଲାଉଛି|ଘୁରାଉଛି|ଭାରି)|munda\s*(bindha|bitha|ghurauchi|bulauchi)/i, 'headache migraine dizziness'],
+  [/ଜ୍ୱର|ତାତି|ଫିଭର|କମ୍ପନ|ଥଣ୍ଡା\s*ଲାଗି\s*ଜ୍ୱର|jwara|jwar|fever|tati/i, 'fever temperature high fever chills malaria dengue'],
+  [/ପେଟ\s*(କାଟିବା|କାଟୁଛି|ବଥା|ଯନ୍ତ୍ରଣା|ମୋଡ଼ିବା|ଫୁଲିବା|ଘୋଳାଉଛି|ଗ୍ୟାସ)|peta\s*(katuchi|gholauchi|bitha|dard|kharab)/i, 'abdominal stomach pain colic cramps gastritis'],
+  [/ଝାଡ଼ା|ପତଳା\s*ଝାଡ଼ା|ପାଣି\s*ଝାଡ଼ା|ଦାସ୍ତ|jhada|patala jhada/i, 'diarrhoea loose motion dehydration ORS fluids'],
+  [/ବାନ୍ତି|ଓକାଳ|ବାନ୍ତି\s*ଲାଗିବା|banti|okala/i, 'vomiting nausea rehydration'],
+  [/କାଶ|ଖଙ୍କାର|କଫ|ଘର\s*ଘର|ଛାତିରେ\s*କଫ|kasa|kafa|khankara/i, 'cough respiratory phlegm bronchitis'],
+  [/ଥଣ୍ଡା|ସର୍ଦ୍ଦି|ନାକରୁ\s*ପାଣି|thanda|sardi/i, 'cold flu running nose viral'],
+  [/ଗଳା\s*(ଯନ୍ତ୍ରଣା|ବିନ୍ଧା|କୁଣ୍ଡେଇବା|ଫୁଲିବା)|ତଣ୍ଟି\s*(ବଥା|କୁଣ୍ଡେଇ)|tanti|gala bitha/i, 'sore throat pharyngitis throat infection tonsillitis'],
+  [/ଆଖି\s*(ନାଲି|ରକ୍ତ|ପାଣି|କୁଣ୍ଡେଇ|ଫୁଲିବା|ଧରିବା|ଲାଲ୍)|ନେତ୍ର|ଗୁହମନୀ|ମୋତିଆବିନ୍ଦୁ|aankhi\s*(nali|lal|pani|kundai|phuliba)/i, 'eye conjunctivitis red eye discharge cataract stye ophthalmology'],
+  [/କାନ\s*(ବିନ୍ଧା|ପାଚିବା|ପୂଜ|ପାଣି\s*ବାହାରିବା)|kan\s*pakiba|kana bitha/i, 'earache ear discharge infection otitis media'],
+  [/ମୁଖ\s*ଘା|ପାଟି\s*ଘା|ପାଟି\s*ଫିଟୁନି|ଜିଭ\s*ଘା|ତମାଖୁ|ଗୁଟ୍‌ଖା|mukha gha|pati gha/i, 'mouth ulcer canker sore aphthous leukoplakia oral cancer OSMF'],
+  [/ପରିସ୍ରା\s*(ପୋଡ଼ା|ଜଳା|କମ|ହଳଦିଆ|ରକ୍ତ)|parisra poda/i, 'urinary tract infection UTI dehydration burning urination jaundice'],
+  [/ଗଣ୍ଠି\s*(ବିନ୍ଧା|ଫୁଲିବା)|ଆଣ୍ଠୁ\s*ଗଣ୍ଠି|ବାତ|ଗୋଡ଼\s*ହାତ\s*ବିନ୍ଧା|ganthi bitha|anthu/i, 'joint pain arthritis chikungunya swelling gout'],
+  [/ଏସିଡିଟି|ଛାତି\s*ପୋଡ଼ା|ଗ୍ୟାସ|ଅଜୀର୍ଣ୍ଣ|ଖଟା\s*ଢେକୁର|gas|acidity/i, 'acidity heartburn GERD reflux indigestion'],
+  [/ଡେଙ୍ଗୁ|dengue/i, 'dengue mosquito fever platelets'],
+  [/ମ୍ୟାଲେରିଆ|କମ୍ପ\s*ଜ୍ୱର|malaria/i, 'malaria chills fever blood smear testing'],
+  [/କୁକୁର\s*(କାମୁଡ଼|ରାମ୍ପୁଡ଼)|ବିଲେଇ\s*କାମୁଡ଼|ପଶୁ\s*କାମୁଡ଼|ରେବିସ୍|kukura kamuda/i, 'dog bite rabies animal bite wash with soap anti-rabies vaccine ARV'],
+  [/ସାପ\s*କାମୁଡ଼|ବିଛା|ନାଗ|sapa kamuda/i, 'snake bite scorpion sting venom poison first aid anti-venom'],
+  [/ପୋଡ଼ି\s*(ଯାଇଛି|ଗଲା)|ଫୋଟକା|ପୋଡ଼ାଜଳା|ନିଆଁ|porajala|podi gala/i, 'burn scald thermal blister first aid cool clean water'],
+  [/ଗର୍ଭାବସ୍ଥା|ଗର୍ଭବତୀ|ପ୍ରସବ|ଛୁଆ\s*ପେଟରେ|garbhabati/i, 'pregnancy maternal antenatal danger signs IFA tablets ASHA'],
+  [/ଅଂଶୁଘାତ|ଖରା\s*ତାତି|ଲୁ|ଗ୍ରୀଷ୍ମ|ansughata|loo/i, 'heat stroke sunstroke dehydration heat exhaustion ORS'],
+  [/ଚର୍ମ\s*(କୁଣ୍ଡେଇ|ଫୋଟକା|ଦାଗ|ରାସ)|ଦାଦ|କାଛୁ|କୁଣ୍ଡିଆ|ଚର୍ମ\s*ରୋଗ|kandu|dada/i, 'skin rash itching allergy tinea ringworm scabies eczema'],
+  [/ପାଣି|ଜଳ|ଓଆରଏସ|ଖାଦ୍ୟ|ପୁଷ୍ଟିକର|କୁପୋଷଣ/i, 'ORS hydration clean drinking water fluids nutrition Anganwadi'],
+  [/ଶିଶୁ|ପିଲା|ନବଜାତ|ଛୁଆ|କାମଳ|ଡାଏପର|କ୍ଷୀର\s*ଖାଉନି|shishu|nabajata/i, 'child infant newborn neonatal jaundice Kramer breastfeeding dehydration SNCU'],
+  [/ନଖ\s*(ଧଳା|ଫିକା|କୁଣ୍ଡେଇ|ବିନ୍ଧା)|ରକ୍ତହୀନତା|ହିମୋଗ୍ଲୋବିନ୍|ରକ୍ତ\s*କମ|nakha dhala|raktahinata/i, 'nail anemia pallor iron deficiency hemoglobin IFA Anganwadi'],
+  [/ମନ\s*ଭଲ\s*ଲାଗୁନି|ଚିନ୍ତା|ଉଦାସ|ନିଦ\s*ହେଉନି/i, 'mental health depression anxiety Tele-MANAS 14416'],
 ];
 
 const HINDI_KEYWORD_MAP = [
-  [/सिर\s*(दर्द|घूमना)|माइग्रेन/, 'headache migraine'],
-  [/बुखार|तापमान|फीवर|तप/, 'fever temperature high fever'],
-  [/पेट\s*(दर्द|खराब|मरोड़|ऐंठन)/, 'abdominal stomach pain colic cramps'],
-  [/दस्त|पेचिश|पतला\s*शौच|लूज\s*मोशन/, 'diarrhoea loose motion dehydration'],
-  [/उल्टी|मतली|जी\s*मिचलाना/, 'vomiting nausea'],
-  [/खांसी|कफ|बलगम/, 'cough respiratory'],
-  [/जुकाम|सर्दी|नाक\s*बहना/, 'cold flu running nose'],
-  [/गले\s*में\s*(दर्द|खराश|सूजन)/, 'sore throat pharyngitis throat infection'],
-  [/आंख\s*(लाल|पानी|दर्द)/, 'eye conjunctivitis red eye discharge'],
-  [/पेशाब\s*(में\s*जलन|कम)/, 'urinary tract infection UTI dehydration burning urination'],
-  [/जोड़ों\s*में\s*दर्द|गठिया|घुटने/, 'joint pain arthritis chikungunya swelling'],
-  [/एसिडिटी|सीने\s*में\s*जलन|गैस/, 'acidity heartburn GERD reflux indigestion'],
-  [/डेंगू/, 'dengue mosquito fever'],
-  [/मलेरिया/, 'malaria chills fever'],
-  [/कुत्ते\s*ने\s*काटा|रेबीज/, 'dog bite rabies animal bite wash with soap'],
-  [/सांप\s*काटा|बिच्छू/, 'snake bite scorpion sting venom poison first aid'],
-  [/गर्भावस्था|गर्भवती|प्रसव/, 'pregnancy maternal antenatal danger signs'],
-  [/लू\s*लगना|गर्मी|धूप/, 'heat stroke sunstroke dehydration heat exhaustion'],
-  [/खुजली|दाद|चकत्ते|त्वचा/, 'skin rash itching allergy'],
-  [/ओआरएस|पानी|तरल|घोल/, 'ORS hydration clean drinking water fluids'],
-  [/बच्चा|शिशु|नवजात/, 'child infant newborn breastfeeding'],
+  [/सिर\s*(दर्द|घूमना|भारी|चक्कर)|माइग्रेन|sir\s*(dard|chakar)/i, 'headache migraine dizziness'],
+  [/बुखार|तापमान|फीवर|तप|कपकपी|bukhar|fever/i, 'fever temperature high fever chills malaria dengue'],
+  [/पेट\s*(दर्द|खराब|मरोड़|ऐंठन|फूलना|गैस)|pet\s*(dard|kharab)/i, 'abdominal stomach pain colic cramps gastritis'],
+  [/दस्त|पेचिश|पतला\s*शौच|लूज\s*मोशन|dast|loose motion/i, 'diarrhoea loose motion dehydration ORS fluids'],
+  [/उल्टी|मतली|जी\s*मिचलाना|ulti/i, 'vomiting nausea rehydration'],
+  [/खांसी|कफ|बलगम|छाती\s*में\s*जकड़न|khansi|balgam/i, 'cough respiratory phlegm bronchitis'],
+  [/जुकाम|सर्दी|नाक\s*बहना|nazla|sardi/i, 'cold flu running nose viral'],
+  [/गले\s*में\s*(दर्द|खराश|सूजन|कांटे)|gala dard/i, 'sore throat pharyngitis throat infection tonsillitis'],
+  [/आंख\s*(लाल|पानी|दर्द|कीचड़|फूलना|आना)|नेत्र|गुहमनी|मोतियाबिंद|aankh lal/i, 'eye conjunctivitis red eye discharge cataract stye ophthalmology'],
+  [/कान\s*(दर्द|पकना|बहना|मवाद)|kan dard/i, 'earache ear discharge infection otitis media'],
+  [/मुंह\s*में\s*(छाले|घाव|दर्द)|मुंह\s*नहीं\s*खुलना|गुटखा|तंबाकू|muh ke chhale/i, 'mouth ulcer canker sore aphthous leukoplakia oral cancer OSMF'],
+  [/पेशाब\s*(में\s*जलन|कम|पीला|खून)|peshab jalan/i, 'urinary tract infection UTI dehydration burning urination jaundice'],
+  [/जोड़ों\s*में\s*दर्द|गठिया|घुटने|जोड़\s*सूजन|हड्डी\s*दर्द|jodon me dard/i, 'joint pain arthritis chikungunya swelling gout'],
+  [/एसिडिटी|सीने\s*में\s*जलन|गैस|खट्टी\s*डकार|pet gas/i, 'acidity heartburn GERD reflux indigestion'],
+  [/डेंगू|dengue/i, 'dengue mosquito fever platelets'],
+  [/मलेरिया|ठंड\s*लगकर\s*बुखार|malaria/i, 'malaria chills fever blood smear testing'],
+  [/कुत्ते\s*ने\s*(काटा|खरोंचा)|बिल्ली|जानवर\s*काटा|रेबीज|kutta kata/i, 'dog bite rabies animal bite wash with soap anti-rabies vaccine ARV'],
+  [/सांप\s*(ने\s*)?काटा|बिच्छू|जहर|zeher/i, 'snake bite scorpion sting venom poison first aid anti-venom'],
+  [/जल\s*गया|जलन|फफोला|आग\s*से|jal gaya/i, 'burn scald thermal blister first aid cool clean water'],
+  [/गर्भावस्था|गर्भवती|प्रसव|बच्चा\s*पेट\s*में|garbhavastha/i, 'pregnancy maternal antenatal danger signs IFA tablets ASHA'],
+  [/लू\s*लगना|गर्मी|धूप|चक्कर|loo lagna/i, 'heat stroke sunstroke dehydration heat exhaustion ORS'],
+  [/खुजली|दाद|चकत्ते|त्वचा|फोड़े|फुंसी|khujli|daad/i, 'skin rash itching allergy tinea ringworm scabies eczema'],
+  [/ओआरएस|पानी|तरल|घोल|पोषण/i, 'ORS hydration clean drinking water fluids nutrition Anganwadi'],
+  [/बच्चा|शिशु|नवजात|पीलिया|दूध\s*नहीं\s*पी\s*रहा|shishu/i, 'child infant newborn neonatal jaundice Kramer breastfeeding dehydration SNCU'],
+  [/नाखून\s*(सफेद|पीले|चम्मच)|एनीमिया|खून\s*की\s*कमी|nakhun safed/i, 'nail anemia pallor iron deficiency hemoglobin IFA Anganwadi'],
+  [/उदास|तनाव|डिप्रेशन|नींद\s*नहीं/i, 'mental health depression anxiety Tele-MANAS 14416'],
 ];
 
 export function normalizeOdiaQuery(text) {

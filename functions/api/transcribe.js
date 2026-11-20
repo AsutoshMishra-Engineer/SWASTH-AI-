@@ -44,13 +44,13 @@ export async function onRequestPost({ request, env }) {
       return json({ error: 'too_large', message: 'Audio recording too long.' }, 413);
     }
 
-    const primaryModel = env.GEMINI_AUDIO_MODEL || 'gemini-3.5-transcribe';
-    const modelsToTry = [primaryModel, 'gemini-3.5-flash'];
+    const primaryModel = env.GEMINI_AUDIO_MODEL || 'gemini-flash-latest';
+    const modelsToTry = [primaryModel, 'gemini-flash-lite-latest'];
     const reqLang = typeof body?.lang === 'string' ? body.lang.toLowerCase() : 'or';
     const isHi = reqLang === 'hi';
     const prompt = isHi
-      ? 'The user is speaking in the Hindi language (हिन्दी) about medical symptoms. Transcribe the audio accurately into clear Devanagari script (हिन्दी). If English medical terms are pronounced, transcribe them accurately. Output ONLY the exact transcribed text in Devanagari script, nothing else.'
-      : 'The user is speaking in the Odia language (or mixed Odia with medical symptoms) from Odisha, India. Transcribe the audio accurately into clear Odia script (ଓଡ଼ିଆ). If English medical terms are pronounced, transcribe them accurately. Output ONLY the exact transcribed text in Odia script, nothing else.';
+      ? 'The user is a rural or general citizen speaking in Hindi (हिन्दी) describing health symptoms or asking medical questions. Transcribe the spoken audio with high phonetic accuracy into clear Hindi Devanagari script. Understand regional rural accents, colloquial idioms, and phonetically transliterated terms. Output ONLY the exact transcribed text in Hindi, nothing else.'
+      : 'The user is a rural citizen or resident of Odisha, India speaking in Odia (ଓଡ଼ିଆ) describing health symptoms or asking medical questions. Transcribe the spoken audio with high phonetic accuracy into natural Odia script (ଓଡ଼ିଆ). Understand regional colloquial Odia dialects (Sambalpuri, Cuttacki, Baleswari, Ganjami), village symptom idioms, and mixed medical loan words. Output ONLY the exact transcribed text in pure Odia script, nothing else.';
 
     let transcribed = '';
     for (const model of modelsToTry) {

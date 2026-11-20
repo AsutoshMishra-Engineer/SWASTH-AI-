@@ -1268,6 +1268,14 @@
       speakBtn.addEventListener('click', () => speakText(data.answer, speakBtn));
       speakBar.appendChild(speakBtn);
       d.appendChild(speakBar);
+
+      // Rural Voice Optimization: If question was asked via voice, auto-play response aloud
+      if (lastQueryWasVoice) {
+        lastQueryWasVoice = false;
+        setTimeout(() => {
+          speakText(data.answer, speakBtn);
+        }, 350);
+      }
     }
 
     // In-Chat Emergency Live Hospital Map Card
@@ -1336,6 +1344,7 @@
   // ---------- Skin Photo / Camera & 6-Department Integration ----------
   let pendingSkinImage = null; // { data: base64, mimeType: string, previewUrl: string }
   let selectedDepartment = 'auto';
+  let lastQueryWasVoice = false;
 
   function initDeptPills() {
     const pills = document.querySelectorAll('.dept-pill');
@@ -1723,6 +1732,7 @@
                 const out = await res.json();
                 if (out.text && out.text.trim()) {
                   // Show the transcribed question on screen and fetch clinical guidance
+                  lastQueryWasVoice = true;
                   send(out.text.trim());
                 } else {
                   addBubble('error', currentLang === 'hi'
