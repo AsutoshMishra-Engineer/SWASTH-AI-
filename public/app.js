@@ -538,7 +538,29 @@
     const imagePreviewLabel = $('imagePreviewLabel');
     if (imagePreviewLabel) imagePreviewLabel.textContent = isHi ? '📷 फोटो संलग्न है' : (isOr ? '📷 ଫଟୋ ସଂଲଗ୍ନ ହୋଇଛି' : '📷 Clinical Photo Attached');
     const imagePreviewHint = $('imagePreviewHint');
-    if (imagePreviewHint) imagePreviewHint.textContent = isHi ? 'लक्षण लिखें या भेजें दबाएं' : (isOr ? 'ଲକ୍ଷଣ ଲେଖନ୍ତୁ ବା ପଠାନ୍ତୁ ଦବାନ୍ତୁ' : 'Type symptoms or tap Send to analyze');
+    if (imagePreviewHint) imagePreviewHint.textContent = isHi ? 'विभाग चुनें या सीधे जाँचें' : (isOr ? 'ବିଭାଗ ଚୟନ କରନ୍ତୁ ବା ସିଧାସଳଖ ପରୀକ୍ଷା କରନ୍ତୁ' : 'Tap below to analyze with AI');
+    const analyzePhotoBtnText = $('analyzePhotoBtnText');
+    if (analyzePhotoBtnText) {
+      analyzePhotoBtnText.textContent = isHi ? 'फोटो की जाँच करें (AI Analysis)' : (isOr ? 'ଫଟୋ ପରୀକ୍ଷା କରନ୍ତୁ' : 'Scan & Analyze Photo');
+    }
+
+    // Localize Department Selector Pills
+    const deptTranslations = {
+      auto: { en: 'Auto', or: 'ସ୍ୱୟଂକ୍ରିୟ', hi: 'स्वतः' },
+      photo: { en: 'Skin', or: 'ଚର୍ମ ଓ ସାଧାରଣ', hi: 'त्वचा व सामान्य' },
+      eye: { en: 'Eye', or: 'ନେତ୍ର ପରୀକ୍ଷା', hi: 'नेत्र परीक्षा' },
+      oral: { en: 'Oral', or: 'ମୁଖ ସ୍ୱାସ୍ଥ୍ୟ', hi: 'मुख स्वास्थ्य' },
+      pediatric: { en: 'Baby', or: 'ଶିଶୁ ସ୍ୱାସ୍ଥ୍ୟ', hi: 'शिशु स्वास्थ्य' },
+      wound: { en: 'Wound', or: 'କ୍ଷତ ଓ ପୋଡ଼ାଜଳା', hi: 'घाव व जलन' },
+      nail: { en: 'Nails', or: 'ନଖ ପରୀକ୍ଷା', hi: 'नाखून व एनीमिया' }
+    };
+    document.querySelectorAll('.dept-pill').forEach((pill) => {
+      const code = pill.getAttribute('data-dept');
+      const textSpan = pill.querySelector('.dept-pill-text');
+      if (code && deptTranslations[code] && textSpan) {
+        textSpan.textContent = isHi ? deptTranslations[code].hi : (isOr ? deptTranslations[code].or : deptTranslations[code].en);
+      }
+    });
 
     const pwaBtn = $('pwaInstallBtn');
     if (pwaBtn && !pwaBtn.hidden) {
@@ -1191,24 +1213,24 @@
         subtitle = isHi ? 'लक्षण, प्राथमिक उपचार व सुरक्षा प्रोटोकॉल' : (isOr ? 'ଲକ୍ଷଣ, ସୁରକ୍ଷା ଓ ପ୍ରାଥମିକ ଚିକିତ୍ସା ଯାଞ୍ଚ' : 'Clinical Triage, First Aid & Safety Protocol');
       } else if (dept === 'eye') {
         icon = '👁️';
-        title = isHi ? '👁️ नेत्र चिकित्सा व दृष्टि मूल्यांकन (Ophthalmology Triage)' : (isOr ? '👁️ ନେତ୍ର ଚିକିତ୍ସା ଓ ଦୃଷ୍ଟି ପରୀକ୍ଷା (Ophthalmology Triage)' : '👁️ Clinical Ophthalmology & Eye Assessment');
-        subtitle = isHi ? 'कंजक्टिवाइटिस, लाल आँख व आपातकालीन जांच' : (isOr ? 'କଞ୍ଜକ୍ଟିଭାଇଟିସ୍, ଲାଲ୍ ଆଖି ଓ ଜରୁରୀ ପରାମର୍ଶ' : 'Conjunctivitis, Stye & Red Eye Triage Protocol');
+        title = isHi ? '👁️ नेत्र चिकित्सा व दृष्टि मूल्यांकन (Netra Pariksha)' : (isOr ? '👁️ ନେତ୍ର ବିଭାଗ ଓ ଦୃଷ୍ଟି ପରୀକ୍ଷା (ନେତ୍ର ପରୀକ୍ଷା)' : '👁️ Ophthalmology & Eye Department (Netra Pariksha)');
+        subtitle = isHi ? 'कंजक्टिवाइटिस, लाल आँख व आपातकालीन जांच' : (isOr ? 'କଞ୍ଜକ୍ଟିଭାଇଟିସ୍, ଲାଲ୍ ଆଖି ଓ ଜରୁରୀ ପରାମର୍ଶ' : 'Conjunctivitis, Stye, Red Eye & Visual Triage Protocol');
       } else if (dept === 'oral') {
         icon = '👄';
-        title = isHi ? '👄 मुख स्वास्थ्य व कैंसर पूर्व जांच (Oral Health Triage)' : (isOr ? '👄 ମୁଖ ସ୍ୱାସ୍ଥ୍ୟ ଓ କର୍କଟ ପୂର୍ବ ଯାଞ୍ଚ (Oral Health Triage)' : '👄 Oral Health & Pre-Cancer Screening');
-        subtitle = isHi ? 'मुँह के छाले, तंबाकू व ल्यूकोप्लाकिया सुरक्षा जांच' : (isOr ? 'ତମାଖୁ, ଗୁଟ୍‌ଖା, ପାନ ଓ ଘା\' ଯାଞ୍ଚ ପ୍ରୋଟୋକଲ୍' : 'Aphthous Ulcer & Tobacco Leukoplakia Triage');
+        title = isHi ? '👄 मुख स्वास्थ्य व कैंसर पूर्व जांच (Mukh Swasthya)' : (isOr ? '👄 ମୁଖ ସ୍ୱାସ୍ଥ୍ୟ ଓ କର୍କଟ ପୂର୍ବ ଯାଞ୍ଚ (ମୁଖ ସ୍ୱାସ୍ଥ୍ୟ)' : '👄 Oral Health & Pre-Cancer Screening (Mukh Swasthya)');
+        subtitle = isHi ? 'मुँह के छाले, तंबाकू व ल्यूकोप्लाकिया सुरक्षा जांच' : (isOr ? 'ତମାଖୁ, ଗୁଟ୍‌ଖା, ପାନ ଓ ଘା\' ଯାଞ୍ଚ ପ୍ରୋଟୋକଲ୍' : 'Aphthous Ulcers, OSMF & Pre-Malignancy Triage');
       } else if (dept === 'pediatric') {
         icon = '👶';
-        title = isHi ? '👶 शिशु स्वास्थ्य व नवजात मूल्यांकन (Pediatric Triage)' : (isOr ? '👶 ଶିଶୁ ଯତ୍ନ ଓ ନବଜାତ ପରୀକ୍ଷା (Pediatric Triage)' : '👶 Pediatric & Newborn Care Triage');
-        subtitle = isHi ? 'नवजात पीलिया (Jaundice), डायपर रैश व निर्जलीकरण जांच' : (isOr ? 'କାମଳ (Jaundice), ଡାଏପର ରାସ୍ ଓ ଶିଶୁ ସୁରକ୍ଷା' : 'Neonatal Jaundice & Dehydration Triage');
+        title = isHi ? '👶 शिशु स्वास्थ्य व नवजात मूल्यांकन (Shishu Swasthya)' : (isOr ? '👶 ଶିଶୁ ସ୍ୱାସ୍ଥ୍ୟ ଓ ନବଜାତ ଯତ୍ନ (ଶିଶୁ ସ୍ୱାସ୍ଥ୍ୟ)' : '👶 Pediatrics & Newborn Triage (Shishu Swasthya)');
+        subtitle = isHi ? 'नवजात पीलिया (Jaundice), डायपर रैश व निर्जलीकरण जांच' : (isOr ? 'କାମଳ (Jaundice), ଡାଏପର ରାସ୍ ଓ ଶିଶୁ ସୁରକ୍ଷା' : 'Neonatal Jaundice, Dehydration & Pediatric Triage');
       } else if (dept === 'wound') {
         icon = '🩹';
-        title = isHi ? '🩹 घाव, जलन व काटने की प्राथमिक चिकित्सा (Wound & Burn Triage)' : (isOr ? '🩹 ଘା\', ପୋଡ଼ାଜଳା ଓ କାମୁଡ଼ା ପ୍ରାଥମିକ ଚିକିତ୍ସା (Wound & Burn Triage)' : '🩹 Wound, Burn & Bite Emergency Triage');
-        subtitle = isHi ? 'कुत्ता काटने पर 15 मिनट पानी से धोने व रेबीज सुरक्षा प्रोटोकॉल' : (isOr ? 'କୁକୁର କାମୁଡ଼ା ରେବିସ୍ ସୁରକ୍ଷା ଓ ଘା\' ପରିଷ୍କାର ପ୍ରୋଟୋକଲ୍' : 'Burn Depth & 15-Minute Rabies Wash Protocol');
+        title = isHi ? '🩹 घाव, जलन व पशु काटना (Khyata & Porajala)' : (isOr ? '🩹 ଘା\', ପୋଡ଼ାଜଳା ଓ ପଶୁ କାମୁଡ଼ା (କ୍ଷତ ଓ ପୋଡ଼ାଜଳା)' : '🩹 Wounds, Burns & Animal Bites (Khyata & Porajala)');
+        subtitle = isHi ? 'कुत्ता काटने पर 15 मिनट पानी से धोने व रेबीज सुरक्षा प्रोटोकॉल' : (isOr ? 'କୁକୁର କାମୁଡ଼ା ରେବିସ୍ ସୁରକ୍ଷା ଓ ୧୫ ମିନିଟ୍ ଧୋଇବା ପ୍ରୋଟୋକଲ୍' : '15-Min Running Water Rabies Wash & Burn Triage');
       } else if (dept === 'nail') {
         icon = '💅';
-        title = isHi ? '💅 नाखून व एनीमिया जांच (Nail & Anemia Screening)' : (isOr ? '💅 ନଖ ଓ ରକ୍ତହୀନତା ପରୀକ୍ଷା (Nail & Anemia Screening)' : '💅 Nail & Anemia Visual Assessment');
-        subtitle = isHi ? 'रक्तहीनता (Pallor), ऑक्सीजन स्तर व पोषण जांच' : (isOr ? 'ରକ୍ତହୀନତା (Pallor), ଅକ୍ସିଜେନ୍ ଓ ପୋଷଣ ଯାଞ୍ଚ' : 'Koilonychia Pallor & Nutritional Triage');
+        title = isHi ? '💅 नाखून व एनीमिया दृश्य मूल्यांकन (Nakha Pariksha)' : (isOr ? '💅 ନଖ ଓ ରକ୍ତହୀନତା ପରୀକ୍ଷା (ନଖ ପରୀକ୍ଷା)' : '💅 Nails & Anemia Visual Screening (Nakha Pariksha)');
+        subtitle = isHi ? 'रक्तहीनता (Pallor), ऑक्सीजन स्तर व पोषण जांच' : (isOr ? 'ରକ୍ତହୀନତା (Pallor), ଅକ୍ସିଜେନ୍ ଓ ପୋଷଣ ଯାଞ୍ଚ' : 'Subungual Pallor, Koilonychia & Hemoglobin Triage');
       }
 
       dermaHeader.innerHTML = `
@@ -1396,6 +1418,7 @@
     const photoBox = $('photoActionBox');
     const regionalCameraBtn = $('regionalCameraBtn');
     const removeBtn = $('removeImageBtn');
+    const analyzeBtn = $('analyzePhotoBtn');
 
     if (cameraBtn && cameraInput) {
       cameraBtn.addEventListener('click', () => cameraInput.click());
@@ -1408,6 +1431,13 @@
     }
     if (removeBtn) {
       removeBtn.addEventListener('click', () => clearPendingImage());
+    }
+    if (analyzeBtn) {
+      analyzeBtn.addEventListener('click', () => {
+        if (pendingSkinImage && !busy) {
+          send($('question')?.value || '');
+        }
+      });
     }
     if (cameraInput) {
       cameraInput.addEventListener('change', (e) => {

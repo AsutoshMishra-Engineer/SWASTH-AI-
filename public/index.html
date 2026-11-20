@@ -16,7 +16,7 @@
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+Devanagari:wght@400;500;600;700&family=Noto+Sans+Oriya:wght@400;500;600;700&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="/vendor/leaflet.css">
-  <link rel="stylesheet" href="/style.css?v=20261120_01">
+  <link rel="stylesheet" href="/style.css?v=20261120_02">
 </head>
 <body>
   <a class="skip" href="#main">Skip to content</a>
@@ -219,15 +219,20 @@
           <div class="image-preview-meta">
             <span id="imagePreviewLabel" class="image-preview-label">📷 Clinical Photo Attached</span>
             <div id="deptPillRow" class="dept-pill-row" role="group" aria-label="Select Clinical Department">
-              <button class="dept-pill active" type="button" data-dept="auto" title="Auto-Detect Department">🌐 Auto</button>
-              <button class="dept-pill" type="button" data-dept="photo" title="Upload Photo">📸 Photo</button>
-              <button class="dept-pill" type="button" data-dept="eye" title="Eye & Vision">👁️ Eye</button>
-              <button class="dept-pill" type="button" data-dept="oral" title="Oral & Pre-Cancer">👄 Oral</button>
-              <button class="dept-pill" type="button" data-dept="pediatric" title="Baby & Pediatrics">👶 Baby</button>
-              <button class="dept-pill" type="button" data-dept="wound" title="Wounds, Burns & Bites">🩹 Wound</button>
-              <button class="dept-pill" type="button" data-dept="nail" title="Nails & Anemia">💅 Nails</button>
+              <button class="dept-pill active" type="button" data-dept="auto" title="Auto-Detect Department"><span class="dept-pill-icon">🌐</span> <span class="dept-pill-text">Auto</span></button>
+              <button class="dept-pill" type="button" data-dept="photo" title="General & Skin"><span class="dept-pill-icon">📸</span> <span class="dept-pill-text">Skin</span></button>
+              <button class="dept-pill" type="button" data-dept="eye" title="Ophthalmology & Eye (Netra Pariksha)"><span class="dept-pill-icon">👁️</span> <span class="dept-pill-text">Eye</span></button>
+              <button class="dept-pill" type="button" data-dept="oral" title="Oral Health & Pre-Cancer (Mukh Swasthya)"><span class="dept-pill-icon">👄</span> <span class="dept-pill-text">Oral</span></button>
+              <button class="dept-pill" type="button" data-dept="pediatric" title="Pediatrics & Newborn (Shishu Swasthya)"><span class="dept-pill-icon">👶</span> <span class="dept-pill-text">Baby</span></button>
+              <button class="dept-pill" type="button" data-dept="wound" title="Wounds, Burns & Bites (Khyata & Porajala)"><span class="dept-pill-icon">🩹</span> <span class="dept-pill-text">Wound</span></button>
+              <button class="dept-pill" type="button" data-dept="nail" title="Nails & Anemia (Nakha Pariksha)"><span class="dept-pill-icon">💅</span> <span class="dept-pill-text">Nails</span></button>
             </div>
-            <span id="imagePreviewHint" class="image-preview-hint">Type symptoms or tap Send to analyze</span>
+            <div class="image-preview-actions">
+              <span id="imagePreviewHint" class="image-preview-hint">Tap below to analyze with AI</span>
+              <button id="analyzePhotoBtn" class="btn primary small analyze-photo-btn" type="button" aria-label="Scan & Analyze Photo">
+                🔍 <span id="analyzePhotoBtnText">Scan & Analyze Photo</span>
+              </button>
+            </div>
           </div>
           <button id="removeImageBtn" class="remove-image-btn" type="button" aria-label="Remove photo" title="Remove photo">✕</button>
         </div>
@@ -466,7 +471,7 @@
 
   <script src="/vendor/leaflet.js"></script>
   <script src="/vendor/supabase.js"></script>
-  <script src="/config.js?v=20261120_01"></script>
-  <script src="/app.js?v=20261120_01"></script>
+  <script src="/config.js?v=20261120_02"></script>
+  <script src="/app.js?v=20261120_02"></script>
 </body>
 </html>

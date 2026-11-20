@@ -132,3 +132,50 @@ test('vision-skin: falls back to secondary model if first model returns 503', as
   assert.match(data.answer, /Ringworm identified by fallback model/);
   assert.equal(modelsCalled.length, 2);
 });
+
+test('vision-skin: supports eye, oral, pediatric, wound, and nail departments with strict zero-random-medicines guard', async () => {
+  let capturedPrompt = '';
+  globalThis.fetch = async (url, init = {}) => {
+    const u = String(url);
+    if (u.includes('/auth/v1/user')) {
+      return reply({ id: 'u1', email: 'test@example.com' }, 200);
+    }
+    if (u.includes('/models/')) {
+      const parsed = JSON.parse(init.body || '{}');
+      capturedPrompt = parsed.contents?.[0]?.parts?.[1]?.text || '';
+      return reply({
+        candidates: [{
+          content: {
+            parts: [{
+              text: '📘 Visual Observation & Probable Causes: Eye redness noted.\n🏠 Safe Home Care & Immediate Relief: Cool compress, do not rub.\n⚠️ Warning Signs: Vision blurring.\n🏥 When to See a Doctor: Visit ophthalmologist.\n[[DEPT:eye]]'
+            }]
+          }
+        }]
+      }, 200);
+    }
+    throw new Error('unexpected: ' + u);
+  };
+
+  const req = new Request('https://site/api/vision-skin', {
+    method: 'POST',
+    headers: { Authorization: 'Bearer tok', 'Content-Type': 'application/json' },
+    body: JSON.stringify({
+      image: 'iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVR42mNk+A8AAQUBAScY42YAAAAASUVORK5CYII=',
+      mimeType: 'image/png',
+      department: 'eye',
+      lang: 'en'
+    })
+  });
+
+  const res = await onRequestPost({ request: req, env: ENV });
+  assert.equal(res.status, 200);
+  const data = await res.json();
+  assert.equal(data.department, 'eye');
+  assert.ok(!data.answer.includes('[[DEPT:eye]]'), 'metadata tag should be stripped from user answer');
+  assert.match(capturedPrompt, /ZERO UNPRESCRIBED RANDOM MEDICINES/);
+  assert.match(capturedPrompt, /OPHTHALMOLOGY & EYE DEPARTMENT/);
+  assert.match(capturedPrompt, /ORAL HEALTH & PRE-CANCER SCREENING/);
+  assert.match(capturedPrompt, /PEDIATRICS & NEWBORN TRIAGE/);
+  assert.match(capturedPrompt, /WOUNDS, BURNS & ANIMAL BITES/);
+  assert.match(capturedPrompt, /NAILS & ANEMIA VISUAL SCREENING/);
+});
