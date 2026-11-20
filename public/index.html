@@ -15,16 +15,26 @@
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+Devanagari:wght@400;500;600;700&family=Noto+Sans+Oriya:wght@400;500;600;700&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="/style.css?v=20261119_07">
+  <link rel="stylesheet" href="/vendor/leaflet.css">
+  <link rel="stylesheet" href="/style.css?v=20261120_01">
 </head>
 <body>
   <a class="skip" href="#main">Skip to content</a>
 
-  <!-- EMERGENCY TRIAGE BANNER (SINGLE PROFESSIONAL BAR) -->
+  <!-- EMERGENCY TRIAGE BANNER (SINGLE PROFESSIONAL BAR WITH LIVE HOSPITAL LOCATOR) -->
   <aside class="emergency" role="alert" aria-label="Emergency warning">
     <div class="emergency-inner">
-      <span class="emergency-icon" aria-hidden="true">🚨</span>
-      <span id="emergencyText"><strong>Medical Emergency?</strong> Severe chest pain, trouble breathing, or heavy bleeding? Call <a href="tel:108">108</a> (Ambulance) or <a href="tel:112">112</a> immediately.</span>
+      <div class="emergency-text-wrap">
+        <span class="emergency-icon" aria-hidden="true">🚨</span>
+        <span id="emergencyText"><strong>Medical Emergency?</strong> Severe chest pain, trouble breathing, or heavy bleeding? Call <a href="tel:108">108</a> (Ambulance) or <a href="tel:112">112</a>.</span>
+      </div>
+      <button id="emergencyMapPillBtn" class="emergency-map-pill" type="button" aria-label="Locate Nearest Emergency Hospital on Map">
+        <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/>
+          <circle cx="12" cy="10" r="3"/>
+        </svg>
+        <span id="emergencyMapPillLabel">📍 Nearest Hospital</span>
+      </button>
     </div>
   </aside>
 
@@ -382,6 +392,65 @@
     </div>
   </dialog>
 
+  <!-- EMERGENCY HOSPITAL LOCATOR & DELIVERY-AGENT STYLE LIVE MAP MODAL -->
+  <dialog id="hospitalMapModal" class="hospital-map-dialog" aria-labelledby="hospitalMapModalTitle">
+    <div class="hospital-modal-wrapper">
+      <div class="hospital-modal-header">
+        <div class="hospital-modal-title-box">
+          <span class="hospital-modal-icon">🏥</span>
+          <div>
+            <h3 id="hospitalMapModalTitle" class="hospital-modal-title">Emergency Hospital Locator</h3>
+            <span id="hospitalMapGpsStatus" class="hospital-gps-status">
+              <span class="gps-dot"></span> <span id="hospitalGpsStatusText">Detecting nearest emergency facilities...</span>
+            </span>
+          </div>
+        </div>
+        <button id="closeHospitalMapBtn" class="btn-icon-close" type="button" aria-label="Close hospital locator">✕</button>
+      </div>
+
+      <!-- INTERACTIVE DELIVERY-STYLE LIVE MAP -->
+      <div class="hospital-map-frame">
+        <div id="hospitalLiveMap" class="hospital-live-map" role="region" aria-label="Interactive map showing your location and nearest hospitals"></div>
+        
+        <!-- LIVE ROUTE HUD (DELIVERY AGENT STYLE) -->
+        <div id="liveRouteHud" class="live-route-hud" hidden>
+          <div class="live-route-hud-inner">
+            <div class="live-route-dot-box">
+              <span class="hud-pulse-ring"></span>
+              <span class="hud-pulse-dot"></span>
+            </div>
+            <div class="live-route-text">
+              <span id="liveRouteHospitalName" class="hud-target-name">Capital Hospital</span>
+              <strong id="liveRouteEta" class="hud-eta">🚗 1.8 km • ~5 min drive</strong>
+            </div>
+            <a id="liveRouteGmapsBtn" href="#" target="_blank" rel="noopener noreferrer" class="hud-navigate-btn">
+              Navigate ↗
+            </a>
+          </div>
+        </div>
+      </div>
+
+      <!-- HOSPITAL CARDS LIST & LIVE ACTIONS -->
+      <div class="hospital-modal-body">
+        <div class="hospital-list-header">
+          <strong id="nearestHospitalsHeading">Nearest 24x7 Government Hospitals & CHCs</strong>
+          <button id="refreshGpsBtn" class="refresh-gps-btn" type="button">🔄 Refresh GPS</button>
+        </div>
+
+        <div id="hospitalListContainer" class="hospital-list-container">
+          <!-- Dynamic hospital cards rendered here -->
+        </div>
+
+        <!-- FALLBACK GOOGLE MAPS LIVE SEARCH BAR -->
+        <div class="hospital-gmaps-fallback">
+          <a id="externalGmapsNearMe" href="https://www.google.com/maps/search/emergency+hospital+near+me/" target="_blank" rel="noopener noreferrer" class="btn ghost small full-width-link">
+            🌐 Open Live Hospital Search in Google Maps App ↗
+          </a>
+        </div>
+      </div>
+    </div>
+  </dialog>
+
   <!-- UNIVERSAL FOOTER (SINGLE CLEAN BOTTOM COPYRIGHT AS REQUESTED) -->
   <footer id="mainFooter" class="foot">
     <div class="foot-inner">
@@ -395,8 +464,9 @@
     </div>
   </footer>
 
+  <script src="/vendor/leaflet.js"></script>
   <script src="/vendor/supabase.js"></script>
-  <script src="/config.js?v=20261119_07"></script>
-  <script src="/app.js?v=20261119_07"></script>
+  <script src="/config.js?v=20261120_01"></script>
+  <script src="/app.js?v=20261120_01"></script>
 </body>
 </html>

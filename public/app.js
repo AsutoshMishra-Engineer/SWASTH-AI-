@@ -544,6 +544,7 @@
     if (pwaBtn && !pwaBtn.hidden) {
       pwaBtn.textContent = isHi ? '📲 ऐप इंस्टॉल करें' : (isOr ? '📲 ଆପ୍ ଇନଷ୍ଟଲ୍' : '📲 Install App');
     }
+    updateHospitalMapLanguage();
 
     // Refresh chips to current language
     renderChips();
@@ -1247,6 +1248,27 @@
       d.appendChild(speakBar);
     }
 
+    // In-Chat Emergency Live Hospital Map Card
+    if (data.kind === 'emergency') {
+      const emCard = document.createElement('div');
+      emCard.className = 'emergency-chat-map-card';
+      const isOr = currentLang === 'or';
+      const isHi = currentLang === 'hi';
+      emCard.innerHTML = `
+        <div class="emergency-chat-map-header">
+          <span class="emergency-chat-map-badge">${isHi ? '🚨 तत्काल चिकित्सकीय सहायता' : (isOr ? '🚨 ତୁରନ୍ତ ଡାକ୍ତରୀ ସହାୟତା ଆବଶ୍ୟକ' : '🚨 Immediate Medical Care Required')}</span>
+          <strong>${isHi ? 'निकटतम 24x7 अस्पताल व आपातकालीन दिशा-निर्देश' : (isOr ? 'ନିକଟସ୍ଥ ୨୪x୭ ଡାକ୍ତରଖାନା ଓ ରାସ୍ତା ଦେଖନ୍ତୁ' : 'Find Nearest Emergency Hospital & Route')}</strong>
+          <p>${isHi ? 'अपने पास के सरकारी अस्पताल, ट्रॉमा सेंटर या सीएचसी का लाइव नक्शा देखें।' : (isOr ? 'ଆପଣଙ୍କ ନିକଟସ୍ଥ ସରକାରୀ ହସ୍ପିଟାଲ, ଟ୍ରମା ସେଣ୍ଟର ବା CHC ର ଲାଇଭ୍ ମ୍ୟାପ୍ ଦେଖନ୍ତୁ ।' : 'Locate the closest government hospital, trauma centre, or CHC with live directions.')}</p>
+        </div>
+        <button class="btn danger small emergency-locate-btn" type="button">
+          📍 ${isHi ? 'निकटतम अस्पताल खोजें (GPS नक्शा)' : (isOr ? 'ନିକଟସ୍ଥ ଡାକ୍ତରଖାନା ଖୋଜନ୍ତୁ (GPS ମ୍ୟାପ୍)' : 'Locate Nearest Hospital (GPS Live Map)')}
+        </button>
+      `;
+      const locBtn = emCard.querySelector('.emergency-locate-btn');
+      if (locBtn) locBtn.addEventListener('click', () => openHospitalMap());
+      d.appendChild(emCard);
+    }
+
     if (Array.isArray(data.sources) && data.sources.length) {
       const s = document.createElement('div');
       s.className = 'sources';
@@ -1839,6 +1861,473 @@
       console.log('Swasth AI successfully installed on home screen!');
     });
   }
+
+  // =========================================================================
+  // EMERGENCY HOSPITAL LOCATOR & DELIVERY-AGENT STYLE LIVE MAP (Leaflet + Google Maps)
+  // =========================================================================
+  const GOVT_HOSPITALS = [
+    {
+      id: 'bbsr-aiims',
+      name: 'AIIMS Bhubaneswar',
+      nameOr: 'ଏମ୍ସ ଭୁବନେଶ୍ୱର (AIIMS Bhubaneswar)',
+      nameHi: 'एम्स भुवनेश्वर (AIIMS Bhubaneswar)',
+      lat: 20.2312,
+      lng: 85.7760,
+      type: 'National Apex Referral & Trauma',
+      address: 'Sijua, Patrapada, Bhubaneswar - 751019',
+      phone: '0674-2476789',
+      emergencyPhone: '108',
+      casualty: '24x7 Emergency & Multi-Specialty Trauma Centre'
+    },
+    {
+      id: 'bbsr-capital',
+      name: 'Capital Hospital & Trauma Centre',
+      nameOr: 'କ୍ୟାପିଟାଲ୍ ହସ୍ପିଟାଲ୍ ଓ ଟ୍ରମା ସେଣ୍ଟର (Capital Hospital)',
+      nameHi: 'कैपिटल हॉस्पिटल व ट्रॉमा सेंटर (Capital Hospital)',
+      lat: 20.2644,
+      lng: 85.8281,
+      type: 'Postgraduate Institute & District Hospital',
+      address: 'Unit-6, Ganga Nagar, Bhubaneswar - 751001',
+      phone: '0674-2391983',
+      emergencyPhone: '108',
+      casualty: '24x7 State Emergency & Casualty Desk'
+    },
+    {
+      id: 'ctc-scb',
+      name: 'SCB Medical College & Hospital',
+      nameOr: 'ଏସସିବି ମେଡିକାଲ କଲେଜ ଓ ହସ୍ପିଟାଲ, କଟକ (SCB Cuttack)',
+      nameHi: 'एससीबी मेडिकल कॉलेज व अस्पताल, कटक (SCB Cuttack)',
+      lat: 20.4727,
+      lng: 85.8885,
+      type: 'Premier Medical College & Super-Specialty',
+      address: 'Mangalabag, Cuttack - 753007',
+      phone: '0671-2414080',
+      emergencyPhone: '108',
+      casualty: '24x7 Apex Emergency Casualty & Trauma ICU'
+    },
+    {
+      id: 'berhampur-mkcg',
+      name: 'MKCG Medical College & Hospital',
+      nameOr: 'ଏମକେସିଜି ମେଡିକାଲ କଲେଜ, ବ୍ରହ୍ମପୁର (MKCG Berhampur)',
+      nameHi: 'एमकेसीजी मेडिकल कॉलेज, ब्रह्मपुर (MKCG Berhampur)',
+      lat: 19.3093,
+      lng: 84.8091,
+      type: 'Southern Regional Referral Hospital',
+      address: 'Medical Campus, Berhampur, Ganjam - 760004',
+      phone: '0680-2292746',
+      emergencyPhone: '108',
+      casualty: '24x7 Emergency Casualty & Critical Care'
+    },
+    {
+      id: 'burla-vimsar',
+      name: 'VIMSAR Medical College & Hospital',
+      nameOr: 'ଭିମସାର ମେଡିକାଲ କଲେଜ, ବୁର୍ଲା, ସମ୍ବଲପୁର (VIMSAR Burla)',
+      nameHi: 'विमसार मेडिकल कॉलेज, बुर्ला, संबलपुर (VIMSAR Burla)',
+      lat: 21.4984,
+      lng: 83.8741,
+      type: 'Western Regional Apex Hospital',
+      address: 'Burla, Sambalpur - 768017',
+      phone: '0663-2430768',
+      emergencyPhone: '108',
+      casualty: '24x7 Western Odisha Emergency & Trauma'
+    },
+    {
+      id: 'puri-dhh',
+      name: 'District Headquarters Hospital (DHH) Puri',
+      nameOr: 'ଜିଲ୍ଲା ମୁଖ୍ୟ ଚିକିତ୍ସାଳୟ (DHH), ପୁରୀ',
+      nameHi: 'जिला मुख्य अस्पताल (DHH), पुरी',
+      lat: 19.8135,
+      lng: 85.8312,
+      type: 'District Headquarters Hospital',
+      address: 'Grand Road, Puri - 752001',
+      phone: '06752-222068',
+      emergencyPhone: '108',
+      casualty: '24x7 Coastal Emergency & Dialysis Ward'
+    },
+    {
+      id: 'rourkela-rgh',
+      name: 'Rourkela Govt Hospital (RGH)',
+      nameOr: 'ରାଉରକେଲା ସରକାରୀ ହସ୍ପିଟାଲ (RGH), ସୁନ୍ଦରଗଡ଼',
+      nameHi: 'राउरकेला सरकारी अस्पताल (RGH), सुंदरगढ़',
+      lat: 22.2272,
+      lng: 84.8536,
+      type: 'District / General Hospital',
+      address: 'Panposh Road, Rourkela - 769004',
+      phone: '0661-2401314',
+      emergencyPhone: '108',
+      casualty: '24x7 Industrial Emergency & Trauma Desk'
+    },
+    {
+      id: 'balasore-fmmc',
+      name: 'Fakir Mohan Medical College (FMMC)',
+      nameOr: 'ଫକୀର ମୋହନ ମେଡିକାଲ କଲେଜ (FMMC), ବାଲେଶ୍ୱର',
+      nameHi: 'फकीर मोहन मेडिकल कॉलेज (FMMC), बालेश्वर',
+      lat: 21.5034,
+      lng: 86.9157,
+      type: 'Govt Medical College & Hospital',
+      address: 'Remuna, Balasore - 756019',
+      phone: '06782-224801',
+      emergencyPhone: '108',
+      casualty: '24x7 Northern Coastal Emergency Centre'
+    },
+    {
+      id: 'baripada-prm',
+      name: 'PRM Medical College & Hospital',
+      nameOr: 'ପିଆରଏମ ମେଡିକାଲ କଲେଜ, ବାରିପଦା (PRM Baripada)',
+      nameHi: 'पीआरएम मेडिकल कॉलेज, बारीपदा (PRM Baripada)',
+      lat: 21.9347,
+      lng: 86.7327,
+      type: 'Govt Medical College & Hospital',
+      address: 'Baripada, Mayurbhanj - 757107',
+      phone: '06792-252132',
+      emergencyPhone: '108',
+      casualty: '24x7 Mayurbhanj Tribal Emergency Ward'
+    },
+    {
+      id: 'koraput-sln',
+      name: 'SLN Medical College & Hospital',
+      nameOr: 'ଏସଏଲଏନ ମେଡିକାଲ କଲେଜ, କୋରାପୁଟ (SLN Koraput)',
+      nameHi: 'एसएलएन मेडिकल कॉलेज, कोरापुट (SLN Koraput)',
+      lat: 18.8166,
+      lng: 82.7166,
+      type: 'Govt Medical College & Hospital',
+      address: 'Koraput, Odisha - 764020',
+      phone: '06852-250100',
+      emergencyPhone: '108',
+      casualty: '24x7 Southern Tribal Trauma Facility'
+    },
+    {
+      id: 'bolangir-bbmc',
+      name: 'Bhima Bhoi Medical College & Hospital',
+      nameOr: 'ଭୀମ ଭୋଇ ମେଡିକାଲ କଲେଜ, ବଲାଙ୍ଗୀର (Bolangir)',
+      nameHi: 'भीम भोई मेडिकल कॉलेज, बलांगीर (Bolangir)',
+      lat: 20.7108,
+      lng: 83.4862,
+      type: 'Govt Medical College & Hospital',
+      address: 'Gandhinagar, Bolangir - 767001',
+      phone: '06652-232333',
+      emergencyPhone: '108',
+      casualty: '24x7 Casualty & Critical Care'
+    },
+    {
+      id: 'kalahandi-dhh',
+      name: 'DHH Bhawanipatna, Kalahandi',
+      nameOr: 'ଜିଲ୍ଲା ମୁଖ୍ୟ ଚିକିତ୍ସାଳୟ (DHH), ଭବାନୀପାଟଣା, କଳାହାଣ୍ଡି',
+      nameHi: 'जिला मुख्य अस्पताल (DHH), भवानीपटना, कालाहांडी',
+      lat: 19.9075,
+      lng: 83.1659,
+      type: 'District Headquarters Hospital',
+      address: 'Bhawanipatna, Kalahandi - 766001',
+      phone: '06670-230303',
+      emergencyPhone: '108',
+      casualty: '24x7 District Casualty & Maternal Ward'
+    },
+    {
+      id: 'angul-dhh',
+      name: 'District Headquarters Hospital (DHH) Angul',
+      nameOr: 'ଜିଲ୍ଲା ମୁଖ୍ୟ ଚିକିତ୍ସାଳୟ (DHH), ଅନୁଗୋଳ',
+      nameHi: 'जिला मुख्य अस्पताल (DHH), अनुगुल',
+      lat: 20.8398,
+      lng: 85.1011,
+      type: 'District Headquarters Hospital',
+      address: 'Amalapada, Angul - 759122',
+      phone: '06764-230301',
+      emergencyPhone: '108',
+      casualty: '24x7 Industrial Emergency Desk'
+    },
+    {
+      id: 'dhenkanal-dhh',
+      name: 'District Headquarters Hospital (DHH) Dhenkanal',
+      nameOr: 'ଜିଲ୍ଲା ମୁଖ୍ୟ ଚିକିତ୍ସାଳୟ (DHH), ଢେଙ୍କାନାଳ',
+      nameHi: 'जिला मुख्य अस्पताल (DHH), ढेंकानाल',
+      lat: 20.6628,
+      lng: 85.5986,
+      type: 'District Headquarters Hospital',
+      address: 'Kunjakanta, Dhenkanal - 759001',
+      phone: '06762-224410',
+      emergencyPhone: '108',
+      casualty: '24x7 Emergency Casualty Desk'
+    },
+    {
+      id: 'delhi-aiims',
+      name: 'AIIMS New Delhi (National Apex)',
+      nameOr: 'ଏମ୍ସ ନୂଆଦିଲ୍ଲୀ (AIIMS New Delhi)',
+      nameHi: 'एम्स नई दिल्ली (AIIMS New Delhi)',
+      lat: 28.5672,
+      lng: 77.2100,
+      type: 'National Apex Referral Institute',
+      address: 'Ansari Nagar, New Delhi - 110029',
+      phone: '011-26588500',
+      emergencyPhone: '108',
+      casualty: '24x7 Emergency Casualty & Trauma'
+    }
+  ];
+
+  let hospitalMapInstance = null;
+  let userLocationCoords = null;
+  let routePolyline = null;
+
+  function toRad(deg) { return (deg * Math.PI) / 180; }
+
+  function haversineKm(lat1, lon1, lat2, lon2) {
+    const R = 6371;
+    const dLat = toRad(lat2 - lat1);
+    const dLon = toRad(lon2 - lon1);
+    const a =
+      Math.sin(dLat / 2) * Math.sin(dLat / 2) +
+      Math.cos(toRad(lat1)) * Math.cos(toRad(lat2)) *
+      Math.sin(dLon / 2) * Math.sin(dLon / 2);
+    const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
+    return R * c;
+  }
+
+  function calcDriveMinutes(km) {
+    return Math.max(3, Math.round((km / 32) * 60) + 1);
+  }
+
+  function updateHospitalMapLanguage() {
+    const isOr = currentLang === 'or';
+    const isHi = currentLang === 'hi';
+    const title = $('hospitalMapModalTitle');
+    if (title) {
+      title.textContent = isHi ? '🏥 आपातकालीन अस्पताल लोकेटर' : (isOr ? '🏥 ଜରୁରୀକାଳୀନ ଡାକ୍ତରଖାନା ଲୋକେଟର୍' : '🏥 Emergency Hospital Locator');
+    }
+    const heading = $('nearestHospitalsHeading');
+    if (heading) {
+      heading.textContent = isHi ? 'निकटतम 24x7 सरकारी अस्पताल व सीएचसी' : (isOr ? 'ନିକଟସ୍ଥ ୨୪x୭ ସରକାରୀ ଡାକ୍ତରଖାନା ଓ CHC' : 'Nearest 24x7 Government Hospitals & CHCs');
+    }
+    const pillLabel = $('emergencyMapPillLabel');
+    if (pillLabel) {
+      pillLabel.textContent = isHi ? '📍 अस्पताल नक्शा' : (isOr ? '📍 ଡାକ୍ତରଖାନା ମ୍ୟାପ୍' : '📍 Nearest Hospital');
+    }
+    const refreshBtn = $('refreshGpsBtn');
+    if (refreshBtn) {
+      refreshBtn.textContent = isHi ? '🔄 जीपीएस रिफ्रेश' : (isOr ? '🔄 GPS ରିଫ୍ରେଶ୍' : '🔄 Refresh GPS');
+    }
+    if (userLocationCoords) {
+      renderHospitalMapAndCards(userLocationCoords);
+    }
+  }
+
+  function openHospitalMap() {
+    const modal = $('hospitalMapModal');
+    if (!modal) return;
+    if (typeof modal.showModal === 'function') {
+      try { modal.showModal(); } catch { modal.setAttribute('open', ''); }
+    } else {
+      modal.setAttribute('open', '');
+    }
+    updateHospitalMapLanguage();
+    locateUserAndRender();
+  }
+
+  function closeHospitalMap() {
+    const modal = $('hospitalMapModal');
+    if (!modal) return;
+    if (typeof modal.close === 'function') {
+      try { modal.close(); } catch { modal.removeAttribute('open'); }
+    } else {
+      modal.removeAttribute('open');
+    }
+  }
+
+  function locateUserAndRender() {
+    const statusText = $('hospitalGpsStatusText');
+    const isOr = currentLang === 'or';
+    const isHi = currentLang === 'hi';
+
+    if (statusText) {
+      statusText.textContent = isHi ? 'लाइव जीपीएस स्थिति खोजी जा रही है...' : (isOr ? 'ଲାଇଭ୍ GPS ସ୍ଥିତି ଯାଞ୍ଚ ହେଉଛି...' : 'Acquiring live GPS location...');
+    }
+
+    const defaultBhubaneswar = { lat: 20.2644, lng: 85.8281, isFallback: true };
+
+    if (typeof navigator !== 'undefined' && navigator.geolocation) {
+      navigator.geolocation.getCurrentPosition(
+        (pos) => {
+          userLocationCoords = {
+            lat: pos.coords.latitude,
+            lng: pos.coords.longitude,
+            isFallback: false
+          };
+          if (statusText) {
+            statusText.textContent = isHi ? '🟢 लाइव जीपीएस सक्रिय' : (isOr ? '🟢 ଲାଇଭ୍ GPS ସକ୍ରିୟ' : '🟢 Live GPS Active');
+          }
+          renderHospitalMapAndCards(userLocationCoords);
+        },
+        (err) => {
+          console.warn('GPS location fallback:', err.message);
+          userLocationCoords = defaultBhubaneswar;
+          if (statusText) {
+            statusText.textContent = isHi ? '📍 ओडिशा संदर्भ स्थिति (GPS अनुमति उपलब्ध नहीं)' : (isOr ? '📍 ଓଡ଼ିଶା କେନ୍ଦ୍ର (GPS ଅନୁମତି ମିଳିନାହିଁ)' : '📍 Odisha Central (GPS Permission Denied)');
+          }
+          renderHospitalMapAndCards(userLocationCoords);
+        },
+        { enableHighAccuracy: true, timeout: 8000, maximumAge: 30000 }
+      );
+    } else {
+      userLocationCoords = defaultBhubaneswar;
+      renderHospitalMapAndCards(userLocationCoords);
+    }
+  }
+
+  function renderHospitalMapAndCards(userPos) {
+    const isOr = currentLang === 'or';
+    const isHi = currentLang === 'hi';
+
+    const sorted = GOVT_HOSPITALS.map((h) => {
+      const dist = haversineKm(userPos.lat, userPos.lng, h.lat, h.lng);
+      const eta = calcDriveMinutes(dist);
+      return { ...h, dist, eta };
+    }).sort((a, b) => a.dist - b.dist);
+
+    const closest = sorted[0];
+
+    // Update Delivery-Style Floating HUD
+    const hud = $('liveRouteHud');
+    const hudName = $('liveRouteHospitalName');
+    const hudEta = $('liveRouteEta');
+    const hudBtn = $('liveRouteGmapsBtn');
+
+    if (hud && closest) {
+      hud.hidden = false;
+      const displayName = isHi ? closest.nameHi : (isOr ? closest.nameOr : closest.name);
+      if (hudName) hudName.textContent = displayName;
+      if (hudEta) {
+        hudEta.textContent = isHi
+          ? `🚗 ${closest.dist.toFixed(1)} किमी • ~${closest.eta} मिनट ड्राइव`
+          : (isOr ? `🚗 ${closest.dist.toFixed(1)} କିମି • ~${closest.eta} ମିନିଟ୍ ଡ୍ରାଇଭ୍` : `🚗 ${closest.dist.toFixed(1)} km • ~${closest.eta} min drive`);
+      }
+      if (hudBtn) {
+        hudBtn.href = `https://www.google.com/maps/dir/?api=1&destination=${closest.lat},${closest.lng}&travelmode=driving`;
+        hudBtn.textContent = isHi ? 'दिशा देखें ↗' : (isOr ? 'ରାସ୍ତା ଦେଖନ୍ତୁ ↗' : 'Navigate ↗');
+      }
+    }
+
+    const extGmaps = $('externalGmapsNearMe');
+    if (extGmaps) {
+      extGmaps.href = `https://www.google.com/maps/search/hospital+emergency+near+me/@${userPos.lat},${userPos.lng},13z`;
+    }
+
+    const container = $('hospitalListContainer');
+    if (container) {
+      container.innerHTML = '';
+      sorted.slice(0, 5).forEach((h, idx) => {
+        const card = document.createElement('div');
+        card.className = 'hospital-card' + (idx === 0 ? ' closest' : '');
+        const dispName = isHi ? h.nameHi : (isOr ? h.nameOr : h.name);
+        const gmapsDirUrl = `https://www.google.com/maps/dir/?api=1&destination=${h.lat},${h.lng}&travelmode=driving`;
+        const phone = h.phone || '108';
+
+        card.innerHTML = `
+          <div class="hospital-card-top">
+            <div>
+              <h4 class="hospital-card-name">${dispName}</h4>
+              <div class="hospital-card-sub">${h.address}</div>
+            </div>
+            <span class="hospital-card-badge">${idx === 0 ? (isHi ? '🏆 सबसे पास' : (isOr ? '🏆 ନିକଟତମ' : '🏆 Closest')) : '🚨 24x7'}</span>
+          </div>
+          <div class="hospital-card-meta">
+            <span class="hospital-meta-dist">
+              🚗 ${h.dist.toFixed(1)} km • ~${h.eta} min drive
+            </span>
+            <span style="color:var(--muted);">&bull;</span>
+            <span style="font-size:0.75rem;color:var(--muted);">${h.type}</span>
+          </div>
+          <div class="hospital-card-actions">
+            <a href="${gmapsDirUrl}" target="_blank" rel="noopener noreferrer" class="btn-nav-gmaps">
+              🧭 ${isHi ? 'Google Maps पर लाइव रास्ता' : (isOr ? 'Google Maps ରେ ରାସ୍ତା ଦେଖନ୍ତୁ' : 'Start Google Maps Navigation')}
+            </a>
+            <a href="tel:${phone}" class="btn-call-hospital">
+              📞 ${isHi ? 'हेल्पलाइन कॉल' : (isOr ? 'କଲ୍ କରନ୍ତୁ' : 'Call Desk')}
+            </a>
+          </div>
+        `;
+        container.appendChild(card);
+      });
+    }
+
+    // Leaflet map rendering (Delivery-agent style tracking)
+    if (typeof window !== 'undefined' && typeof window.L !== 'undefined') {
+      const mapContainer = $('hospitalLiveMap');
+      if (!mapContainer) return;
+
+      if (hospitalMapInstance) {
+        try { hospitalMapInstance.remove(); } catch {}
+        hospitalMapInstance = null;
+      }
+
+      try {
+        hospitalMapInstance = window.L.map('hospitalLiveMap', {
+          zoomControl: true,
+          attributionControl: false
+        }).setView([userPos.lat, userPos.lng], 13);
+
+        window.L.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png', {
+          maxZoom: 19
+        }).addTo(hospitalMapInstance);
+
+        const userRadarIcon = window.L.divIcon({
+          className: 'user-radar-pin',
+          iconSize: [18, 18],
+          iconAnchor: [9, 9]
+        });
+        const userMarker = window.L.marker([userPos.lat, userPos.lng], { icon: userRadarIcon }).addTo(hospitalMapInstance);
+        userMarker.bindPopup(isHi ? '📍 आपकी लाइव स्थिति' : (isOr ? '📍 ଆପଣଙ୍କ ଲାଇଭ୍ ସ୍ଥିତି' : '📍 Your Live Location'));
+
+        const bounds = [[userPos.lat, userPos.lng]];
+        sorted.slice(0, 5).forEach((h) => {
+          const hospIcon = window.L.divIcon({
+            className: 'hospital-beacon-pin',
+            html: '🏥',
+            iconSize: [32, 32],
+            iconAnchor: [16, 16]
+          });
+          const m = window.L.marker([h.lat, h.lng], { icon: hospIcon }).addTo(hospitalMapInstance);
+          const dispName = isHi ? h.nameHi : (isOr ? h.nameOr : h.name);
+          m.bindPopup(`<strong>${dispName}</strong><br/>🚗 ${h.dist.toFixed(1)} km (~${h.eta} min)<br/><a href="https://www.google.com/maps/dir/?api=1&destination=${h.lat},${h.lng}" target="_blank">Navigate ↗</a>`);
+          bounds.push([h.lat, h.lng]);
+        });
+
+        if (closest) {
+          routePolyline = window.L.polyline(
+            [[userPos.lat, userPos.lng], [closest.lat, closest.lng]],
+            { color: '#0d9488', weight: 4, dashArray: '6, 8', opacity: 0.9 }
+          ).addTo(hospitalMapInstance);
+        }
+
+        if (bounds.length > 1) {
+          hospitalMapInstance.fitBounds(bounds, { padding: [35, 35], maxZoom: 14 });
+        }
+
+        setTimeout(() => {
+          if (hospitalMapInstance) hospitalMapInstance.invalidateSize();
+        }, 300);
+      } catch (mapErr) {
+        console.warn('Leaflet map render error:', mapErr);
+      }
+    }
+  }
+
+  function initHospitalMapControls() {
+    const pillBtn = $('emergencyMapPillBtn');
+    if (pillBtn) pillBtn.addEventListener('click', openHospitalMap);
+
+    const closeBtn = $('closeHospitalMapBtn');
+    if (closeBtn) closeBtn.addEventListener('click', closeHospitalMap);
+
+    const refreshBtn = $('refreshGpsBtn');
+    if (refreshBtn) refreshBtn.addEventListener('click', locateUserAndRender);
+
+    const modal = $('hospitalMapModal');
+    if (modal) {
+      modal.addEventListener('click', (e) => {
+        if (e.target === modal) closeHospitalMap();
+      });
+    }
+  }
+
+  initHospitalMapControls();
 
   // ---------- Boot / Init ----------
   sb.auth.onAuthStateChange((_event, session) => route(session));
