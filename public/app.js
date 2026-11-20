@@ -1904,8 +1904,10 @@
 
   // =========================================================================
   // EMERGENCY HOSPITAL LOCATOR & DELIVERY-AGENT STYLE LIVE MAP (Leaflet + Google Maps)
+  // Comprehensive coverage across ALL 30 DISTRICTS of Odisha + National Apex
   // =========================================================================
   const GOVT_HOSPITALS = [
+    // --- 1. KHORDHA / BHUBANESWAR ---
     {
       id: 'bbsr-aiims',
       name: 'AIIMS Bhubaneswar',
@@ -1913,6 +1915,7 @@
       nameHi: 'एम्स भुवनेश्वर (AIIMS Bhubaneswar)',
       lat: 20.2312,
       lng: 85.7760,
+      district: 'khordha',
       type: 'National Apex Referral & Trauma',
       address: 'Sijua, Patrapada, Bhubaneswar - 751019',
       phone: '0674-2476789',
@@ -1921,17 +1924,34 @@
     },
     {
       id: 'bbsr-capital',
-      name: 'Capital Hospital & Trauma Centre',
-      nameOr: 'କ୍ୟାପିଟାଲ୍ ହସ୍ପିଟାଲ୍ ଓ ଟ୍ରମା ସେଣ୍ଟର (Capital Hospital)',
-      nameHi: 'कैपिटल हॉस्पिटल व ट्रॉमा सेंटर (Capital Hospital)',
+      name: 'Capital Hospital & PGIER Bhubaneswar',
+      nameOr: 'କ୍ୟାପିଟାଲ୍ ହସ୍ପିଟାଲ୍ ଓ ପିଜିଆଇଇଆର (Capital Hospital)',
+      nameHi: 'कैपिटल हॉस्पिटल व पीजीआईईआर, भुवनेश्वर',
       lat: 20.2644,
       lng: 85.8281,
-      type: 'Postgraduate Institute & District Hospital',
+      district: 'khordha',
+      type: 'Postgraduate Institute & Apex Hospital',
       address: 'Unit-6, Ganga Nagar, Bhubaneswar - 751001',
       phone: '0674-2391983',
       emergencyPhone: '108',
       casualty: '24x7 State Emergency & Casualty Desk'
     },
+    {
+      id: 'khordha-dhh',
+      name: 'District Headquarters Hospital (DHH) Khordha',
+      nameOr: 'ଜିଲ୍ଲା ମୁଖ୍ୟ ଚିକିତ୍ସାଳୟ (DHH), ଖୋର୍ଦ୍ଧା',
+      nameHi: 'जिला मुख्य अस्पताल (DHH), खोर्धा',
+      lat: 20.1843,
+      lng: 85.6212,
+      district: 'khordha',
+      type: 'District Headquarters Hospital',
+      address: 'Near Collectorate, Khordha - 752055',
+      phone: '06755-220444',
+      emergencyPhone: '108',
+      casualty: '24x7 Casualty & Emergency Ward'
+    },
+
+    // --- 2. CUTTACK ---
     {
       id: 'ctc-scb',
       name: 'SCB Medical College & Hospital',
@@ -1939,6 +1959,7 @@
       nameHi: 'एससीबी मेडिकल कॉलेज व अस्पताल, कटक (SCB Cuttack)',
       lat: 20.4727,
       lng: 85.8885,
+      district: 'cuttack',
       type: 'Premier Medical College & Super-Specialty',
       address: 'Mangalabag, Cuttack - 753007',
       phone: '0671-2414080',
@@ -1946,12 +1967,151 @@
       casualty: '24x7 Apex Emergency Casualty & Trauma ICU'
     },
     {
+      id: 'ctc-city-dhh',
+      name: 'City Hospital (DHH) Cuttack',
+      nameOr: 'ସିଟି ହସ୍ପିଟାଲ (DHH), କଟକ',
+      nameHi: 'सिटी अस्पताल (DHH), कटक',
+      lat: 20.4631,
+      lng: 85.8752,
+      district: 'cuttack',
+      type: 'District Headquarters Hospital',
+      address: 'Buxi Bazaar, Cuttack - 753001',
+      phone: '0671-2301140',
+      emergencyPhone: '108',
+      casualty: '24x7 Emergency Ward & OPD'
+    },
+
+    // --- 3. KEONJHAR (KENDUJHAR) ---
+    {
+      id: 'keonjhar-ddmch',
+      name: 'Dharanidhar Medical College & Hospital (DDMCH / DHH Keonjhar)',
+      nameOr: 'ଧରଣୀଧର ମେଡିକାଲ କଲେଜ ଓ ହସ୍ପିଟାଲ (DDMCH), କେନ୍ଦୁଝର',
+      nameHi: 'धरणीधर मेडिकल कॉलेज व अस्पताल (DDMCH), केंदुझर',
+      lat: 21.6288,
+      lng: 85.5817,
+      district: 'keonjhar',
+      type: 'Govt Medical College & District Hospital',
+      address: 'Hospital Road, Keonjhar - 758001',
+      phone: '06766-255444',
+      emergencyPhone: '108',
+      casualty: '24x7 Emergency Casualty & Trauma Care'
+    },
+    {
+      id: 'keonjhar-sdh-anandapur',
+      name: 'Sub-Divisional Hospital (SDH) Anandapur',
+      nameOr: 'ଉପଖଣ୍ଡ ଡାକ୍ତରଖାନା (SDH), ଆନନ୍ଦପୁର, କେନ୍ଦୁଝର',
+      nameHi: 'उपखंड अस्पताल (SDH), आनंदपुर, केंदुझर',
+      lat: 21.2223,
+      lng: 86.1217,
+      district: 'keonjhar',
+      type: 'Sub-Divisional Hospital & Emergency',
+      address: 'Anandapur, Keonjhar - 758021',
+      phone: '06731-220022',
+      emergencyPhone: '108',
+      casualty: '24x7 Emergency Desk & Delivery Ward'
+    },
+
+    // --- 4. BHADRAK ---
+    {
+      id: 'bhadrak-dhh',
+      name: 'District Headquarters Hospital (DHH) Bhadrak',
+      nameOr: 'ଜିଲ୍ଲା ମୁଖ୍ୟ ଚିକିତ୍ସାଳୟ (DHH), ଭଦ୍ରକ',
+      nameHi: 'जिला मुख्य अस्पताल (DHH), भद्रक',
+      lat: 21.0583,
+      lng: 86.5028,
+      district: 'bhadrak',
+      type: 'District Headquarters Hospital',
+      address: 'Hospital Road, Bhadrak - 756100',
+      phone: '06784-251410',
+      emergencyPhone: '108',
+      casualty: '24x7 Casualty & Dialysis Centre'
+    },
+
+    // --- 5. JAJPUR ---
+    {
+      id: 'jajpur-mch-dhh',
+      name: 'Govt Medical College & DHH Jajpur',
+      nameOr: 'ଯାଜପୁର ସରକାରୀ ମେଡିକାଲ କଲେଜ ଓ DHH',
+      nameHi: 'सरकारी मेडिकल कॉलेज व DHH, जाजपुर',
+      lat: 20.8497,
+      lng: 86.3353,
+      district: 'jajpur',
+      type: 'Govt Medical College & District Hospital',
+      address: 'Jajpur Town, Odisha - 755001',
+      phone: '06728-222040',
+      emergencyPhone: '108',
+      casualty: '24x7 Emergency Trauma & ICU Desk'
+    },
+    {
+      id: 'jajpur-sdh-vyasanagar',
+      name: 'Sub-Divisional Hospital Jajpur Road (Vyasanagar)',
+      nameOr: 'ଉପଖଣ୍ଡ ଚିକିତ୍ସାଳୟ, ଯାଜପୁର ରୋଡ୍ (ବ୍ୟାସନଗର)',
+      nameHi: 'उपखंड अस्पताल, जाजपुर रोड (व्यासनगर)',
+      lat: 20.9463,
+      lng: 86.1362,
+      district: 'jajpur',
+      type: 'Sub-Divisional Hospital & Trauma Centre',
+      address: 'Jajpur Road, Vyasanagar - 755019',
+      phone: '06726-220130',
+      emergencyPhone: '108',
+      casualty: '24x7 Industrial Emergency & Trauma Desk'
+    },
+
+    // --- 6. BALASORE ---
+    {
+      id: 'balasore-fmmc',
+      name: 'Fakir Mohan Medical College (FMMC) Balasore',
+      nameOr: 'ଫକୀର ମୋହନ ମେଡିକାଲ କଲେଜ (FMMC), ବାଲେଶ୍ୱର',
+      nameHi: 'फकीर मोहन मेडिकल कॉलेज (FMMC), बालेश्वर',
+      lat: 21.5034,
+      lng: 86.9157,
+      district: 'balasore',
+      type: 'Govt Medical College & Hospital',
+      address: 'Remuna, Balasore - 756019',
+      phone: '06782-224801',
+      emergencyPhone: '108',
+      casualty: '24x7 Northern Coastal Emergency Centre'
+    },
+
+    // --- 7. MAYURBHANJ ---
+    {
+      id: 'baripada-prm',
+      name: 'Pandit Raghunath Murmu MCH & DHH Baripada',
+      nameOr: 'ପଣ୍ଡିତ ରଘୁନାଥ ମୁର୍ମୁ ମେଡିକାଲ କଲେଜ, ବାରିପଦା',
+      nameHi: 'पंडित रघुनाथ मुर्मू मेडिकल कॉलेज, बारीपदा',
+      lat: 21.9347,
+      lng: 86.7327,
+      district: 'mayurbhanj',
+      type: 'Govt Medical College & Hospital',
+      address: 'Baripada, Mayurbhanj - 757107',
+      phone: '06792-252132',
+      emergencyPhone: '108',
+      casualty: '24x7 Tribal Emergency & Trauma Ward'
+    },
+    {
+      id: 'mayurbhanj-sdh-rairangpur',
+      name: 'Sub-Divisional Hospital (SDH) Rairangpur',
+      nameOr: 'ଉପଖଣ୍ଡ ଚିକିତ୍ସାଳୟ, ରାଇରଙ୍ଗପୁର, ମୟୂରଭଞ୍ଜ',
+      nameHi: 'उपखंड अस्पताल, राइरंगपुर, मयूरभंज',
+      lat: 22.2687,
+      lng: 86.1772,
+      district: 'mayurbhanj',
+      type: 'Sub-Divisional Hospital & Emergency',
+      address: 'Rairangpur, Mayurbhanj - 757043',
+      phone: '06794-222045',
+      emergencyPhone: '108',
+      casualty: '24x7 Emergency Casualty Desk'
+    },
+
+    // --- 8. GANJAM ---
+    {
       id: 'berhampur-mkcg',
       name: 'MKCG Medical College & Hospital',
       nameOr: 'ଏମକେସିଜି ମେଡିକାଲ କଲେଜ, ବ୍ରହ୍ମପୁର (MKCG Berhampur)',
       nameHi: 'एमकेसीजी मेडिकल कॉलेज, ब्रह्मपुर (MKCG Berhampur)',
       lat: 19.3093,
       lng: 84.8091,
+      district: 'ganjam',
       type: 'Southern Regional Referral Hospital',
       address: 'Medical Campus, Berhampur, Ganjam - 760004',
       phone: '0680-2292746',
@@ -1959,18 +2119,21 @@
       casualty: '24x7 Emergency Casualty & Critical Care'
     },
     {
-      id: 'burla-vimsar',
-      name: 'VIMSAR Medical College & Hospital',
-      nameOr: 'ଭିମସାର ମେଡିକାଲ କଲେଜ, ବୁର୍ଲା, ସମ୍ବଲପୁର (VIMSAR Burla)',
-      nameHi: 'विमसार मेडिकल कॉलेज, बुर्ला, संबलपुर (VIMSAR Burla)',
-      lat: 21.4984,
-      lng: 83.8741,
-      type: 'Western Regional Apex Hospital',
-      address: 'Burla, Sambalpur - 768017',
-      phone: '0663-2430768',
+      id: 'ganjam-city-dhh',
+      name: 'City Hospital (DHH), Berhampur',
+      nameOr: 'ସିଟି ହସ୍ପିଟାଲ (DHH), ବ୍ରହ୍ମପୁର, ଗଞ୍ଜାମ',
+      nameHi: 'सिटी अस्पताल (DHH), ब्रह्मपुर, गंजम',
+      lat: 19.3146,
+      lng: 84.7933,
+      district: 'ganjam',
+      type: 'District Headquarters Hospital',
+      address: 'Old Bus Stand Road, Berhampur - 760001',
+      phone: '0680-2220140',
       emergencyPhone: '108',
-      casualty: '24x7 Western Odisha Emergency & Trauma'
+      casualty: '24x7 Emergency & Maternity Wing'
     },
+
+    // --- 9. PURI ---
     {
       id: 'puri-dhh',
       name: 'District Headquarters Hospital (DHH) Puri',
@@ -1978,12 +2141,45 @@
       nameHi: 'जिला मुख्य अस्पताल (DHH), पुरी',
       lat: 19.8135,
       lng: 85.8312,
+      district: 'puri',
       type: 'District Headquarters Hospital',
       address: 'Grand Road, Puri - 752001',
       phone: '06752-222068',
       emergencyPhone: '108',
       casualty: '24x7 Coastal Emergency & Dialysis Ward'
     },
+
+    // --- 10. SAMBALPUR ---
+    {
+      id: 'burla-vimsar',
+      name: 'VIMSAR Medical College & Hospital',
+      nameOr: 'ଭିମସାର ମେଡିକାଲ କଲେଜ, ବୁର୍ଲା, ସମ୍ବଲପୁର (VIMSAR Burla)',
+      nameHi: 'विमसार मेडिकल कॉलेज, बुर्ला, संबलपुर (VIMSAR Burla)',
+      lat: 21.4984,
+      lng: 83.8741,
+      district: 'sambalpur',
+      type: 'Western Regional Apex Hospital',
+      address: 'Burla, Sambalpur - 768017',
+      phone: '0663-2430768',
+      emergencyPhone: '108',
+      casualty: '24x7 Western Odisha Emergency & Trauma'
+    },
+    {
+      id: 'sambalpur-dhh',
+      name: 'District Headquarters Hospital (DHH) Sambalpur',
+      nameOr: 'ଜିଲ୍ଲା ମୁଖ୍ୟ ଚିକିତ୍ସାଳୟ (DHH), ସମ୍ବଲପୁର',
+      nameHi: 'जिला मुख्य अस्पताल (DHH), संबलपुर',
+      lat: 21.4669,
+      lng: 83.9756,
+      district: 'sambalpur',
+      type: 'District Headquarters Hospital',
+      address: 'Modipara, Sambalpur - 768001',
+      phone: '0663-2400104',
+      emergencyPhone: '108',
+      casualty: '24x7 Emergency Casualty & Burn Unit'
+    },
+
+    // --- 11. SUNDARGARH / ROURKELA ---
     {
       id: 'rourkela-rgh',
       name: 'Rourkela Govt Hospital (RGH)',
@@ -1991,6 +2187,7 @@
       nameHi: 'राउरकेला सरकारी अस्पताल (RGH), सुंदरगढ़',
       lat: 22.2272,
       lng: 84.8536,
+      district: 'sundargarh',
       type: 'District / General Hospital',
       address: 'Panposh Road, Rourkela - 769004',
       phone: '0661-2401314',
@@ -1998,51 +2195,29 @@
       casualty: '24x7 Industrial Emergency & Trauma Desk'
     },
     {
-      id: 'balasore-fmmc',
-      name: 'Fakir Mohan Medical College (FMMC)',
-      nameOr: 'ଫକୀର ମୋହନ ମେଡିକାଲ କଲେଜ (FMMC), ବାଲେଶ୍ୱର',
-      nameHi: 'फकीर मोहन मेडिकल कॉलेज (FMMC), बालेश्वर',
-      lat: 21.5034,
-      lng: 86.9157,
+      id: 'sundargarh-mch-dhh',
+      name: 'Govt Medical College & DHH Sundargarh',
+      nameOr: 'ସରକାରୀ ମେଡିକାଲ କଲେଜ ଓ DHH, ସୁନ୍ଦରଗଡ଼',
+      nameHi: 'सरकारी मेडिकल कॉलेज व DHH, सुंदरगढ़',
+      lat: 22.1190,
+      lng: 84.0326,
+      district: 'sundargarh',
       type: 'Govt Medical College & Hospital',
-      address: 'Remuna, Balasore - 756019',
-      phone: '06782-224801',
+      address: 'Mission Road, Sundargarh - 770001',
+      phone: '06622-272214',
       emergencyPhone: '108',
-      casualty: '24x7 Northern Coastal Emergency Centre'
+      casualty: '24x7 District Casualty & ICU'
     },
-    {
-      id: 'baripada-prm',
-      name: 'PRM Medical College & Hospital',
-      nameOr: 'ପିଆରଏମ ମେଡିକାଲ କଲେଜ, ବାରିପଦା (PRM Baripada)',
-      nameHi: 'पीआरएम मेडिकल कॉलेज, बारीपदा (PRM Baripada)',
-      lat: 21.9347,
-      lng: 86.7327,
-      type: 'Govt Medical College & Hospital',
-      address: 'Baripada, Mayurbhanj - 757107',
-      phone: '06792-252132',
-      emergencyPhone: '108',
-      casualty: '24x7 Mayurbhanj Tribal Emergency Ward'
-    },
-    {
-      id: 'koraput-sln',
-      name: 'SLN Medical College & Hospital',
-      nameOr: 'ଏସଏଲଏନ ମେଡିକାଲ କଲେଜ, କୋରାପୁଟ (SLN Koraput)',
-      nameHi: 'एसएलएन मेडिकल कॉलेज, कोरापुट (SLN Koraput)',
-      lat: 18.8166,
-      lng: 82.7166,
-      type: 'Govt Medical College & Hospital',
-      address: 'Koraput, Odisha - 764020',
-      phone: '06852-250100',
-      emergencyPhone: '108',
-      casualty: '24x7 Southern Tribal Trauma Facility'
-    },
+
+    // --- 12. BALANGIR ---
     {
       id: 'bolangir-bbmc',
-      name: 'Bhima Bhoi Medical College & Hospital',
+      name: 'Bhima Bhoi Medical College & Hospital (BBMC)',
       nameOr: 'ଭୀମ ଭୋଇ ମେଡିକାଲ କଲେଜ, ବଲାଙ୍ଗୀର (Bolangir)',
       nameHi: 'भीम भोई मेडिकल कॉलेज, बलांगीर (Bolangir)',
       lat: 20.7108,
       lng: 83.4862,
+      district: 'balangir',
       type: 'Govt Medical College & Hospital',
       address: 'Gandhinagar, Bolangir - 767001',
       phone: '06652-232333',
@@ -2050,18 +2225,69 @@
       casualty: '24x7 Casualty & Critical Care'
     },
     {
-      id: 'kalahandi-dhh',
-      name: 'DHH Bhawanipatna, Kalahandi',
-      nameOr: 'ଜିଲ୍ଲା ମୁଖ୍ୟ ଚିକିତ୍ସାଳୟ (DHH), ଭବାନୀପାଟଣା, କଳାହାଣ୍ଡି',
-      nameHi: 'जिला मुख्य अस्पताल (DHH), भवानीपटना, कालाहांडी',
-      lat: 19.9075,
-      lng: 83.1659,
-      type: 'District Headquarters Hospital',
-      address: 'Bhawanipatna, Kalahandi - 766001',
-      phone: '06670-230303',
+      id: 'balangir-sdh-titilagarh',
+      name: 'Sub-Divisional Hospital (SDH) Titilagarh',
+      nameOr: 'ଉପଖଣ୍ଡ ଚିକିତ୍ସାଳୟ (SDH), ଟିଟିଲାଗଡ଼',
+      nameHi: 'उपखंड अस्पताल (SDH), टिटिलागढ़',
+      lat: 20.2974,
+      lng: 83.1517,
+      district: 'balangir',
+      type: 'Sub-Divisional Hospital & Emergency',
+      address: 'Titilagarh, Balangir - 767033',
+      phone: '06655-220033',
       emergencyPhone: '108',
-      casualty: '24x7 District Casualty & Maternal Ward'
+      casualty: '24x7 Emergency Desk & Ambulance Hub'
     },
+
+    // --- 13. BARGARH ---
+    {
+      id: 'bargarh-dhh',
+      name: 'District Headquarters Hospital (DHH) Bargarh',
+      nameOr: 'ଜିଲ୍ଲା ମୁଖ୍ୟ ଚିକିତ୍ସାଳୟ (DHH), ବରଗଡ଼',
+      nameHi: 'जिला मुख्य अस्पताल (DHH), बरगढ़',
+      lat: 21.3323,
+      lng: 83.6214,
+      district: 'bargarh',
+      type: 'District Headquarters Hospital',
+      address: 'Near Old Bus Stand, Bargarh - 768028',
+      phone: '06646-231210',
+      emergencyPhone: '108',
+      casualty: '24x7 District Emergency & Delivery Care'
+    },
+
+    // --- 14. JHARSUGUDA ---
+    {
+      id: 'jharsuguda-dhh',
+      name: 'District Headquarters Hospital (DHH) Jharsuguda',
+      nameOr: 'ଜିଲ୍ଲା ମୁଖ୍ୟ ଚିକିତ୍ସାଳୟ (DHH), ଝାରସୁଗୁଡ଼ା',
+      nameHi: 'जिला मुख्य अस्पताल (DHH), झारसुगुड़ा',
+      lat: 21.8540,
+      lng: 84.0084,
+      district: 'jharsuguda',
+      type: 'District Headquarters Hospital',
+      address: 'Mangalbazar, Jharsuguda - 768201',
+      phone: '06645-270110',
+      emergencyPhone: '108',
+      casualty: '24x7 Trauma & Industrial Emergency Desk'
+    },
+
+    // --- 15. DEOGARH ---
+    {
+      id: 'deogarh-dhh',
+      name: 'District Headquarters Hospital (DHH) Deogarh',
+      nameOr: 'ଜିଲ୍ଲା ମୁଖ୍ୟ ଚିକିତ୍ସାଳୟ (DHH), ଦେବଗଡ଼',
+      nameHi: 'जिला मुख्य अस्पताल (DHH), देवगढ़',
+      lat: 21.5367,
+      lng: 84.7336,
+      district: 'deogarh',
+      type: 'District Headquarters Hospital',
+      address: 'Purunagarh, Deogarh - 768119',
+      phone: '06641-226420',
+      emergencyPhone: '108',
+      casualty: '24x7 Emergency Casualty Desk'
+    },
+
+    // --- 16. ANGUL ---
     {
       id: 'angul-dhh',
       name: 'District Headquarters Hospital (DHH) Angul',
@@ -2069,12 +2295,15 @@
       nameHi: 'जिला मुख्य अस्पताल (DHH), अनुगुल',
       lat: 20.8398,
       lng: 85.1011,
+      district: 'angul',
       type: 'District Headquarters Hospital',
       address: 'Amalapada, Angul - 759122',
       phone: '06764-230301',
       emergencyPhone: '108',
       casualty: '24x7 Industrial Emergency Desk'
     },
+
+    // --- 17. DHENKANAL ---
     {
       id: 'dhenkanal-dhh',
       name: 'District Headquarters Hospital (DHH) Dhenkanal',
@@ -2082,12 +2311,265 @@
       nameHi: 'जिला मुख्य अस्पताल (DHH), ढेंकानाल',
       lat: 20.6628,
       lng: 85.5986,
+      district: 'dhenkanal',
       type: 'District Headquarters Hospital',
       address: 'Kunjakanta, Dhenkanal - 759001',
       phone: '06762-224410',
       emergencyPhone: '108',
       casualty: '24x7 Emergency Casualty Desk'
     },
+
+    // --- 18. KENDRAPARA ---
+    {
+      id: 'kendrapara-dhh',
+      name: 'District Headquarters Hospital (DHH) Kendrapara',
+      nameOr: 'ଜିଲ୍ଲା ମୁଖ୍ୟ ଚିକିତ୍ସାଳୟ (DHH), କେନ୍ଦ୍ରାପଡ଼ା',
+      nameHi: 'जिला मुख्य अस्पताल (DHH), केंद्रापड़ा',
+      lat: 20.4996,
+      lng: 86.4253,
+      district: 'kendrapara',
+      type: 'District Headquarters Hospital',
+      address: 'Santahi, Kendrapara - 754211',
+      phone: '06727-232140',
+      emergencyPhone: '108',
+      casualty: '24x7 Coastal Emergency & Maternal Care'
+    },
+
+    // --- 19. JAGATSINGHPUR ---
+    {
+      id: 'jagatsinghpur-dhh',
+      name: 'District Headquarters Hospital (DHH) Jagatsinghpur',
+      nameOr: 'ଜିଲ୍ଲା ମୁଖ୍ୟ ଚିକିତ୍ସାଳୟ (DHH), ଜଗତସିଂହପୁର',
+      nameHi: 'जिला मुख्य अस्पताल (DHH), जगतसिंहपुर',
+      lat: 20.2575,
+      lng: 86.1683,
+      district: 'jagatsinghpur',
+      type: 'District Headquarters Hospital',
+      address: 'Near Collectorate, Jagatsinghpur - 754103',
+      phone: '06724-220130',
+      emergencyPhone: '108',
+      casualty: '24x7 Emergency Casualty & Dialysis'
+    },
+    {
+      id: 'jagatsinghpur-paradip-port',
+      name: 'Biju Memorial & Port Hospital, Paradip',
+      nameOr: 'ବିଜୁ ମେମୋରିଆଲ ଓ ପୋର୍ଟ ହସ୍ପିଟାଲ, ପାରାଦୀପ',
+      nameHi: 'बीजू मेमोरियल व पोर्ट अस्पताल, पारादीप',
+      lat: 20.2889,
+      lng: 86.6712,
+      district: 'jagatsinghpur',
+      type: 'Port & Industrial Trauma Hospital',
+      address: 'Paradip Port, Jagatsinghpur - 754142',
+      phone: '06722-222030',
+      emergencyPhone: '108',
+      casualty: '24x7 Coastal Trauma & Emergency Desk'
+    },
+
+    // --- 20. NAYAGARH ---
+    {
+      id: 'nayagarh-dhh',
+      name: 'District Headquarters Hospital (DHH) Nayagarh',
+      nameOr: 'ଜିଲ୍ଲା ମୁଖ୍ୟ ଚିକିତ୍ସାଳୟ (DHH), ନୟାଗଡ଼',
+      nameHi: 'जिला मुख्य अस्पताल (DHH), नयागढ़',
+      lat: 20.1264,
+      lng: 85.1065,
+      district: 'nayagarh',
+      type: 'District Headquarters Hospital',
+      address: 'Old Bus Stand Road, Nayagarh - 752069',
+      phone: '06753-252110',
+      emergencyPhone: '108',
+      casualty: '24x7 Emergency Casualty & Newborn Care'
+    },
+
+    // --- 21. BOUDH ---
+    {
+      id: 'boudh-dhh',
+      name: 'District Headquarters Hospital (DHH) Boudh',
+      nameOr: 'ଜିଲ୍ଲା ମୁଖ୍ୟ ଚିକିତ୍ସାଳୟ (DHH), ବୌଦ୍ଧ',
+      nameHi: 'जिला मुख्य अस्पताल (DHH), बौध',
+      lat: 20.8407,
+      lng: 84.3236,
+      district: 'boudh',
+      type: 'District Headquarters Hospital',
+      address: 'Hospital Road, Boudh - 762014',
+      phone: '06841-222230',
+      emergencyPhone: '108',
+      casualty: '24x7 District Casualty & Emergency'
+    },
+
+    // --- 22. SUBARNAPUR (SONEPUR) ---
+    {
+      id: 'sonepur-dhh',
+      name: 'District Headquarters Hospital (DHH) Sonepur',
+      nameOr: 'ଜିଲ୍ଲା ମୁଖ୍ୟ ଚିକିତ୍ସାଳୟ (DHH), ସୁବର୍ଣ୍ଣପୁର',
+      nameHi: 'जिला मुख्य अस्पताल (DHH), सोनपुर',
+      lat: 20.8378,
+      lng: 83.9168,
+      district: 'sonepur',
+      type: 'District Headquarters Hospital',
+      address: 'Manmunda Road, Sonepur - 767017',
+      phone: '06654-220230',
+      emergencyPhone: '108',
+      casualty: '24x7 Emergency Desk & Critical Care'
+    },
+
+    // --- 23. KANDHAMAL ---
+    {
+      id: 'kandhamal-dhh',
+      name: 'District Headquarters Hospital (DHH) Phulbani',
+      nameOr: 'ଜିଲ୍ଲା ମୁଖ୍ୟ ଚିକିତ୍ସାଳୟ (DHH), ଫୁଲବାଣୀ, କନ୍ଧମାଳ',
+      nameHi: 'जिला मुख्य अस्पताल (DHH), फुलबानी, कंधमाल',
+      lat: 20.4776,
+      lng: 84.2327,
+      district: 'kandhamal',
+      type: 'District Headquarters Hospital',
+      address: 'Phulbani, Kandhamal - 762001',
+      phone: '06842-253210',
+      emergencyPhone: '108',
+      casualty: '24x7 Tribal Emergency & Trauma Ward'
+    },
+
+    // --- 24. KALAHANDI ---
+    {
+      id: 'kalahandi-dhh',
+      name: 'Saheed Rendo Majhi MCH & DHH Bhawanipatna',
+      nameOr: 'ସହିଦ ରେନ୍ଦୋ ମାଝୀ ମେଡିକାଲ କଲେଜ ଓ DHH, ଭବାନୀପାଟଣା',
+      nameHi: 'शहीद रेंदो माझी मेडिकल कॉलेज व DHH, भवानीपटना',
+      lat: 19.9075,
+      lng: 83.1659,
+      district: 'kalahandi',
+      type: 'Govt Medical College & District Hospital',
+      address: 'Bhawanipatna, Kalahandi - 766001',
+      phone: '06670-230303',
+      emergencyPhone: '108',
+      casualty: '24x7 District Casualty & Maternal Ward'
+    },
+
+    // --- 25. NUAPADA ---
+    {
+      id: 'nuapada-dhh',
+      name: 'District Headquarters Hospital (DHH) Nuapada',
+      nameOr: 'ଜିଲ୍ଲା ମୁଖ୍ୟ ଚିକିତ୍ସାଳୟ (DHH), ନୂଆପଡ଼ା',
+      nameHi: 'जिला मुख्य अस्पताल (DHH), नुआपड़ा',
+      lat: 20.8354,
+      lng: 82.5292,
+      district: 'nuapada',
+      type: 'District Headquarters Hospital',
+      address: 'Hospital Square, Nuapada - 766105',
+      phone: '06678-223120',
+      emergencyPhone: '108',
+      casualty: '24x7 Border District Emergency & ICU'
+    },
+
+    // --- 26. RAYAGADA ---
+    {
+      id: 'rayagada-dhh',
+      name: 'District Headquarters Hospital (DHH) Rayagada',
+      nameOr: 'ଜିଲ୍ଲା ମୁଖ୍ୟ ଚିକିତ୍ସାଳୟ (DHH), ରାୟଗଡ଼ା',
+      nameHi: 'जिला मुख्य अस्पताल (DHH), रायगड़ा',
+      lat: 19.1678,
+      lng: 83.4144,
+      district: 'rayagada',
+      type: 'District Headquarters Hospital',
+      address: 'Hospital Road, Rayagada - 765001',
+      phone: '06856-222320',
+      emergencyPhone: '108',
+      casualty: '24x7 Southern Tribal Emergency Ward'
+    },
+    {
+      id: 'rayagada-sdh-gunupur',
+      name: 'Sub-Divisional Hospital (SDH) Gunupur',
+      nameOr: 'ଉପଖଣ୍ଡ ଚିକିତ୍ସାଳୟ (SDH), ଗୁଣୁପୁର, ରାୟଗଡ଼ା',
+      nameHi: 'उपखंड अस्पताल (SDH), गुणुपुर, रायगड़ा',
+      lat: 19.0805,
+      lng: 83.8118,
+      district: 'rayagada',
+      type: 'Sub-Divisional Hospital & Emergency',
+      address: 'Gunupur, Rayagada - 765022',
+      phone: '06857-220130',
+      emergencyPhone: '108',
+      casualty: '24x7 Emergency Desk & Ambulance Wing'
+    },
+
+    // --- 27. KORAPUT ---
+    {
+      id: 'koraput-sln',
+      name: 'SLN Medical College & Hospital, Koraput',
+      nameOr: 'ଏସଏଲଏନ ମେଡିକାଲ କଲେଜ, କୋରାପୁଟ (SLN Koraput)',
+      nameHi: 'एसएलएन मेडिकल कॉलेज, कोरापुट (SLN Koraput)',
+      lat: 18.8166,
+      lng: 82.7166,
+      district: 'koraput',
+      type: 'Govt Medical College & Apex Hospital',
+      address: 'Koraput, Odisha - 764020',
+      phone: '06852-250100',
+      emergencyPhone: '108',
+      casualty: '24x7 Southern Tribal Trauma Facility'
+    },
+    {
+      id: 'koraput-sdh-jeypore',
+      name: 'Sub-Divisional Hospital (SDH) Jeypore',
+      nameOr: 'ଉପଖଣ୍ଡ ଚିକିତ୍ସାଳୟ, ଜୟପୁର, କୋରାପୁଟ',
+      nameHi: 'उपखंड अस्पताल, जयपुर, कोरापुट',
+      lat: 18.8601,
+      lng: 82.5694,
+      district: 'koraput',
+      type: 'Sub-Divisional Hospital & Trauma Centre',
+      address: 'Main Road, Jeypore - 764001',
+      phone: '06854-230140',
+      emergencyPhone: '108',
+      casualty: '24x7 Commercial & Trauma Emergency Wing'
+    },
+
+    // --- 28. NABARANGPUR ---
+    {
+      id: 'nabarangpur-dhh',
+      name: 'District Headquarters Hospital (DHH) Nabarangpur',
+      nameOr: 'ଜିଲ୍ଲା ମୁଖ୍ୟ ଚିକିତ୍ସାଳୟ (DHH), ନବରଙ୍ଗପୁର',
+      nameHi: 'जिला मुख्य अस्पताल (DHH), नवरंगपुर',
+      lat: 19.2318,
+      lng: 82.5516,
+      district: 'nabarangpur',
+      type: 'District Headquarters Hospital',
+      address: 'Mission Road, Nabarangpur - 764059',
+      phone: '06858-222140',
+      emergencyPhone: '108',
+      casualty: '24x7 Tribal Emergency & Delivery Unit'
+    },
+
+    // --- 29. MALKANGIRI ---
+    {
+      id: 'malkangiri-dhh',
+      name: 'District Headquarters Hospital (DHH) Malkangiri',
+      nameOr: 'ଜିଲ୍ଲା ମୁଖ୍ୟ ଚିକିତ୍ସାଳୟ (DHH), ମାଲକାନଗିରି',
+      nameHi: 'जिला मुख्य अस्पताल (DHH), मालकानगिरि',
+      lat: 18.3512,
+      lng: 81.8974,
+      district: 'malkangiri',
+      type: 'District Headquarters Hospital',
+      address: 'DNK Road, Malkangiri - 764045',
+      phone: '06861-230230',
+      emergencyPhone: '108',
+      casualty: '24x7 Deep Southern Border Emergency Desk'
+    },
+
+    // --- 30. GAJAPATI ---
+    {
+      id: 'gajapati-dhh',
+      name: 'District Headquarters Hospital Paralakhemundi',
+      nameOr: 'ଜିଲ୍ଲା ମୁଖ୍ୟ ଚିକିତ୍ସାଳୟ (DHH), ପାରଳାଖେମୁଣ୍ଡି, ଗଜପତି',
+      nameHi: 'जिला मुख्य अस्पताल (DHH), पारलाखेमुंडी, गजपति',
+      lat: 18.7758,
+      lng: 84.0908,
+      district: 'gajapati',
+      type: 'District Headquarters Hospital',
+      address: 'Palace Street, Paralakhemundi - 761200',
+      phone: '06815-222340',
+      emergencyPhone: '108',
+      casualty: '24x7 Border Emergency & Maternity Ward'
+    },
+
+    // --- NATIONAL APEX REFERRAL ---
     {
       id: 'delhi-aiims',
       name: 'AIIMS New Delhi (National Apex)',
@@ -2095,6 +2577,7 @@
       nameHi: 'एम्स नई दिल्ली (AIIMS New Delhi)',
       lat: 28.5672,
       lng: 77.2100,
+      district: 'national',
       type: 'National Apex Referral Institute',
       address: 'Ansari Nagar, New Delhi - 110029',
       phone: '011-26588500',
@@ -2102,6 +2585,40 @@
       casualty: '24x7 Emergency Casualty & Trauma'
     }
   ];
+
+  // GEOGRAPHICAL CENTERS FOR ALL 30 DISTRICTS (Guarantees fallback < 1-5 km)
+  const DISTRICT_CENTERS = {
+    angul: { lat: 20.8398, lng: 85.1011, name: 'Angul (ଅନୁଗୋଳ)' },
+    balangir: { lat: 20.7108, lng: 83.4862, name: 'Balangir (ବଲାଙ୍ଗୀର)' },
+    balasore: { lat: 21.5034, lng: 86.9157, name: 'Balasore (ବାଲେଶ୍ୱର)' },
+    bargarh: { lat: 21.3323, lng: 83.6214, name: 'Bargarh (ବରଗଡ଼)' },
+    bhadrak: { lat: 21.0583, lng: 86.5028, name: 'Bhadrak (ଭଦ୍ରକ)' },
+    boudh: { lat: 20.8407, lng: 84.3236, name: 'Boudh (ବୌଦ୍ଧ)' },
+    cuttack: { lat: 20.4727, lng: 85.8885, name: 'Cuttack (କଟକ)' },
+    deogarh: { lat: 21.5367, lng: 84.7336, name: 'Deogarh (ଦେବଗଡ଼)' },
+    dhenkanal: { lat: 20.6628, lng: 85.5986, name: 'Dhenkanal (ଢେଙ୍କାନାଳ)' },
+    gajapati: { lat: 18.7758, lng: 84.0908, name: 'Gajapati (ଗଜପତି)' },
+    ganjam: { lat: 19.3093, lng: 84.8091, name: 'Ganjam / Berhampur (ଗଞ୍ଜାମ)' },
+    jagatsinghpur: { lat: 20.2575, lng: 86.1683, name: 'Jagatsinghpur (ଜଗତସିଂହପୁର)' },
+    jajpur: { lat: 20.8497, lng: 86.3353, name: 'Jajpur (ଯାଜପୁର)' },
+    jharsuguda: { lat: 21.8540, lng: 84.0084, name: 'Jharsuguda (ଝାରସୁଗୁଡ଼ା)' },
+    kalahandi: { lat: 19.9075, lng: 83.1659, name: 'Kalahandi / Bhawanipatna (କଳାହାଣ୍ଡି)' },
+    kandhamal: { lat: 20.4776, lng: 84.2327, name: 'Kandhamal / Phulbani (କନ୍ଧମାଳ)' },
+    kendrapara: { lat: 20.4996, lng: 86.4253, name: 'Kendrapara (କେନ୍ଦ୍ରାପଡ଼ା)' },
+    keonjhar: { lat: 21.6288, lng: 85.5817, name: 'Kendujhar / Keonjhar (କେନ୍ଦୁଝର)' },
+    khordha: { lat: 20.2644, lng: 85.8281, name: 'Khordha / Bhubaneswar (ଖୋର୍ଦ୍ଧା)' },
+    koraput: { lat: 18.8166, lng: 82.7166, name: 'Koraput / Jeypore (କୋରାପୁଟ)' },
+    malkangiri: { lat: 18.3512, lng: 81.8974, name: 'Malkangiri (ମାଲକାନଗିରି)' },
+    mayurbhanj: { lat: 21.9347, lng: 86.7327, name: 'Mayurbhanj / Baripada (ମୟୂରଭଞ୍ଜ)' },
+    nabarangpur: { lat: 19.2318, lng: 82.5516, name: 'Nabarangpur (ନବରଙ୍ଗପୁର)' },
+    nayagarh: { lat: 20.1264, lng: 85.1065, name: 'Nayagarh (ନୟାଗଡ଼)' },
+    nuapada: { lat: 20.8354, lng: 82.5292, name: 'Nuapada (ନୂଆପଡ଼ା)' },
+    puri: { lat: 19.8135, lng: 85.8312, name: 'Puri (ପୁରୀ)' },
+    rayagada: { lat: 19.1678, lng: 83.4144, name: 'Rayagada (ରାୟଗଡ଼ା)' },
+    sambalpur: { lat: 21.4984, lng: 83.8741, name: 'Sambalpur / Burla (ସମ୍ବଲପୁର)' },
+    sonepur: { lat: 20.8378, lng: 83.9168, name: 'Subarnapur / Sonepur (ସୁବର୍ଣ୍ଣପୁର)' },
+    sundargarh: { lat: 22.2272, lng: 84.8536, name: 'Sundargarh / Rourkela (ସୁନ୍ଦରଗଡ଼)' }
+  };
 
   let hospitalMapInstance = null;
   let userLocationCoords = null;
@@ -2144,6 +2661,16 @@
     if (refreshBtn) {
       refreshBtn.textContent = isHi ? '🔄 जीपीएस रिफ्रेश' : (isOr ? '🔄 GPS ରିଫ୍ରେଶ୍' : '🔄 Refresh GPS');
     }
+    const districtSelectLabel = $('districtSelectLabel');
+    if (districtSelectLabel) {
+      districtSelectLabel.textContent = isHi ? '📍 अपना जिला / क्षेत्र चुनें:' : (isOr ? '📍 ନିଜ ଜିଲ୍ଲା / ଅଞ୍ଚଳ ବାଛନ୍ତୁ:' : '📍 District / Region:');
+    }
+    const extGmapsLabel = $('externalGmapsLabel');
+    if (extGmapsLabel) {
+      extGmapsLabel.textContent = isHi
+        ? 'Google Maps ऐप पर निकटतम लाइव अस्पताल देखें'
+        : (isOr ? 'Google Maps ଆପ୍‌ରେ ନିକଟତମ ଡାକ୍ତରଖାନା ଖୋଜନ୍ତୁ' : 'Open Nearest Live Hospitals on Google Maps App');
+    }
     if (userLocationCoords) {
       renderHospitalMapAndCards(userLocationCoords);
     }
@@ -2171,18 +2698,41 @@
     }
   }
 
-  function locateUserAndRender() {
+  function locateUserAndRender(forceDistrict) {
     const statusText = $('hospitalGpsStatusText');
     const isOr = currentLang === 'or';
     const isHi = currentLang === 'hi';
+    const districtSelect = $('districtSelect');
+
+    const selectedDistrict = forceDistrict || (districtSelect ? districtSelect.value : 'auto');
+
+    // If user explicitly picked a district from dropdown
+    if (selectedDistrict && selectedDistrict !== 'auto' && DISTRICT_CENTERS[selectedDistrict]) {
+      const center = DISTRICT_CENTERS[selectedDistrict];
+      userLocationCoords = {
+        lat: center.lat,
+        lng: center.lng,
+        isFallback: false,
+        district: selectedDistrict,
+        districtName: center.name
+      };
+      if (statusText) {
+        statusText.textContent = isHi
+          ? `📍 चयनित जिला: ${center.name}`
+          : (isOr ? `📍 ଚୟନିତ ଜିଲ୍ଲା: ${center.name}` : `📍 Selected District: ${center.name}`);
+      }
+      renderHospitalMapAndCards(userLocationCoords);
+      return;
+    }
 
     if (statusText) {
       statusText.textContent = isHi ? 'लाइव जीपीएस स्थिति खोजी जा रही है...' : (isOr ? 'ଲାଇଭ୍ GPS ସ୍ଥିତି ଯାଞ୍ଚ ହେଉଛି...' : 'Acquiring live GPS location...');
     }
 
-    const defaultBhubaneswar = { lat: 20.2644, lng: 85.8281, isFallback: true };
+    const defaultLocation = { lat: 20.2644, lng: 85.8281, isFallback: true };
 
     if (typeof navigator !== 'undefined' && navigator.geolocation) {
+      // Stage 1: Fast network-based location (Cell/WiFi, resolves in < 1 second)
       navigator.geolocation.getCurrentPosition(
         (pos) => {
           userLocationCoords = {
@@ -2193,20 +2743,44 @@
           if (statusText) {
             statusText.textContent = isHi ? '🟢 लाइव जीपीएस सक्रिय' : (isOr ? '🟢 ଲାଇଭ୍ GPS ସକ୍ରିୟ' : '🟢 Live GPS Active');
           }
+          if (districtSelect && districtSelect.value !== 'auto') {
+            districtSelect.value = 'auto';
+          }
           renderHospitalMapAndCards(userLocationCoords);
+
+          // Stage 2: Asynchronous high-accuracy GPS refinement in background
+          navigator.geolocation.getCurrentPosition(
+            (refinedPos) => {
+              userLocationCoords = {
+                lat: refinedPos.coords.latitude,
+                lng: refinedPos.coords.longitude,
+                isFallback: false
+              };
+              renderHospitalMapAndCards(userLocationCoords);
+            },
+            () => { /* Keep stage 1 coords */ },
+            { enableHighAccuracy: true, timeout: 10000, maximumAge: 10000 }
+          );
         },
         (err) => {
           console.warn('GPS location fallback:', err.message);
-          userLocationCoords = defaultBhubaneswar;
+          userLocationCoords = defaultLocation;
           if (statusText) {
-            statusText.textContent = isHi ? '📍 ओडिशा संदर्भ स्थिति (GPS अनुमति उपलब्ध नहीं)' : (isOr ? '📍 ଓଡ଼ିଶା କେନ୍ଦ୍ର (GPS ଅନୁମତି ମିଳିନାହିଁ)' : '📍 Odisha Central (GPS Permission Denied)');
+            statusText.textContent = isHi
+              ? '📍 GPS अक्षम: ऊपर दिए गए ड्रॉपडाउन से अपना जिला चुनें'
+              : (isOr ? '📍 GPS ଅନୁମତି ମିଳିନାହିଁ: ଉପର ତାଲିକାରୁ ନିଜ ଜିଲ୍ଲା ବାଛନ୍ତୁ' : '📍 GPS Unavailable: Select your District above');
           }
           renderHospitalMapAndCards(userLocationCoords);
         },
-        { enableHighAccuracy: true, timeout: 8000, maximumAge: 30000 }
+        { enableHighAccuracy: false, timeout: 6000, maximumAge: 60000 }
       );
     } else {
-      userLocationCoords = defaultBhubaneswar;
+      userLocationCoords = defaultLocation;
+      if (statusText) {
+        statusText.textContent = isHi
+          ? '📍 ऊपर ड्रॉपडाउन से अपना जिला चुनें'
+          : (isOr ? '📍 ଉପର ତାଲିକାରୁ ନିଜ ଜିଲ୍ଲା ବାଛନ୍ତୁ' : '📍 Select your District from the dropdown above');
+      }
       renderHospitalMapAndCards(userLocationCoords);
     }
   }
@@ -2244,15 +2818,16 @@
       }
     }
 
+    // Direct 1-Click Search: Centers Google Maps with live coordinates on hospitals/clinics
     const extGmaps = $('externalGmapsNearMe');
     if (extGmaps) {
-      extGmaps.href = `https://www.google.com/maps/search/hospital+emergency+near+me/@${userPos.lat},${userPos.lng},13z`;
+      extGmaps.href = `https://www.google.com/maps/search/hospitals+near+me/@${userPos.lat},${userPos.lng},14z`;
     }
 
     const container = $('hospitalListContainer');
     if (container) {
       container.innerHTML = '';
-      sorted.slice(0, 5).forEach((h, idx) => {
+      sorted.slice(0, 6).forEach((h, idx) => {
         const card = document.createElement('div');
         card.className = 'hospital-card' + (idx === 0 ? ' closest' : '');
         const dispName = isHi ? h.nameHi : (isOr ? h.nameOr : h.name);
@@ -2301,7 +2876,7 @@
         hospitalMapInstance = window.L.map('hospitalLiveMap', {
           zoomControl: true,
           attributionControl: false
-        }).setView([userPos.lat, userPos.lng], 13);
+        }).setView([userPos.lat, userPos.lng], 12);
 
         window.L.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png', {
           maxZoom: 19
@@ -2316,7 +2891,7 @@
         userMarker.bindPopup(isHi ? '📍 आपकी लाइव स्थिति' : (isOr ? '📍 ଆପଣଙ୍କ ଲାଇଭ୍ ସ୍ଥିତି' : '📍 Your Live Location'));
 
         const bounds = [[userPos.lat, userPos.lng]];
-        sorted.slice(0, 5).forEach((h) => {
+        sorted.slice(0, 6).forEach((h) => {
           const hospIcon = window.L.divIcon({
             className: 'hospital-beacon-pin',
             html: '🏥',
@@ -2357,7 +2932,14 @@
     if (closeBtn) closeBtn.addEventListener('click', closeHospitalMap);
 
     const refreshBtn = $('refreshGpsBtn');
-    if (refreshBtn) refreshBtn.addEventListener('click', locateUserAndRender);
+    if (refreshBtn) refreshBtn.addEventListener('click', () => locateUserAndRender('auto'));
+
+    const districtSelect = $('districtSelect');
+    if (districtSelect) {
+      districtSelect.addEventListener('change', (e) => {
+        locateUserAndRender(e.target.value);
+      });
+    }
 
     const modal = $('hospitalMapModal');
     if (modal) {

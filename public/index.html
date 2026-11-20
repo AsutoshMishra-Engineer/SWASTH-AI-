@@ -437,20 +437,58 @@
 
       <!-- HOSPITAL CARDS LIST & LIVE ACTIONS -->
       <div class="hospital-modal-body">
+        <!-- DISTRICT QUICK-SELECTOR & LIVE GPS CONTROLS -->
+        <div class="hospital-controls-bar">
+          <div class="district-select-box">
+            <label for="districtSelect" id="districtSelectLabel" class="district-select-label">📍 District / Region:</label>
+            <select id="districtSelect" class="district-select">
+              <option value="auto">📍 Live GPS (Current Location)</option>
+              <option value="angul">Angul (ଅନୁଗୋଳ)</option>
+              <option value="balangir">Balangir (ବଲାଙ୍ଗୀର)</option>
+              <option value="balasore">Balasore (ବାଲେଶ୍ୱର)</option>
+              <option value="bargarh">Bargarh (ବରଗଡ଼)</option>
+              <option value="bhadrak">Bhadrak (ଭଦ୍ରକ)</option>
+              <option value="boudh">Boudh (ବୌଦ୍ଧ)</option>
+              <option value="cuttack">Cuttack (କଟକ)</option>
+              <option value="deogarh">Deogarh (ଦେବଗଡ଼)</option>
+              <option value="dhenkanal">Dhenkanal (ଢେଙ୍କାନାଳ)</option>
+              <option value="gajapati">Gajapati (ଗଜପତି)</option>
+              <option value="ganjam">Ganjam / Berhampur (ଗଞ୍ଜାମ)</option>
+              <option value="jagatsinghpur">Jagatsinghpur (ଜଗତସିଂହପୁର)</option>
+              <option value="jajpur">Jajpur (ଯାଜପୁର)</option>
+              <option value="jharsuguda">Jharsuguda (ଝାରସୁଗୁଡ଼ା)</option>
+              <option value="kalahandi">Kalahandi / Bhawanipatna (କଳାହାଣ୍ଡି)</option>
+              <option value="kandhamal">Kandhamal / Phulbani (କନ୍ଧମାଳ)</option>
+              <option value="kendrapara">Kendrapara (କେନ୍ଦ୍ରାପଡ଼ା)</option>
+              <option value="keonjhar">Kendujhar / Keonjhar (କେନ୍ଦୁଝର)</option>
+              <option value="khordha">Khordha / Bhubaneswar (ଖୋର୍ଦ୍ଧା)</option>
+              <option value="koraput">Koraput / Jeypore (କୋରାପୁଟ)</option>
+              <option value="malkangiri">Malkangiri (ମାଲକାନଗିରି)</option>
+              <option value="mayurbhanj">Mayurbhanj / Baripada (ମୟୂରଭଞ୍ଜ)</option>
+              <option value="nabarangpur">Nabarangpur (ନବରଙ୍ଗପୁର)</option>
+              <option value="nayagarh">Nayagarh (ନୟାଗଡ଼)</option>
+              <option value="nuapada">Nuapada (ନୂଆପଡ଼ା)</option>
+              <option value="puri">Puri (ପୁରୀ)</option>
+              <option value="rayagada">Rayagada (ରାୟଗଡ଼ା)</option>
+              <option value="sambalpur">Sambalpur / Burla (ସମ୍ବଲପୁର)</option>
+              <option value="sonepur">Subarnapur / Sonepur (ସୁବର୍ଣ୍ଣପୁର)</option>
+              <option value="sundargarh">Sundargarh / Rourkela (ସୁନ୍ଦରଗଡ଼)</option>
+            </select>
+          </div>
+          <button id="refreshGpsBtn" class="refresh-gps-btn" type="button">🔄 Refresh GPS</button>
+        </div>
+
+        <!-- 1-CLICK LIVE GOOGLE MAPS GPS SEARCH (OPENS NATIVE GOOGLE MAPS WITH LIVE GPS) -->
+        <a id="externalGmapsNearMe" href="https://www.google.com/maps/search/hospitals+near+me/" target="_blank" rel="noopener noreferrer" class="btn-gmaps-live-hub">
+          🧭 <span id="externalGmapsLabel">Open Nearest Live Hospitals on Google Maps App</span> ↗
+        </a>
+
         <div class="hospital-list-header">
           <strong id="nearestHospitalsHeading">Nearest 24x7 Government Hospitals & CHCs</strong>
-          <button id="refreshGpsBtn" class="refresh-gps-btn" type="button">🔄 Refresh GPS</button>
         </div>
 
         <div id="hospitalListContainer" class="hospital-list-container">
           <!-- Dynamic hospital cards rendered here -->
-        </div>
-
-        <!-- FALLBACK GOOGLE MAPS LIVE SEARCH BAR -->
-        <div class="hospital-gmaps-fallback">
-          <a id="externalGmapsNearMe" href="https://www.google.com/maps/search/emergency+hospital+near+me/" target="_blank" rel="noopener noreferrer" class="btn ghost small full-width-link">
-            🌐 Open Live Hospital Search in Google Maps App ↗
-          </a>
         </div>
       </div>
     </div>
