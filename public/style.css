@@ -2871,3 +2871,421 @@ body.chat-active .messages {
   background: #f0fdfa;
   border-color: var(--primary);
 }
+
+/* ============================================================
+   OFFLINE EMERGENCY CARE & 1-CLICK DOCTOR TRIAGE PDF STYLING
+   ============================================================ */
+
+.emergency-actions-wrap {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  flex-shrink: 0;
+}
+
+.offline-care-pill {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  background: rgba(254, 243, 199, 0.25);
+  color: #ffffff;
+  border: 1.5px solid rgba(254, 243, 199, 0.7);
+  padding: 5px 11px;
+  border-radius: 9999px;
+  font-size: 0.8rem;
+  font-weight: 700;
+  cursor: pointer;
+  white-space: nowrap;
+  transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.15);
+}
+.offline-care-pill:hover {
+  background: #fef3c7;
+  color: #92400e;
+  transform: translateY(-1px);
+}
+.offline-care-pill .offline-bolt {
+  color: #fef08a;
+  font-size: 0.92rem;
+}
+.offline-care-pill:hover .offline-bolt {
+  color: #b45309;
+}
+
+body.chat-active .offline-care-pill {
+  padding: 3px 8px;
+  font-size: 0.72rem;
+  white-space: nowrap;
+  flex-shrink: 0;
+}
+
+/* OFFLINE MODAL DIALOG */
+.offline-dialog {
+  border: none;
+  border-radius: var(--radius-lg);
+  padding: 0;
+  max-width: 680px;
+  width: 94vw;
+  box-shadow: 0 25px 50px -12px rgba(15, 23, 42, 0.35);
+  background: #ffffff;
+  overflow: hidden;
+}
+.offline-dialog::backdrop {
+  background: rgba(15, 23, 42, 0.65);
+  backdrop-filter: blur(4px);
+}
+.offline-modal-wrapper {
+  display: flex;
+  flex-direction: column;
+  max-height: 90vh;
+}
+.offline-modal-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 14px 18px;
+  background: linear-gradient(135deg, #065f46 0%, #047857 100%);
+  color: #ffffff;
+}
+.offline-modal-title-box {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+.offline-modal-icon {
+  font-size: 1.6rem;
+  background: rgba(255, 255, 255, 0.15);
+  width: 40px;
+  height: 40px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 50%;
+}
+.offline-modal-title {
+  margin: 0;
+  font-size: 1.1rem;
+  font-weight: 800;
+  color: #ffffff;
+}
+.offline-modal-sub {
+  font-size: 0.75rem;
+  color: #a7f3d0;
+  display: block;
+}
+.offline-modal-body {
+  padding: 14px 18px;
+  overflow-y: auto;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+/* HELPLINES ROW */
+.offline-helpline-row {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 8px;
+}
+@media (min-width: 520px) {
+  .offline-helpline-row {
+    grid-template-columns: repeat(4, 1fr);
+  }
+}
+.offline-helpline-card {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 8px 10px;
+  border-radius: 8px;
+  text-decoration: none;
+  color: #1e293b;
+  border: 1px solid #cbd5e1;
+  background: #f8fafc;
+  transition: all 0.15s ease;
+}
+.offline-helpline-card:hover {
+  transform: translateY(-1px);
+  box-shadow: 0 3px 6px rgba(0,0,0,0.08);
+}
+.card-108 {
+  border-color: #fca5a5;
+  background: #fef2f2;
+}
+.card-108 strong {
+  color: #b91c1c;
+}
+.card-112 {
+  border-color: #fdba74;
+  background: #fff7ed;
+}
+.card-112 strong {
+  color: #c2410c;
+}
+.card-104 {
+  border-color: #99f6e4;
+  background: #f0fdfa;
+}
+.card-104 strong {
+  color: #0f766e;
+}
+.card-14416 {
+  border-color: #d8b4fe;
+  background: #faf5ff;
+}
+.card-14416 strong {
+  color: #7e22ce;
+}
+.hl-info {
+  display: flex;
+  flex-direction: column;
+  line-height: 1.2;
+}
+.hl-info strong {
+  font-size: 0.82rem;
+}
+.hl-info span {
+  font-size: 0.68rem;
+  color: #64748b;
+}
+.hl-call-btn {
+  font-size: 0.72rem;
+  font-weight: 700;
+  padding: 2px 6px;
+  background: #ffffff;
+  border: 1px solid currentColor;
+  border-radius: 4px;
+}
+
+/* SEARCH BOX */
+.offline-search-input {
+  width: 100%;
+  padding: 8px 12px;
+  border: 1.5px solid var(--line);
+  border-radius: var(--radius);
+  font-size: 0.85rem;
+  background: #f8fafc;
+  box-sizing: border-box;
+}
+.offline-search-input:focus {
+  outline: none;
+  border-color: var(--primary);
+  background: #ffffff;
+}
+
+/* PROTOCOLS GRID & ACCORDION CARDS */
+.offline-protocols-grid {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+.offline-proto-card {
+  border: 1.5px solid #e2e8f0;
+  border-radius: var(--radius);
+  background: #ffffff;
+  overflow: hidden;
+  transition: all 0.2s ease;
+}
+.offline-proto-head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 10px 14px;
+  background: #f8fafc;
+  cursor: pointer;
+  user-select: none;
+}
+.offline-proto-head:hover {
+  background: #f1f5f9;
+}
+.offline-proto-title-box {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+.offline-proto-icon {
+  font-size: 1.3rem;
+}
+.offline-proto-title {
+  font-size: 0.9rem;
+  font-weight: 800;
+  color: #1e293b;
+}
+.offline-proto-meta {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+.offline-proto-badge {
+  font-size: 0.68rem;
+  font-weight: 800;
+  padding: 2px 8px;
+  border-radius: 9999px;
+  text-transform: uppercase;
+}
+.badge-critical {
+  background: #fee2e2;
+  color: #b91c1c;
+  border: 1px solid #fca5a5;
+}
+.badge-high {
+  background: #fef3c7;
+  color: #92400e;
+  border: 1px solid #fde68a;
+}
+.offline-proto-chevron {
+  transition: transform 0.2s ease;
+  font-size: 0.8rem;
+  color: #64748b;
+}
+.offline-proto-card.expanded .offline-proto-chevron {
+  transform: rotate(180deg);
+}
+.offline-proto-body {
+  padding: 12px 14px;
+  border-top: 1px solid #e2e8f0;
+  display: none;
+  flex-direction: column;
+  gap: 10px;
+}
+.offline-proto-card.expanded .offline-proto-body {
+  display: flex;
+}
+.offline-summary-text {
+  font-size: 0.85rem;
+  color: #334155;
+  margin: 0;
+  font-weight: 600;
+}
+.offline-section-box {
+  border-radius: 6px;
+  padding: 8px 12px;
+  font-size: 0.82rem;
+  line-height: 1.45;
+}
+.box-dos {
+  background: #f0fdf4;
+  border: 1px solid #bbf7d0;
+}
+.box-dos strong {
+  color: #166534;
+  display: block;
+  margin-bottom: 4px;
+}
+.box-donts {
+  background: #fef2f2;
+  border: 1px solid #fecaca;
+}
+.box-donts strong {
+  color: #991b1b;
+  display: block;
+  margin-bottom: 4px;
+}
+.offline-list {
+  margin: 0;
+  padding-left: 18px;
+}
+.offline-list li {
+  margin-bottom: 4px;
+}
+.offline-proto-foot {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding-top: 6px;
+  border-top: 1px dashed #e2e8f0;
+}
+.btn-offline-call {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  background: #b91c1c;
+  color: #ffffff;
+  padding: 4px 10px;
+  border-radius: 6px;
+  font-size: 0.75rem;
+  font-weight: 700;
+  text-decoration: none;
+}
+.btn-offline-call:hover {
+  background: #991b1b;
+}
+
+/* OFFLINE FOOTER DIRECTORY LINK */
+.offline-footer-card {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  background: #f0fdfa;
+  border: 1.5px dashed #5eead4;
+  border-radius: var(--radius);
+  padding: 12px;
+}
+@media (min-width: 520px) {
+  .offline-footer-card {
+    flex-direction: row;
+    align-items: center;
+    justify-content: space-between;
+  }
+}
+.offline-footer-card strong {
+  color: #0f766e;
+  font-size: 0.85rem;
+}
+.offline-footer-card p {
+  margin: 2px 0 0;
+  font-size: 0.75rem;
+  color: #134e4a;
+}
+
+/* ============================================================
+   1-CLICK DOCTOR TRIAGE SLIP (PDF) IN-CHAT BUTTON
+   ============================================================ */
+
+.answer-actions-bar {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 8px;
+  margin-top: 10px;
+  padding-top: 8px;
+  border-top: 1px dashed var(--line);
+}
+
+.btn-triage-pdf {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  background: #f0fdf4;
+  color: #166534;
+  border: 1.5px solid #86efac;
+  padding: 5px 12px;
+  border-radius: 20px;
+  font-size: 0.78rem;
+  font-weight: 700;
+  cursor: pointer;
+  transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+  box-shadow: 0 1px 3px rgba(0,0,0,0.05);
+}
+.btn-triage-pdf:hover {
+  background: #dcfce7;
+  border-color: #22c55e;
+  color: #14532d;
+  transform: translateY(-1px);
+  box-shadow: 0 2px 6px rgba(34, 197, 94, 0.2);
+}
+.btn-triage-pdf.downloading {
+  opacity: 0.6;
+  pointer-events: none;
+}
+
+/* OFFLINE CHAT STATUS INDICATOR */
+.chat-header-info .status-indicator.offline {
+  background: #fef3c7;
+  color: #92400e;
+  border-color: #fde68a;
+}
+.chat-header-info .status-indicator.offline .pulse-dot {
+  background: #f59e0b;
+  box-shadow: 0 0 0 0 rgba(245, 158, 11, 0.7);
+}
