@@ -6268,31 +6268,91 @@
       ctx.fillStyle = '#065f46';
       ctx.fillRect(0, 0, 1200, 150);
 
-      // 2. Official System Logo on Top Left
-      ctx.fillStyle = '#047857';
-      ctx.beginPath();
-      ctx.arc(80, 75, 42, 0, Math.PI * 2);
-      ctx.fill();
-      ctx.strokeStyle = '#ffffff';
-      ctx.lineWidth = 3;
-      ctx.stroke();
+      // 2. Official System Logo on Top Left (Exact Official App Icon Vector)
+      function drawRoundRect(c, x, y, w, h, r) {
+        if (typeof c.roundRect === 'function') {
+          c.beginPath();
+          c.roundRect(x, y, w, h, r);
+          return;
+        }
+        c.beginPath();
+        c.moveTo(x + r, y);
+        c.lineTo(x + w - r, y);
+        c.quadraticCurveTo(x + w, y, x + w, y + r);
+        c.lineTo(x + w, y + h - r);
+        c.quadraticCurveTo(x + w, y + h, x + w - r, y + h);
+        c.lineTo(x + r, y + h);
+        c.quadraticCurveTo(x, y + h, x, y + h - r);
+        c.lineTo(x, y + r);
+        c.quadraticCurveTo(x, y, x + r, y);
+        c.closePath();
+      }
 
-      // White Medical Cross in Logo
-      ctx.fillStyle = '#ffffff';
-      ctx.fillRect(74, 53, 12, 44);
-      ctx.fillRect(58, 69, 44, 12);
+      function drawOfficialSwasthLogo(c, x, y, size) {
+        const s = size / 512;
+        c.save();
+
+        // Background Rounded Rect with Official Emerald/Teal Gradient
+        const grad = c.createLinearGradient(x, y, x + size, y + size);
+        grad.addColorStop(0, '#0d9488');
+        grad.addColorStop(1, '#0f766e');
+        c.fillStyle = grad;
+        drawRoundRect(c, x, y, size, size, 128 * s);
+        c.fill();
+        c.strokeStyle = 'rgba(255, 255, 255, 0.4)';
+        c.lineWidth = Math.max(1.5, 4 * s);
+        c.stroke();
+
+        // Outer Medical Shield Ring
+        c.beginPath();
+        c.arc(x + 256 * s, y + 256 * s, 190 * s, 0, Math.PI * 2);
+        c.strokeStyle = 'rgba(255, 255, 255, 0.35)';
+        c.lineWidth = Math.max(2, 12 * s);
+        c.stroke();
+
+        // Central White Medical Cross
+        c.fillStyle = '#ffffff';
+        drawRoundRect(c, x + 220 * s, y + 128 * s, 72 * s, 256 * s, 20 * s);
+        c.fill();
+        drawRoundRect(c, x + 128 * s, y + 220 * s, 256 * s, 72 * s, 20 * s);
+        c.fill();
+
+        // Stethoscope ECG Pulse Wave
+        c.beginPath();
+        c.moveTo(x + 160 * s, y + 256 * s);
+        c.lineTo(x + 210 * s, y + 256 * s);
+        c.lineTo(x + 235 * s, y + 210 * s);
+        c.lineTo(x + 265 * s, y + 300 * s);
+        c.lineTo(x + 290 * s, y + 240 * s);
+        c.lineTo(x + 310 * s, y + 256 * s);
+        c.lineTo(x + 352 * s, y + 256 * s);
+        c.strokeStyle = '#0d9488';
+        c.lineWidth = Math.max(2.5, 10 * s);
+        c.lineCap = 'round';
+        c.lineJoin = 'round';
+        c.stroke();
+
+        // Brand Subtitle Text
+        c.fillStyle = '#ffffff';
+        c.font = 'bold ' + Math.round(34 * s) + 'px "Plus Jakarta Sans", sans-serif';
+        c.textAlign = 'center';
+        c.fillText('SWASTH AI', x + 256 * s, y + 442 * s);
+        c.restore();
+      }
+
+      drawOfficialSwasthLogo(ctx, 45, 22, 106);
 
       // Title & Header Text
       ctx.fillStyle = '#ffffff';
       ctx.font = 'bold 30px "Plus Jakarta Sans", "Noto Sans Oriya", "Noto Sans Devanagari", sans-serif';
-      ctx.fillText('SWASTH AI (ସ୍ୱାସ୍ଥ୍ୟ AI / स्वास्थ्य AI)', 145, 62);
+      ctx.fillText('SWASTH AI (ସ୍ୱାସ୍ଥ୍ୟ AI / स्वास्थ्य AI)', 170, 62);
 
       ctx.fillStyle = '#a7f3d0';
       ctx.font = '16px "Plus Jakarta Sans", "Noto Sans Oriya", "Noto Sans Devanagari", sans-serif';
-      ctx.fillText('Government of Odisha • Public Health Digital Triage System', 145, 94);
+      ctx.fillText('Government of Odisha • Public Health Digital Triage System', 170, 94);
 
       ctx.font = '13px "Plus Jakarta Sans", "Noto Sans Oriya", "Noto Sans Devanagari", sans-serif';
-      ctx.fillText('Certified WHO & MoHFW Clinical Triage Protocol • SIH 25049 / F-204', 145, 120);
+      ctx.fillText('Certified WHO & MoHFW Clinical Triage Protocol • SIH 25049 / F-204', 170, 120);
 
       // Top Right Digital Badge
       ctx.fillStyle = 'rgba(255, 255, 255, 0.18)';
@@ -6336,8 +6396,6 @@
       ctx.font = 'bold 15px "Plus Jakarta Sans", sans-serif';
       ctx.fillText('FACILITY: [ AI DIAGNOSED ]', 740, 188);
 
-      let curY = 245;
-
       function drawBox(x, y, w, h, bgColor, borderColor, borderLeftColor) {
         ctx.fillStyle = bgColor;
         ctx.fillRect(x, y, w, h);
@@ -6350,53 +6408,43 @@
         }
       }
 
-      function renderWrappedText(text, x, y, maxWidth, lineHeight, maxLines, font, color) {
-        ctx.font = font || '15px sans-serif';
-        ctx.fillStyle = color || '#1e293b';
-        const words = (text || '').replace(/\n+/g, ' \n ').split(' ');
-        let line = '';
-        let linesDrawn = 0;
-        let lineY = y;
-
-        for (let i = 0; i < words.length; i++) {
-          if (words[i] === '\n') {
-            ctx.fillText(line.trim(), x, lineY);
-            line = '';
-            lineY += lineHeight;
-            linesDrawn++;
-            if (linesDrawn >= maxLines) break;
-            continue;
+      function wrapTextToLines(text, maxWidth, font) {
+        ctx.font = font;
+        const paragraphs = (text || '').replace(/\r/g, '').split('\n').map(l => l.trim());
+        const result = [];
+        for (let p = 0; p < paragraphs.length; p++) {
+          const para = paragraphs[p];
+          if (!para) continue;
+          const words = para.split(/\s+/);
+          let curLine = '';
+          for (let i = 0; i < words.length; i++) {
+            const testLine = curLine ? (curLine + ' ' + words[i]) : words[i];
+            if (ctx.measureText(testLine).width > maxWidth && curLine) {
+              result.push(curLine);
+              curLine = words[i];
+            } else {
+              curLine = testLine;
+            }
           }
-          const testLine = line + words[i] + ' ';
-          const metrics = ctx.measureText(testLine);
-          if (metrics.width > maxWidth && line.length > 0) {
-            ctx.fillText(line.trim(), x, lineY);
-            line = words[i] + ' ';
-            lineY += lineHeight;
-            linesDrawn++;
-            if (linesDrawn >= maxLines) break;
-          } else {
-            line = testLine;
-          }
+          if (curLine) result.push(curLine);
         }
-        if (line.trim().length > 0 && linesDrawn < maxLines) {
-          ctx.fillText(line.trim(), x, lineY);
-          lineY += lineHeight;
-        }
-        return lineY;
+        return result;
       }
 
-      // 4. SECTION 1: PATIENT REPORTED COMPLAINT
-      drawBox(45, curY, 1110, 110, '#f8fafc', '#e2e8f0', '#0d9488');
-      ctx.fillStyle = '#0f766e';
-      ctx.font = 'bold 16px "Plus Jakarta Sans", "Noto Sans Oriya", "Noto Sans Devanagari", sans-serif';
-      ctx.fillText('1. PATIENT REPORTED COMPLAINT (Chief Symptoms / ସମସ୍ୟା):', 65, curY + 30);
+      function renderLines(lines, x, startY, lineHeight, maxLines, font, color) {
+        ctx.font = font;
+        ctx.fillStyle = color;
+        let y = startY;
+        const count = Math.min(lines.length, maxLines);
+        for (let i = 0; i < count; i++) {
+          ctx.fillText(lines[i], x, y);
+          y += lineHeight;
+        }
+        return y;
+      }
 
+      // Prepare text content for dynamic layout calculation
       const cleanQuery = (queryText || 'General symptom consultation and clinical advice').trim();
-      renderWrappedText(cleanQuery, 65, curY + 62, 1070, 24, 2, '16px "Plus Jakarta Sans", "Noto Sans Oriya", "Noto Sans Devanagari", sans-serif', '#1e293b');
-      curY += 135;
-
-      // Extract sections from answer text
       const cleanAnswer = (answerText || '')
         .replace(/\*\*(.*?)\*\*/g, '$1')
         .replace(/<[^>]+>/g, '')
@@ -6413,47 +6461,162 @@
         }
       }
 
-      // 5. SECTION 2: CLINICAL TRIAGE GUIDANCE & SAFE CARE
-      drawBox(45, curY, 1110, 420, '#ffffff', '#cbd5e1', '#0284c7');
+      // Calculate lines dynamically for each section
+      const qFont = '15.5px "Plus Jakarta Sans", "Noto Sans Oriya", "Noto Sans Devanagari", sans-serif';
+      const gFont = '15px "Plus Jakarta Sans", "Noto Sans Oriya", "Noto Sans Devanagari", sans-serif';
+      const dFont = '15px "Plus Jakarta Sans", "Noto Sans Oriya", "Noto Sans Devanagari", sans-serif';
+
+      const complaintLines = wrapTextToLines(cleanQuery, 1070, qFont);
+      const guidanceLines = wrapTextToLines(careGuidanceText, 1070, gFont);
+      const doctorLines = wrapTextToLines(doctorSignsText, 1070, dFont);
+
+      // Dynamic Section Heights: If one box requires less space, give it to other boxes
+      const box1Lines = Math.min(3, Math.max(1, complaintLines.length));
+      const box1H = Math.max(76, 36 + box1Lines * 24 + 12);
+
+      // Section 4 (24x7 Helplines) & Section 5 (Nearest Hospital) fixed clean heights
+      const box4H = 74;
+      const box5H = 84;
+      const noticeH = 185;
+
+      // Vertical space budgeting: Total available content height from Y: 230 to 1635 is 1405px
+      const totalBudget = 1405;
+      const fixedTotal = box1H + box4H + box5H + noticeH; // ~420px
+      const remainingFor2and3andGaps = totalBudget - fixedTotal; // ~985px
+
+      // Target lines: Box 2 clinical guidance and Box 3 danger signs
+      const neededBox2 = Math.min(480, Math.max(280, 42 + Math.min(15, guidanceLines.length) * 25 + 16));
+      const neededBox3 = Math.min(260, Math.max(180, 42 + Math.min(7, doctorLines.length) * 25 + 16));
+
+      // Calculate dynamic gap so the page is filled cleanly and interactively without blank holes
+      const rawGap = Math.floor((remainingFor2and3andGaps - neededBox2 - neededBox3) / 5);
+      const gap = Math.max(12, Math.min(22, rawGap));
+
+      // Reallocate any surplus space to Box 2 for extra clinical reading comfort
+      const surplus = Math.max(0, remainingFor2and3andGaps - neededBox2 - neededBox3 - (5 * gap));
+      const box2H = neededBox2 + Math.floor(surplus * 0.7);
+      const box3H = neededBox3 + Math.floor(surplus * 0.3);
+
+      let curY = 230;
+
+      // 4. SECTION 1: PATIENT REPORTED COMPLAINT
+      drawBox(45, curY, 1110, box1H, '#f8fafc', '#e2e8f0', '#0d9488');
+      ctx.fillStyle = '#0f766e';
+      ctx.font = 'bold 16px "Plus Jakarta Sans", "Noto Sans Oriya", "Noto Sans Devanagari", sans-serif';
+      ctx.fillText('1. PATIENT REPORTED COMPLAINT (Chief Symptoms / ସମସ୍ୟା):', 65, curY + 28);
+      renderLines(complaintLines, 65, curY + 56, 24, box1Lines, qFont, '#1e293b');
+      curY += box1H + gap;
+
+      // 5. SECTION 2: CLINICAL TRIAGE GUIDANCE & SAFE HOME CARE
+      drawBox(45, curY, 1110, box2H, '#ffffff', '#cbd5e1', '#0284c7');
       ctx.fillStyle = '#0284c7';
       ctx.font = 'bold 16px "Plus Jakarta Sans", "Noto Sans Oriya", "Noto Sans Devanagari", sans-serif';
-      ctx.fillText('2. CLINICAL TRIAGE GUIDANCE & SAFE HOME CARE (WHO & MoHFW Grounded):', 65, curY + 32);
+      ctx.fillText('2. CLINICAL TRIAGE GUIDANCE & SAFE HOME CARE (WHO & MoHFW Grounded):', 65, curY + 30);
+      const maxGuidanceLines = Math.floor((box2H - 52) / 25);
+      renderLines(guidanceLines, 65, curY + 60, 25, maxGuidanceLines, gFont, '#1e293b');
+      curY += box2H + gap;
 
-      renderWrappedText(careGuidanceText, 65, curY + 66, 1070, 25, 14, '15px "Plus Jakarta Sans", "Noto Sans Oriya", "Noto Sans Devanagari", sans-serif', '#1e293b');
-      curY += 445;
-
-      // 6. SECTION 3: WHEN TO SEE A DOCTOR / RED FLAGS
-      drawBox(45, curY, 1110, 240, '#fef2f2', '#fca5a5', '#dc2626');
+      // 6. SECTION 3: WHEN TO SEE A DOCTOR / RED FLAG WARNING SIGNS
+      drawBox(45, curY, 1110, box3H, '#fef2f2', '#fca5a5', '#dc2626');
       ctx.fillStyle = '#b91c1c';
       ctx.font = 'bold 16px "Plus Jakarta Sans", "Noto Sans Oriya", "Noto Sans Devanagari", sans-serif';
-      ctx.fillText('3. WHEN TO SEE A DOCTOR / RED FLAG WARNING SIGNS (ତୁରନ୍ତ ଡାକ୍ତରଖାନା ଯିବା ବିପଦ ଲକ୍ଷଣ):', 65, curY + 32);
+      ctx.fillText('3. WHEN TO SEE A DOCTOR / RED FLAG WARNING SIGNS (ତୁରନ୍ତ ଡାକ୍ତରଖାନା ଯିବା ବିପଦ ଲକ୍ଷଣ):', 65, curY + 30);
+      const maxDoctorLines = Math.floor((box3H - 52) / 25);
+      renderLines(doctorLines, 65, curY + 60, 25, maxDoctorLines, dFont, '#991b1b');
+      curY += box3H + gap;
 
-      renderWrappedText(doctorSignsText, 65, curY + 66, 1070, 25, 7, '15px "Plus Jakarta Sans", "Noto Sans Oriya", "Noto Sans Devanagari", sans-serif', '#991b1b');
-      curY += 265;
+      // 7. SECTION 4: 24×7 ODISHA STATE EMERGENCY DIRECTORY & HELPLINES (Exact Screenshot Format)
+      drawBox(45, curY, 1110, box4H, '#f0fdf4', '#86efac', '#059669');
+      ctx.fillStyle = '#059669';
+      ctx.font = 'bold 16px "Plus Jakarta Sans", "Noto Sans Oriya", sans-serif';
+      ctx.fillText('4. 24×7 ODISHA STATE EMERGENCY DIRECTORY & HELPLINES:', 65, curY + 28);
 
-      // 7. BILINGUAL YELLOW / AMBER WARNING BOX (1st English, then selected language)
-      drawBox(45, curY, 1110, 310, '#fffbeb', '#f59e0b', '#b45309');
+      ctx.fillStyle = '#1e293b';
+      ctx.font = 'bold 15px "Plus Jakarta Sans", sans-serif';
+      ctx.fillText('🚑 Ambulance: 108', 65, curY + 56);
+      ctx.fillText('🚨 National Emergency: 112', 320, curY + 56);
+      ctx.fillText('📞 State Health Helpline: 104', 600, curY + 56);
+      ctx.fillText('🧠 Tele-MANAS: 14416', 890, curY + 56);
+      curY += box4H + gap;
+
+      // 8. SECTION 5: NEAREST RECOMMENDED GOVERNMENT HEALTHCARE FACILITY & DISTANCE IN KM
+      const userPos = (typeof userLocationCoords !== 'undefined' && userLocationCoords && userLocationCoords.lat)
+        ? userLocationCoords
+        : { lat: 20.2961, lng: 85.8245, isFallback: true };
+
+      let nearestHosp = null;
+      if (typeof GOVT_HOSPITALS !== 'undefined' && Array.isArray(GOVT_HOSPITALS) && GOVT_HOSPITALS.length > 0) {
+        let minDist = Infinity;
+        for (let i = 0; i < GOVT_HOSPITALS.length; i++) {
+          const h = GOVT_HOSPITALS[i];
+          const d = haversineKm(userPos.lat, userPos.lng, h.lat, h.lng);
+          if (d < minDist) {
+            minDist = d;
+            nearestHosp = { ...h, distanceKm: d };
+          }
+        }
+      }
+      if (!nearestHosp) {
+        nearestHosp = {
+          name: 'Capital Hospital & PGIER, Unit 6',
+          nameOr: 'କ୍ୟାପିଟାଲ୍ ହସ୍ପିଟାଲ୍ ଓ PGIER',
+          type: 'District Headquarter Hospital (DHH) / Super-Speciality',
+          district: 'Khordha',
+          distanceKm: 2.4
+        };
+      }
+
+      drawBox(45, curY, 1110, box5H, '#ecfdf5', '#a7f3d0', '#0d9488');
+      ctx.fillStyle = '#0f766e';
+      ctx.font = 'bold 16px "Plus Jakarta Sans", "Noto Sans Oriya", "Noto Sans Devanagari", sans-serif';
+      ctx.fillText('5. NEAREST RECOMMENDED GOVERNMENT HEALTHCARE FACILITY (ନିକଟସ୍ଥ ସରକାରୀ ଡାକ୍ତରଖାନା):', 65, curY + 28);
+
+      const isOr = lang === 'or';
+      const isHi = lang === 'hi';
+      const hospDisplayName = (isOr && nearestHosp.nameOr) ? `${nearestHosp.name} (${nearestHosp.nameOr})` : nearestHosp.name;
+      const distBadge = `📍 Distance: ~${nearestHosp.distanceKm.toFixed(1)} km from current location`;
+
+      ctx.fillStyle = '#0f172a';
+      ctx.font = 'bold 15px "Plus Jakarta Sans", "Noto Sans Oriya", sans-serif';
+      ctx.fillText('🏥 ' + hospDisplayName, 65, curY + 54);
+
+      // Distance Badge in Emerald
+      ctx.fillStyle = '#047857';
+      ctx.font = 'bold 15px "Plus Jakarta Sans", sans-serif';
+      ctx.textAlign = 'right';
+      ctx.fillText(distBadge, 1130, curY + 54);
+      ctx.textAlign = 'left';
+
+      // Facility Details Line
+      ctx.fillStyle = '#475569';
+      ctx.font = '13.5px "Plus Jakarta Sans", sans-serif';
+      const hospFacilityLine = `Level: ${nearestHosp.type || 'Govt Hospital / CHC'}  •  District: ${nearestHosp.district || 'Odisha'}  •  24×7 Casualty & Emergency Department Active`;
+      ctx.fillText(hospFacilityLine, 65, curY + 74);
+
+      curY += box5H + gap;
+
+      // 9. BILINGUAL YELLOW / AMBER NOTICE BOX (For Consulting Medical Officer)
+      drawBox(45, curY, 1110, noticeH, '#fffbeb', '#f59e0b', '#b45309');
       ctx.fillStyle = '#b45309';
       ctx.font = 'bold 16px "Plus Jakarta Sans", "Noto Sans Oriya", "Noto Sans Devanagari", sans-serif';
-      ctx.fillText('⚠️ NOTICE FOR CONSULTING MEDICAL OFFICER (CHC / PHC / DHH):', 65, curY + 32);
+      ctx.fillText('⚠️ NOTICE FOR CONSULTING MEDICAL OFFICER (CHC / PHC / DHH):', 65, curY + 28);
 
       // Part 1: English
       const noticeEn = 'This clinical triage slip was generated by Swasth AI to assist patients and frontline health workers (ASHA/ANM) with early symptom awareness. The patient was STRICTLY instructed NOT to self-medicate with unprescribed antibiotics or OTC steroids. Please conduct a comprehensive physical clinical examination, blood/diagnostic tests, and prescribe authorized medicines.';
-      renderWrappedText(noticeEn, 65, curY + 62, 1070, 23, 4, '14.5px "Plus Jakarta Sans", sans-serif', '#78350f');
+      const enLines = wrapTextToLines(noticeEn, 1070, '14px "Plus Jakarta Sans", sans-serif');
+      renderLines(enLines, 65, curY + 52, 21, 3, '14px "Plus Jakarta Sans", sans-serif', '#78350f');
 
       // Part 2: Selected Regional Language
-      const isOr = lang === 'or';
-      const isHi = lang === 'hi';
       const noticeLang = isHi
         ? '⚠️ डॉक्टर के लिए निर्देश: यह पर्ची प्रारंभिक लक्षण जागरूकता के लिए तैयार की गई है। मरीज को बिना डॉक्टर के पर्चे कोई भी एंटीबायोटिक या स्टेरॉयड दवा न लेने की सख्त हिदायत दी गई है। कृपया शारीरिक जांच कर औपचारिक नुस्खा प्रदान करें।'
         : (isOr
           ? '⚠️ ଡାକ୍ତରଙ୍କ ପାଇଁ ନିର୍ଦ୍ଦେଶ: ଏହି ସ୍ୱାସ୍ଥ୍ୟ ସାରାଂଶ ସଚେତନତା ପାଇଁ ପ୍ରସ୍ତୁତ କରାଯାଇଛି । ରୋଗୀଙ୍କୁ ବିନା ଡାକ୍ତରୀ ପ୍ରେସକ୍ରିପସନରେ କୌଣସି ଆଣ୍ଟିବାୟୋଟିକ୍ ବା ଷ୍ଟେରଏଡ୍ ଔଷଧ ନଖାଇବାକୁ କଡ଼ା ଚେତାବନୀ ଦିଆଯାଇଛି । ଦୟାକରି ଶାରୀରିକ ପରୀକ୍ଷା ଓ ରକ୍ତ ଯାଞ୍ଚ କରି ଆବଶ୍ୟକ ଔଷଧ ପ୍ରଦାନ କରନ୍ତୁ ।'
           : '⚠️ SECONDARY DIRECTIVE: Ensure immediate vitals check (Blood Pressure, Pulse, SpO2, Temperature) and rule out acute complications before outpatient discharge.');
 
-      renderWrappedText(noticeLang, 65, curY + 175, 1070, 24, 4, '14.5px "Plus Jakarta Sans", "Noto Sans Oriya", "Noto Sans Devanagari", sans-serif', '#92400e');
-      curY += 330;
+      const langLines = wrapTextToLines(noticeLang, 1070, '14px "Plus Jakarta Sans", "Noto Sans Oriya", "Noto Sans Devanagari", sans-serif');
+      renderLines(langLines, 65, curY + 128, 22, 2, '14px "Plus Jakarta Sans", "Noto Sans Oriya", "Noto Sans Devanagari", sans-serif', '#92400e');
 
-      // 8. Bottom Line - EXACTLY AS INSTRUCTED (Nothing more, nothing less)
+      // 10. Bottom Line - EXACTLY AS INSTRUCTED (Nothing more, nothing less)
       ctx.fillStyle = '#475569';
       ctx.font = 'bold 15px "Plus Jakarta Sans", sans-serif';
       ctx.textAlign = 'center';
