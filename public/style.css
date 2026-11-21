@@ -606,11 +606,84 @@ input:focus, textarea:focus {
   line-height: 1.4;
 }
 
-/* --- CHAT VIEW --- */
+/* --- CHAT VIEW (UNIVERSAL 100dvh VIEWPORT ARCHITECTURE - WORKS ON ALL PHONES, TABLETS & DESKTOPS) --- */
+html, body {
+  height: 100%;
+  height: 100dvh;
+}
+body.chat-active {
+  height: 100%;
+  height: 100dvh !important;
+  max-height: 100dvh !important;
+  overflow: hidden !important;
+  display: flex !important;
+  flex-direction: column !important;
+  background: var(--bg);
+  margin: 0;
+  padding: 0;
+}
+body.chat-active .top {
+  flex-shrink: 0 !important;
+}
+body.chat-active .emergency {
+  flex-shrink: 0 !important;
+}
+body.chat-active main {
+  flex: 1 1 auto !important;
+  display: flex !important;
+  flex-direction: column !important;
+  min-height: 0 !important;
+  width: 100% !important;
+  max-width: 860px;
+  margin: 0 auto;
+  padding: 4px 6px 2px !important;
+  box-sizing: border-box !important;
+  overflow: hidden !important;
+}
+body.chat-active .chat {
+  flex: 1 1 auto !important;
+  display: flex !important;
+  flex-direction: column !important;
+  min-height: 0 !important;
+  height: 100% !important;
+  background: var(--surface);
+  border: 1px solid var(--line);
+  border-radius: 16px;
+  box-shadow: 0 2px 12px rgba(0, 0, 0, 0.04);
+  overflow: hidden !important;
+  padding: 4px 8px 6px !important;
+  box-sizing: border-box !important;
+}
+body.chat-active .chat-header-info {
+  flex-shrink: 0 !important;
+}
+body.chat-active .chips {
+  flex-shrink: 0 !important;
+}
+body.chat-active .image-preview-tray {
+  flex-shrink: 0 !important;
+}
+body.chat-active .composer {
+  flex-shrink: 0 !important;
+  padding: 3px 0 2px !important;
+}
+body.chat-active .composer-foot {
+  flex-shrink: 0 !important;
+}
+body.chat-active .dual-action-area {
+  flex-shrink: 0 !important;
+}
+body.chat-active .foot {
+  flex-shrink: 0 !important;
+  margin-top: auto !important;
+  padding: 6px 10px max(6px, env(safe-area-inset-bottom)) !important;
+  background: #ffffff !important;
+  border-top: 1px solid var(--line-subtle) !important;
+}
 .chat {
   display: flex;
   flex-direction: column;
-  gap: 14px;
+  gap: 10px;
 }
 .chat-header-info {
   display: flex;
@@ -655,19 +728,23 @@ body.chat-active .lang-switch-box {
 .messages {
   display: flex;
   flex-direction: column;
-  gap: 14px;
-  padding: 12px 4px;
+  gap: 12px;
+  padding: 8px 4px;
   scroll-behavior: smooth;
+  flex: 1 1 auto;
+  min-height: 0 !important;
+  max-height: none !important;
+  overflow-y: auto !important;
+  -webkit-overflow-scrolling: touch;
+  overscroll-behavior-y: contain;
 }
-body.chat-active:not(.chat-has-results) .messages {
-  min-height: auto;
-  max-height: 140px;
-  overflow: hidden;
-}
-body.chat-active.chat-has-results .messages {
-  min-height: 45vh;
-  max-height: 60vh;
-  overflow-y: auto;
+body.chat-active .messages {
+  flex: 1 1 auto !important;
+  min-height: 0 !important;
+  max-height: none !important;
+  overflow-y: auto !important;
+  -webkit-overflow-scrolling: touch;
+  overscroll-behavior-y: contain;
 }
 .bubble {
   max-width: 86%;
@@ -776,14 +853,7 @@ body.chat-active.chat-has-results .messages {
   transform: translateY(-1px);
 }
 
-/* COMPOSER */
-/* Odia and Hindi: Strict complete removal of search/input bar */
-body.lang-or #chatForm,
-body.lang-hi #chatForm,
-body.lang-or .composer-foot,
-body.lang-hi .composer-foot {
-  display: none !important;
-}
+/* COMPOSER - CLEAN UNIVERSAL INPUT BAR (WORKS IN ALL LANGUAGES: ENGLISH, ODIA, HINDI) */
 
 /* WHATSAPP-STYLE CLEAN COMPOSER (ENGLISH) */
 .whatsapp-composer {
@@ -959,13 +1029,13 @@ body.lang-hi .composer-foot {
   text-overflow: ellipsis;
 }
 
-/* HERO MODE (WHEN IN ODIA OR HINDI) - 2 CLEAN SIDE-BY-SIDE HERO BOXES (ONE BY ONE SIDE, NOT UP AND DOWN) */
+/* CLEAN 2-BOX ACTION AREA (VOICE & PHOTO) */
 .dual-action-area.hero-mode {
   display: grid !important;
   grid-template-columns: 1fr 1fr !important;
-  gap: 12px;
-  margin-top: 14px;
-  margin-bottom: 6px;
+  gap: 8px;
+  margin-top: 4px;
+  margin-bottom: 2px;
   width: 100%;
 }
 .dual-action-area.hero-mode .action-box {
@@ -974,12 +1044,12 @@ body.lang-hi .composer-foot {
   align-items: center;
   justify-content: center;
   text-align: center;
-  padding: 18px 12px;
+  padding: 6px 4px;
   border-radius: var(--radius-lg);
-  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.06);
-  border-width: 2px;
-  gap: 10px;
-  min-height: 130px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.04);
+  border-width: 1.5px;
+  gap: 2px;
+  min-height: 56px;
   min-width: 0;
 }
 .dual-action-area.hero-mode .action-box.voice-box {
@@ -988,8 +1058,8 @@ body.lang-hi .composer-foot {
 }
 .dual-action-area.hero-mode .action-box.voice-box:hover {
   background: #ccfbf1;
-  transform: translateY(-2px);
-  box-shadow: 0 8px 24px rgba(13, 148, 136, 0.2);
+  transform: translateY(-1px);
+  box-shadow: 0 4px 12px rgba(13, 148, 136, 0.15);
 }
 .dual-action-area.hero-mode .action-box.photo-box {
   background: linear-gradient(135deg, #eff6ff 0%, #e0f2fe 100%);
@@ -997,13 +1067,13 @@ body.lang-hi .composer-foot {
 }
 .dual-action-area.hero-mode .action-box.photo-box:hover {
   background: #dbeafe;
-  transform: translateY(-2px);
-  box-shadow: 0 8px 24px rgba(59, 130, 246, 0.2);
+  transform: translateY(-1px);
+  box-shadow: 0 4px 12px rgba(59, 130, 246, 0.15);
 }
 .dual-action-area.hero-mode .action-box-icon {
-  width: 50px;
-  height: 50px;
-  margin-bottom: 2px;
+  width: 28px;
+  height: 28px;
+  margin-bottom: 1px;
 }
 .dual-action-area.hero-mode .action-box-text {
   align-items: center;
@@ -1011,18 +1081,22 @@ body.lang-hi .composer-foot {
   width: 100%;
 }
 .dual-action-area.hero-mode .action-box-text strong {
-  font-size: 1.05rem;
-  font-weight: 800;
+  font-size: 0.84rem;
+  font-weight: 700;
   letter-spacing: -0.01em;
-  white-space: normal;
-  word-break: break-word;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  max-width: 100%;
 }
 .dual-action-area.hero-mode .action-box-text span {
-  font-size: 0.82rem;
+  font-size: 0.68rem;
   color: #475569;
-  margin-top: 2px;
-  white-space: normal;
-  word-break: break-word;
+  margin-top: 1px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  max-width: 100%;
 }
 .btn-icon {
   background: #f1f5f9;
@@ -2107,16 +2181,17 @@ body.lang-hi .composer-foot {
   /* Android Composer & Textarea: Prevents Mobile Auto-Zoom */
   .composer {
     gap: 6px;
-    padding: 6px 0;
+    padding: 2px 0;
   }
-  .composer-box {
-    padding: 0;
+  .composer-box.whatsapp-box {
+    padding: 2px 8px !important;
   }
-  .composer-box textarea {
+  .composer-box textarea,
+  .whatsapp-box textarea {
     font-size: 16px !important; /* Standard fix: iOS & Android will not zoom in */
-    min-height: 42px;
-    padding: 10px 145px 10px 12px;
-    line-height: 1.4;
+    min-height: 36px;
+    padding: 6px 8px !important;
+    line-height: 1.35;
   }
   .composer-actions {
     right: 5px;

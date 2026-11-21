@@ -497,29 +497,16 @@
     const composerFoot = document.querySelector('.composer-foot');
     const dualActionArea = $('dualActionArea');
 
-    if (isEn) {
-      // In English: show crystal-clear search bar + action boxes below
-      if (chatForm) {
-        chatForm.hidden = false;
-        chatForm.style.display = 'flex';
-      }
-      if (composerFoot) {
-        composerFoot.hidden = false;
-        composerFoot.style.display = 'flex';
-      }
-      if (dualActionArea) dualActionArea.classList.remove('hero-mode');
-    } else {
-      // In Odia or Hindi: completely remove/hide the search bar, show ONLY the 2 clear action boxes!
-      if (chatForm) {
-        chatForm.hidden = true;
-        chatForm.style.display = 'none';
-      }
-      if (composerFoot) {
-        composerFoot.hidden = true;
-        composerFoot.style.display = 'none';
-      }
-      if (dualActionArea) dualActionArea.classList.add('hero-mode');
+    // Composer & Dual Action Boxes visibility - Available in ALL languages (English, Odia, Hindi)
+    if (chatForm) {
+      chatForm.hidden = false;
+      chatForm.style.display = 'flex';
     }
+    if (composerFoot) {
+      composerFoot.hidden = false;
+      composerFoot.style.display = 'flex';
+    }
+    if (dualActionArea) dualActionArea.classList.remove('hero-mode');
 
     const voiceBoxTitle = $('voiceBoxTitle');
     const voiceBoxSub = $('voiceBoxSub');
@@ -1872,11 +1859,23 @@
   initCameraControl();
   initDeptPills();
 
-  // ---------- PWA & Service Worker Registration ----------
+  // ---------- PWA & Service Worker Registration & Auto-Refresh ----------
   if (typeof window !== 'undefined' && 'serviceWorker' in navigator) {
     window.addEventListener('load', () => {
       navigator.serviceWorker.register('/sw.js').then((reg) => {
         console.log('Swasth AI PWA ServiceWorker active:', reg.scope);
+        reg.update();
+        reg.addEventListener('updatefound', () => {
+          const newWorker = reg.installing;
+          if (newWorker) {
+            newWorker.addEventListener('statechange', () => {
+              if (newWorker.state === 'installed' && navigator.serviceWorker.controller) {
+                console.log('New Swasth AI version installed - refreshing');
+                window.location.reload();
+              }
+            });
+          }
+        });
       }).catch((err) => {
         console.warn('ServiceWorker registration error:', err);
       });
