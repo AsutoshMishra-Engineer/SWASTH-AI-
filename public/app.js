@@ -430,6 +430,10 @@
     }
     $('messages').appendChild(d);
     d.scrollIntoView({ block: 'end' });
+    setTimeout(() => {
+      const mb = $('messages');
+      if (mb) mb.scrollTop = mb.scrollHeight;
+    }, 60);
     return d;
   }
   function clearChat() {
@@ -1148,6 +1152,10 @@
     d.appendChild(t);
     $('messages').appendChild(d);
     d.scrollIntoView({ block: 'end' });
+    setTimeout(() => {
+      const mb = $('messages');
+      if (mb) mb.scrollTop = mb.scrollHeight;
+    }, 60);
     return d;
   }
 
@@ -1188,6 +1196,10 @@
     d.appendChild(txtGroup);
     $('messages').appendChild(d);
     d.scrollIntoView({ block: 'end' });
+    setTimeout(() => {
+      const mb = $('messages');
+      if (mb) mb.scrollTop = mb.scrollHeight;
+    }, 60);
     return d;
   }
 
