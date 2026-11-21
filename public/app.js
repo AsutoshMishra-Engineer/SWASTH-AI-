@@ -6264,9 +6264,9 @@
       ctx.fillStyle = '#ffffff';
       ctx.fillRect(0, 0, 1200, 1700);
 
-      // Top Emerald Header Banner
+      // Top Emerald Header Banner (Small & Compact)
       ctx.fillStyle = '#065f46';
-      ctx.fillRect(0, 0, 1200, 150);
+      ctx.fillRect(0, 0, 1200, 110);
 
       // 2. Official System Logo on Top Left (Exact Official App Icon Vector)
       function drawRoundRect(c, x, y, w, h, r) {
@@ -6340,40 +6340,37 @@
         c.restore();
       }
 
-      drawOfficialSwasthLogo(ctx, 45, 22, 106);
+      drawOfficialSwasthLogo(ctx, 45, 14, 82);
 
-      // Title & Header Text
+      // Title & Header Text (Compact Header)
       ctx.fillStyle = '#ffffff';
-      ctx.font = 'bold 30px "Plus Jakarta Sans", "Noto Sans Oriya", "Noto Sans Devanagari", sans-serif';
-      ctx.fillText('SWASTH AI (ସ୍ୱାସ୍ଥ୍ୟ AI / स्वास्थ्य AI)', 170, 62);
+      ctx.font = 'bold 28px "Plus Jakarta Sans", "Noto Sans Oriya", "Noto Sans Devanagari", sans-serif';
+      ctx.fillText('SWASTH AI (ସ୍ୱାସ୍ଥ୍ୟ AI / स्वास्थ्य AI)', 145, 52);
 
       ctx.fillStyle = '#a7f3d0';
-      ctx.font = '16px "Plus Jakarta Sans", "Noto Sans Oriya", "Noto Sans Devanagari", sans-serif';
-      ctx.fillText('Government of Odisha • Public Health Digital Triage System', 170, 94);
+      ctx.font = '15px "Plus Jakarta Sans", "Noto Sans Oriya", "Noto Sans Devanagari", sans-serif';
+      ctx.fillText('Government of Odisha • Public Health Digital Triage System', 145, 82);
 
-      ctx.font = '13px "Plus Jakarta Sans", "Noto Sans Oriya", "Noto Sans Devanagari", sans-serif';
-      ctx.fillText('Certified WHO & MoHFW Clinical Triage Protocol • SIH 25049 / F-204', 170, 120);
-
-      // Top Right Digital Badge
+      // Top Right Digital Badge (Compact)
       ctx.fillStyle = 'rgba(255, 255, 255, 0.18)';
-      ctx.fillRect(940, 52, 215, 44);
+      ctx.fillRect(940, 35, 215, 40);
       ctx.strokeStyle = '#a7f3d0';
       ctx.lineWidth = 1.5;
-      ctx.strokeRect(940, 52, 215, 44);
+      ctx.strokeRect(940, 35, 215, 40);
       ctx.fillStyle = '#ffffff';
-      ctx.font = 'bold 14px "Plus Jakarta Sans", sans-serif';
+      ctx.font = 'bold 13.5px "Plus Jakarta Sans", sans-serif';
       ctx.textAlign = 'center';
-      ctx.fillText('OFFICIAL DIGITAL SLIP', 1047, 79);
+      ctx.fillText('OFFICIAL DIGITAL SLIP', 1047, 60);
       ctx.textAlign = 'left';
 
-      // 3. Metadata Info Bar (Y: 150 to 215)
+      // 3. Metadata Info Bar (Compact Y: 110 to 168)
       ctx.fillStyle = '#f1f5f9';
-      ctx.fillRect(0, 150, 1200, 65);
+      ctx.fillRect(0, 110, 1200, 58);
       ctx.strokeStyle = '#cbd5e1';
       ctx.lineWidth = 1.5;
       ctx.beginPath();
-      ctx.moveTo(0, 215);
-      ctx.lineTo(1200, 215);
+      ctx.moveTo(0, 168);
+      ctx.lineTo(1200, 168);
       ctx.stroke();
 
       const triageId = 'OD-TRG-' + Math.floor(100000 + Math.random() * 900000);
@@ -6381,20 +6378,22 @@
       const timeStr = new Date().toLocaleTimeString('en-IN', { hour: '2-digit', minute: '2-digit' });
 
       ctx.fillStyle = '#1e293b';
-      ctx.font = 'bold 15px "Plus Jakarta Sans", sans-serif';
-      ctx.fillText('SLIP REF: ' + triageId, 45, 189);
+      ctx.font = 'bold 14.5px "Plus Jakarta Sans", sans-serif';
+      ctx.fillText('SLIP REF: ' + triageId, 45, 145);
       ctx.fillStyle = '#475569';
-      ctx.fillText('DATE: ' + dateStr + ', ' + timeStr, 340, 189);
+      ctx.fillText('DATE: ' + dateStr + ', ' + timeStr, 340, 145);
 
-      // FACILITY: [ AI DIAGNOSED ] (Department removed as requested)
+      // FACILITY: [ AI DIAGNOSED ] (Compact box)
       ctx.fillStyle = '#f0fdf4';
-      ctx.fillRect(720, 163, 435, 40);
+      ctx.fillRect(830, 121, 325, 36);
       ctx.strokeStyle = '#86efac';
       ctx.lineWidth = 1.5;
-      ctx.strokeRect(720, 163, 435, 40);
+      ctx.strokeRect(830, 121, 325, 36);
       ctx.fillStyle = '#166534';
-      ctx.font = 'bold 15px "Plus Jakarta Sans", sans-serif';
-      ctx.fillText('FACILITY: [ AI DIAGNOSED ]', 740, 188);
+      ctx.font = 'bold 14px "Plus Jakarta Sans", sans-serif';
+      ctx.textAlign = 'center';
+      ctx.fillText('FACILITY: [ AI DIAGNOSED ]', 992, 144);
+      ctx.textAlign = 'left';
 
       function drawBox(x, y, w, h, bgColor, borderColor, borderLeftColor) {
         ctx.fillStyle = bgColor;
@@ -6475,29 +6474,29 @@
       const box1H = Math.max(76, 36 + box1Lines * 24 + 12);
 
       // Section 4 (24x7 Helplines) & Section 5 (Nearest Hospital) fixed clean heights
-      const box4H = 74;
-      const box5H = 84;
-      const noticeH = 185;
+      const box4H = 70;
+      const box5H = 78;
+      const noticeH = 155;
 
-      // Vertical space budgeting: Total available content height from Y: 230 to 1635 is 1405px
-      const totalBudget = 1405;
-      const fixedTotal = box1H + box4H + box5H + noticeH; // ~420px
-      const remainingFor2and3andGaps = totalBudget - fixedTotal; // ~985px
+      // Vertical space budgeting: Total available content height from Y: 185 to 1635 is 1450px
+      const totalBudget = 1450;
+      const fixedTotal = box1H + box4H + box5H + noticeH; // ~379px
+      const remainingFor2and3andGaps = totalBudget - fixedTotal; // ~1071px
 
       // Target lines: Box 2 clinical guidance and Box 3 danger signs
-      const neededBox2 = Math.min(480, Math.max(280, 42 + Math.min(15, guidanceLines.length) * 25 + 16));
-      const neededBox3 = Math.min(260, Math.max(180, 42 + Math.min(7, doctorLines.length) * 25 + 16));
+      const neededBox2 = Math.min(500, Math.max(300, 40 + Math.min(16, guidanceLines.length) * 25 + 16));
+      const neededBox3 = Math.min(270, Math.max(180, 40 + Math.min(8, doctorLines.length) * 25 + 16));
 
       // Calculate dynamic gap so the page is filled cleanly and interactively without blank holes
       const rawGap = Math.floor((remainingFor2and3andGaps - neededBox2 - neededBox3) / 5);
-      const gap = Math.max(12, Math.min(22, rawGap));
+      const gap = Math.max(14, Math.min(24, rawGap));
 
       // Reallocate any surplus space to Box 2 for extra clinical reading comfort
       const surplus = Math.max(0, remainingFor2and3andGaps - neededBox2 - neededBox3 - (5 * gap));
       const box2H = neededBox2 + Math.floor(surplus * 0.7);
       const box3H = neededBox3 + Math.floor(surplus * 0.3);
 
-      let curY = 230;
+      let curY = 185;
 
       // 4. SECTION 1: PATIENT REPORTED COMPLAINT
       drawBox(45, curY, 1110, box1H, '#f8fafc', '#e2e8f0', '#0d9488');
@@ -6511,7 +6510,7 @@
       drawBox(45, curY, 1110, box2H, '#ffffff', '#cbd5e1', '#0284c7');
       ctx.fillStyle = '#0284c7';
       ctx.font = 'bold 16px "Plus Jakarta Sans", "Noto Sans Oriya", "Noto Sans Devanagari", sans-serif';
-      ctx.fillText('2. CLINICAL TRIAGE GUIDANCE & SAFE HOME CARE (WHO & MoHFW Grounded):', 65, curY + 30);
+      ctx.fillText('2. CLINICAL TRIAGE GUIDANCE & SAFE HOME CARE:', 65, curY + 30);
       const maxGuidanceLines = Math.floor((box2H - 52) / 25);
       renderLines(guidanceLines, 65, curY + 60, 25, maxGuidanceLines, gFont, '#1e293b');
       curY += box2H + gap;
@@ -6529,14 +6528,14 @@
       drawBox(45, curY, 1110, box4H, '#f0fdf4', '#86efac', '#059669');
       ctx.fillStyle = '#059669';
       ctx.font = 'bold 16px "Plus Jakarta Sans", "Noto Sans Oriya", sans-serif';
-      ctx.fillText('4. 24×7 ODISHA STATE EMERGENCY DIRECTORY & HELPLINES:', 65, curY + 28);
+      ctx.fillText('4. 24×7 ODISHA STATE EMERGENCY DIRECTORY & HELPLINES:', 65, curY + 26);
 
       ctx.fillStyle = '#1e293b';
       ctx.font = 'bold 15px "Plus Jakarta Sans", sans-serif';
-      ctx.fillText('🚑 Ambulance: 108', 65, curY + 56);
-      ctx.fillText('🚨 National Emergency: 112', 320, curY + 56);
-      ctx.fillText('📞 State Health Helpline: 104', 600, curY + 56);
-      ctx.fillText('🧠 Tele-MANAS: 14416', 890, curY + 56);
+      ctx.fillText('🚑 Ambulance: 108', 65, curY + 52);
+      ctx.fillText('🚨 National Emergency: 112', 320, curY + 52);
+      ctx.fillText('📞 State Health Helpline: 104', 600, curY + 52);
+      ctx.fillText('🧠 Tele-MANAS: 14416', 890, curY + 52);
       curY += box4H + gap;
 
       // 8. SECTION 5: NEAREST RECOMMENDED GOVERNMENT HEALTHCARE FACILITY & DISTANCE IN KM
@@ -6569,7 +6568,7 @@
       drawBox(45, curY, 1110, box5H, '#ecfdf5', '#a7f3d0', '#0d9488');
       ctx.fillStyle = '#0f766e';
       ctx.font = 'bold 16px "Plus Jakarta Sans", "Noto Sans Oriya", "Noto Sans Devanagari", sans-serif';
-      ctx.fillText('5. NEAREST RECOMMENDED GOVERNMENT HEALTHCARE FACILITY (ନିକଟସ୍ଥ ସରକାରୀ ଡାକ୍ତରଖାନା):', 65, curY + 28);
+      ctx.fillText('5. NEAREST RECOMMENDED GOVERNMENT HEALTHCARE FACILITY (ନିକଟସ୍ଥ ସରକାରୀ ଡାକ୍ତରଖାନା):', 65, curY + 26);
 
       const isOr = lang === 'or';
       const isHi = lang === 'hi';
@@ -6578,33 +6577,33 @@
 
       ctx.fillStyle = '#0f172a';
       ctx.font = 'bold 15px "Plus Jakarta Sans", "Noto Sans Oriya", sans-serif';
-      ctx.fillText('🏥 ' + hospDisplayName, 65, curY + 54);
+      ctx.fillText('🏥 ' + hospDisplayName, 65, curY + 50);
 
       // Distance Badge in Emerald
       ctx.fillStyle = '#047857';
       ctx.font = 'bold 15px "Plus Jakarta Sans", sans-serif';
       ctx.textAlign = 'right';
-      ctx.fillText(distBadge, 1130, curY + 54);
+      ctx.fillText(distBadge, 1130, curY + 50);
       ctx.textAlign = 'left';
 
       // Facility Details Line
       ctx.fillStyle = '#475569';
       ctx.font = '13.5px "Plus Jakarta Sans", sans-serif';
       const hospFacilityLine = `Level: ${nearestHosp.type || 'Govt Hospital / CHC'}  •  District: ${nearestHosp.district || 'Odisha'}  •  24×7 Casualty & Emergency Department Active`;
-      ctx.fillText(hospFacilityLine, 65, curY + 74);
+      ctx.fillText(hospFacilityLine, 65, curY + 68);
 
       curY += box5H + gap;
 
-      // 9. BILINGUAL YELLOW / AMBER NOTICE BOX (For Consulting Medical Officer)
+      // 9. BILINGUAL YELLOW / AMBER NOTICE BOX (For Consulting Medical Officer - Compact & Sleek)
       drawBox(45, curY, 1110, noticeH, '#fffbeb', '#f59e0b', '#b45309');
       ctx.fillStyle = '#b45309';
-      ctx.font = 'bold 16px "Plus Jakarta Sans", "Noto Sans Oriya", "Noto Sans Devanagari", sans-serif';
-      ctx.fillText('⚠️ NOTICE FOR CONSULTING MEDICAL OFFICER (CHC / PHC / DHH):', 65, curY + 28);
+      ctx.font = 'bold 15px "Plus Jakarta Sans", "Noto Sans Oriya", "Noto Sans Devanagari", sans-serif';
+      ctx.fillText('⚠️ NOTICE FOR CONSULTING MEDICAL OFFICER (CHC / PHC / DHH):', 65, curY + 24);
 
       // Part 1: English
       const noticeEn = 'This clinical triage slip was generated by Swasth AI to assist patients and frontline health workers (ASHA/ANM) with early symptom awareness. The patient was STRICTLY instructed NOT to self-medicate with unprescribed antibiotics or OTC steroids. Please conduct a comprehensive physical clinical examination, blood/diagnostic tests, and prescribe authorized medicines.';
-      const enLines = wrapTextToLines(noticeEn, 1070, '14px "Plus Jakarta Sans", sans-serif');
-      renderLines(enLines, 65, curY + 52, 21, 3, '14px "Plus Jakarta Sans", sans-serif', '#78350f');
+      const enLines = wrapTextToLines(noticeEn, 1070, '13.5px "Plus Jakarta Sans", sans-serif');
+      renderLines(enLines, 65, curY + 46, 19, 3, '13.5px "Plus Jakarta Sans", sans-serif', '#78350f');
 
       // Part 2: Selected Regional Language
       const noticeLang = isHi
@@ -6613,8 +6612,8 @@
           ? '⚠️ ଡାକ୍ତରଙ୍କ ପାଇଁ ନିର୍ଦ୍ଦେଶ: ଏହି ସ୍ୱାସ୍ଥ୍ୟ ସାରାଂଶ ସଚେତନତା ପାଇଁ ପ୍ରସ୍ତୁତ କରାଯାଇଛି । ରୋଗୀଙ୍କୁ ବିନା ଡାକ୍ତରୀ ପ୍ରେସକ୍ରିପସନରେ କୌଣସି ଆଣ୍ଟିବାୟୋଟିକ୍ ବା ଷ୍ଟେରଏଡ୍ ଔଷଧ ନଖାଇବାକୁ କଡ଼ା ଚେତାବନୀ ଦିଆଯାଇଛି । ଦୟାକରି ଶାରୀରିକ ପରୀକ୍ଷା ଓ ରକ୍ତ ଯାଞ୍ଚ କରି ଆବଶ୍ୟକ ଔଷଧ ପ୍ରଦାନ କରନ୍ତୁ ।'
           : '⚠️ SECONDARY DIRECTIVE: Ensure immediate vitals check (Blood Pressure, Pulse, SpO2, Temperature) and rule out acute complications before outpatient discharge.');
 
-      const langLines = wrapTextToLines(noticeLang, 1070, '14px "Plus Jakarta Sans", "Noto Sans Oriya", "Noto Sans Devanagari", sans-serif');
-      renderLines(langLines, 65, curY + 128, 22, 2, '14px "Plus Jakarta Sans", "Noto Sans Oriya", "Noto Sans Devanagari", sans-serif', '#92400e');
+      const langLines = wrapTextToLines(noticeLang, 1070, '13.5px "Plus Jakarta Sans", "Noto Sans Oriya", "Noto Sans Devanagari", sans-serif');
+      renderLines(langLines, 65, curY + 110, 20, 2, '13.5px "Plus Jakarta Sans", "Noto Sans Oriya", "Noto Sans Devanagari", sans-serif', '#92400e');
 
       // 10. Bottom Line - EXACTLY AS INSTRUCTED (Nothing more, nothing less)
       ctx.fillStyle = '#475569';
