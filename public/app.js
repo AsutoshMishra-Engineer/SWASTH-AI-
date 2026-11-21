@@ -11,18 +11,18 @@
     'Do antibiotics work for a common cold?'
   ];
   const EXAMPLES_OR = [
-    '🦟 ଡେଙ୍ଗୁରୁ କିପରି ବଞ୍ଚିବା?',
-    '🐕 କୁକୁର କାମୁଡ଼ିଲେ କ\'ଣ କରିବା?',
-    '💧 ଘରେ ORS କିପରି ପ୍ରସ୍ତୁତ କରିବେ?',
-    '🤰 ଗର୍ଭାବସ୍ଥାରେ ବିପଦର ଲକ୍ଷଣ କ\'ଣ?',
-    '☀️ ଅଂଶୁଘାତରୁ ରକ୍ଷା ଓ ପ୍ରାଥମିକ ଯତ୍ନ'
+    'ଡେଙ୍ଗୁରୁ କିପରି ବଞ୍ଚିବା?',
+    'କୁକୁର କାମୁଡ଼ିଲେ କ\'ଣ କରିବା?',
+    'ଘରେ ORS କିପରି ପ୍ରସ୍ତୁତ କରିବେ?',
+    'ଗର୍ଭାବସ୍ଥାରେ ବିପଦର ଲକ୍ଷଣ କ\'ଣ?',
+    'ଅଂଶୁଘାତରୁ ରକ୍ଷା ଓ ପ୍ରାଥମିକ ଯତ୍ନ'
   ];
   const EXAMPLES_HI = [
-    '🦟 डेंगू से कैसे बचें?',
-    '🐕 कुत्ते के काटने पर क्या करें?',
-    '💧 घर पर ओआरएस (ORS) घोल कैसे बनाएं?',
-    '🤰 गर्भावस्था में खतरे के मुख्य लक्षण क्या हैं?',
-    '☀️ लू (सनस्ट्रोक) से बचाव और प्राथमिक उपचार'
+    'डेंगू से कैसे बचें?',
+    'कुत्ते के काटने पर क्या करें?',
+    'घर पर ओआरएस (ORS) घोल कैसे बनाएं?',
+    'गर्भावस्था में खतरे के मुख्य लक्षण क्या हैं?',
+    'लू (सनस्ट्रोक) से बचाव और प्राथमिक उपचार'
   ];
   const EXAMPLES = EXAMPLES_EN;
   // Strict Requirement: Default to English on every reload
@@ -97,7 +97,7 @@
     }
     const footCombined = $('footCopyrightCombined') || $('footCopyrightSmall') || $('footCopyrightMain');
     if (footCombined) {
-      footCombined.innerHTML = '&copy; 2026 Swasth AI &bull; All Rights Reserved &bull; Odisha Public Health Assistant &bull; F-204 DEMO PROJECT &bull; <a href="https://swasth-ai.pages.dev" target="_blank" rel="noopener noreferrer" style="color:var(--primary);font-weight:700;text-decoration:underline;">swasth-ai.pages.dev</a>';
+      footCombined.innerHTML = '&copy; 2026 Swasth AI &bull; All Rights Reserved &bull; Odisha Public Health Assistant &bull; <a href="https://swasth-ai.pages.dev" target="_blank" rel="noopener noreferrer" style="color:var(--primary);font-weight:700;text-decoration:underline;">swasth-ai.pages.dev</a>';
     }
   }
 
@@ -515,7 +515,7 @@
     const photoBoxSub = $('photoBoxSub');
 
     if (voiceBoxTitle) {
-      voiceBoxTitle.textContent = isHi ? '🎙️ बोलकर बताएं' : (isOr ? '🎙️ ଭଏସ୍ ମେସେଜ୍' : '🎙️ Voice Message');
+      voiceBoxTitle.textContent = isHi ? 'बोलकर परामर्श' : (isOr ? 'ଭଏସ୍ ପରାମର୍ଶ' : 'Voice Consultation');
     }
     if (voiceBoxSub) {
       voiceBoxSub.textContent = isHi ? 'बोलकर पूछें' : (isOr ? 'ଓଡ଼ିଆରେ କୁହନ୍ତୁ' : 'Tap to speak');
@@ -556,7 +556,7 @@
 
     const pwaBtn = $('pwaInstallBtn');
     if (pwaBtn && !pwaBtn.hidden) {
-      pwaBtn.textContent = isHi ? '📲 ऐप इंस्टॉल करें' : (isOr ? '📲 ଆପ୍ ଇନଷ୍ଟଲ୍' : '📲 Install App');
+      pwaBtn.textContent = isHi ? 'ऐप इंस्टॉल करें' : (isOr ? 'ଆପ୍ ଇନଷ୍ଟଲ୍' : 'Install App');
     }
 
     const offCareLbl = $('offlineCareLabel');
@@ -688,10 +688,9 @@
     if ($('modalTitle')) $('modalTitle').textContent = isHi ? 'महत्वपूर्ण स्वास्थ्य और डॉक्टरी सूचना' : (isOr ? 'ଜରୁରୀ ସ୍ୱାସ୍ଥ୍ୟ ଓ ଡାକ୍ତରୀ ସୂଚନା' : 'Important Health & Doctor Notice');
     if ($('modalNoticeCard')) {
       $('modalNoticeCard').innerHTML = isHi
-        ? '<strong>⚠️ स्वास्थ्य AI केवल एक सूचनात्मक मार्गदर्शक है, कोई डॉक्टर नहीं</strong><p>यह सेवा केवल स्वास्थ्य जागरूकता और सामान्य सलाह के लिए है। यह किसी डॉक्टर की शारीरिक जांच, लैब टेस्ट या दवा के नुस्खे (प्रिस्क्रिप्शन) का विकल्प नहीं है।</p>'
-        : (isOr
-          ? '<strong>⚠️ ସ୍ୱାସ୍ଥ୍ୟ AI କେବଳ ଏକ ସୂଚନାକାରୀ ସହାୟକ, କୌଣସି ଡାକ୍ତର ନୁହେଁ</strong><p>ଏହି ସେବା କେବଳ ସଚେତନତା ଓ ସାଧାରଣ ସ୍ୱାସ୍ଥ୍ୟ ପରାମର୍ଶ ପାଇଁ ଉଦ୍ଦିଷ୍ଟ । ଏହା ଡାକ୍ତରୀ ଶାରୀରିକ ପରୀକ୍ଷା, ରକ୍ତ ପରୀକ୍ଷା କିମ୍ବା ଔଷଧ ପ୍ରେସକ୍ରିପସନର ବିକଳ୍ପ ନୁହେଁ ।</p>'
-          : '<strong>⚠️ Swasth AI is an Informational Guide, Not a Doctor</strong><p>This service provides educational public health advice and symptom awareness. It cannot replace a clinical physical examination, diagnostic blood tests, or prescribed medication from a licensed medical professional.</p>');
+        ? '<strong>स्वास्थ्य AI केवल एक सूचनात्मक मार्गदर्शक है, कोई डॉक्टर नहीं</strong><p>यह सेवा केवल स्वास्थ्य जागरूकता और सामान्य सलाह के लिए है। यह किसी डॉक्टर की शारीरिक जांच, लैब टेस्ट या दवा के नुस्खे (प्रिस्क्रिप्शन) का विकल्प नहीं है।</p>'
+        : (isOr ? '<strong>ସ୍ୱାସ୍ଥ୍ୟ AI କେବଳ ଏକ ସୂଚନାକାରୀ ସହାୟକ, କୌଣସି ଡାକ୍ତର ନୁହେଁ</strong><p>ଏହି ସେବା କେବଳ ସଚେତନତା ଓ ସାଧାରଣ ସ୍ୱାସ୍ଥ୍ୟ ପରାମର୍ଶ ପାଇଁ ଉଦ୍ଦିଷ୍ଟ । ଏହା ଡାକ୍ତରୀ ଶାରୀରିକ ପରୀକ୍ଷା, ରକ୍ତ ପରୀକ୍ଷା କିମ୍ବା ଔଷଧ ପ୍ରେସକ୍ରିପସନର ବିକଳ୍ପ ନୁହେଁ ।</p>'
+          : '<strong>Swasth AI is an Informational Guide, Not a Doctor</strong><p>This service provides educational public health advice and symptom awareness. It cannot replace a clinical physical examination, diagnostic blood tests, or prescribed medication from a licensed medical professional.</p>');
     }
     if ($('modalStep1Title')) $('modalStep1Title').textContent = isHi ? 'लक्षण स्पष्ट रूप से बताएं' : (isOr ? 'ଲକ୍ଷଣଗୁଡ଼ିକ ସ୍ପଷ୍ଟ ଭାବେ କୁହନ୍ତୁ' : 'Ask Symptoms Clearly');
     if ($('modalStep1P')) $('modalStep1P').textContent = isHi
@@ -712,10 +711,10 @@
 
     // User bar buttons
     if ($('signOut')) $('signOut').textContent = isHi ? 'लॉग आउट' : (isOr ? 'ଲଗ୍ ଆଉଟ୍' : 'Sign out');
-    if ($('navDeleteAccountBtn')) $('navDeleteAccountBtn').textContent = isHi ? '🗑️ हटाएं' : (isOr ? '🗑️ ଡିଲିଟ୍' : '🗑️ Delete');
+    if ($('navDeleteAccountBtn')) $('navDeleteAccountBtn').textContent = isHi ? 'खाता हटाएं' : (isOr ? 'ଆକାଉଣ୍ଟ ଡିଲିଟ୍' : 'Delete Account');
 
     // Delete account modal
-    if ($('deleteModalTitle')) $('deleteModalTitle').textContent = isHi ? '⚠️ क्या आप अपना खाता हटाना चाहते हैं?' : (isOr ? '⚠️ ଆପଣଙ୍କ ଆକାଉଣ୍ଟ ଡିଲିଟ୍ କରିବେ କି?' : '⚠️ Delete Your Account?');
+    if ($('deleteModalTitle')) $('deleteModalTitle').textContent = isHi ? 'क्या आप अपना खाता हटाना चाहते हैं?' : (isOr ? 'ଆପଣଙ୍କ ଆକାଉଣ୍ଟ ଡିଲିଟ୍ କରିବେ କି?' : 'Delete Your Account?');
     if ($('cancelDeleteBtn')) $('cancelDeleteBtn').textContent = isHi ? 'रद्द करें' : (isOr ? 'ବାତିଲ୍' : 'Cancel');
     if ($('confirmDeleteBtn')) $('confirmDeleteBtn').textContent = isHi ? 'हाँ, स्थायी रूप से हटाएं' : (isOr ? 'ହଁ, ସ୍ଥାୟୀ ଭାବେ ଡିଲିଟ୍ କରନ୍ତୁ' : 'Yes, Permanently Delete');
 
@@ -818,7 +817,7 @@
       activeSpeakBtn.classList.remove('speaking');
       const label = activeSpeakBtn.querySelector('.speak-label');
       if (label) {
-        label.textContent = currentLang === 'hi' ? '🔊 सुनें' : (currentLang === 'or' ? '🔊 ଶୁଣନ୍ତୁ' : '🔊 Listen');
+        label.textContent = currentLang === 'hi' ? 'सुनें' : (currentLang === 'or' ? 'ଶୁଣନ୍ତୁ' : 'Listen');
       }
       activeSpeakBtn = null;
     }
@@ -862,8 +861,8 @@
           stopSpeaking();
           const label = btn.querySelector('.speak-label');
           if (label) {
-            label.textContent = '⚠️ ଅଡିଓ ସଂଯୋଗ ହେଉନାହିଁ';
-            setTimeout(() => { if (label) label.textContent = '🔊 ଶୁଣନ୍ତୁ'; }, 3000);
+            label.textContent = 'ଅଡିଓ ସଂଯୋଗ ହେଉନାହିଁ';
+            setTimeout(() => { if (label) label.textContent = 'ଶୁଣନ୍ତୁ'; }, 3000);
           }
           return;
         }
@@ -900,8 +899,8 @@
           stopSpeaking();
           const label = btn.querySelector('.speak-label');
           if (label) {
-            label.textContent = '⚠️ ऑडियो उपलब्ध नहीं';
-            setTimeout(() => { if (label) label.textContent = '🔊 सुनें'; }, 3000);
+            label.textContent = 'ऑडियो उपलब्ध नहीं';
+            setTimeout(() => { if (label) label.textContent = 'सुनें'; }, 3000);
           }
         };
 
@@ -924,8 +923,8 @@
           stopSpeaking();
           const label = btn.querySelector('.speak-label');
           if (label) {
-            label.textContent = '⚠️ Audio not available';
-            setTimeout(() => { if (label) label.textContent = '🔊 Listen'; }, 3000);
+            label.textContent = 'Audio not available';
+            setTimeout(() => { if (label) label.textContent = 'Listen'; }, 3000);
           }
         };
 
@@ -938,8 +937,8 @@
       if (label) {
         const isHi = targetLang === 'hi' || /[\u0900-\u097F]/.test(clean);
         const isOr = targetLang === 'or' || /[\u0B00-\u0B7F]/.test(clean);
-        label.textContent = isHi ? '⚠️ ऑडियो उपलब्ध नहीं' : (isOr ? '⚠️ ଅଡିଓ ସଂଯୋଗ ହେଉନାହିଁ' : '⚠️ Audio not available');
-        setTimeout(() => { if (label) label.textContent = isHi ? '🔊 सुनें' : (isOr ? '🔊 ଶୁଣନ୍ତୁ' : '🔊 Listen'); }, 3000);
+        label.textContent = isHi ? 'ऑडियो उपलब्ध नहीं' : (isOr ? 'ଅଡିଓ ସଂଯୋଗ ହେଉନାହିଁ' : 'Audio not available');
+        setTimeout(() => { if (label) label.textContent = isHi ? 'सुनें' : (isOr ? 'ଶୁଣନ୍ତୁ' : 'Listen'); }, 3000);
       }
     }
   }
@@ -1231,24 +1230,24 @@
         title = isHi ? '📸 क्लिनिकल फोटो मूल्यांकन' : (isOr ? '📸 ଡାକ୍ତରୀ ଫଟୋ ପରୀକ୍ଷା' : '📸 AI Clinical Photo Assessment');
         subtitle = isHi ? 'लक्षण, प्राथमिक उपचार व सुरक्षा प्रोटोकॉल' : (isOr ? 'ଲକ୍ଷଣ, ସୁରକ୍ଷା ଓ ପ୍ରାଥମିକ ଚିକିତ୍ସା ଯାଞ୍ଚ' : 'Clinical Triage, First Aid & Safety Protocol');
       } else if (dept === 'eye') {
-        icon = '👁️';
-        title = isHi ? '👁️ नेत्र चिकित्सा व दृष्टि मूल्यांकन (Netra Pariksha)' : (isOr ? '👁️ ନେତ୍ର ବିଭାଗ ଓ ଦୃଷ୍ଟି ପରୀକ୍ଷା (ନେତ୍ର ପରୀକ୍ଷା)' : '👁️ Ophthalmology & Eye Department (Netra Pariksha)');
+        icon = '📸';
+        title = isHi ? 'नेत्र चिकित्सा व दृष्टि मूल्यांकन (Netra Pariksha)' : (isOr ? 'ନେତ୍ର ବିଭାଗ ଓ ଦୃଷ୍ଟି ପରୀକ୍ଷା (ନେତ୍ର ପରୀକ୍ଷା)' : 'Ophthalmology & Eye Department (Netra Pariksha)');
         subtitle = isHi ? 'कंजक्टिवाइटिस, लाल आँख व आपातकालीन जांच' : (isOr ? 'କଞ୍ଜକ୍ଟିଭାଇଟିସ୍, ଲାଲ୍ ଆଖି ଓ ଜରୁରୀ ପରାମର୍ଶ' : 'Conjunctivitis, Stye, Red Eye & Visual Triage Protocol');
       } else if (dept === 'oral') {
-        icon = '👄';
-        title = isHi ? '👄 मुख स्वास्थ्य व कैंसर पूर्व जांच (Mukh Swasthya)' : (isOr ? '👄 ମୁଖ ସ୍ୱାସ୍ଥ୍ୟ ଓ କର୍କଟ ପୂର୍ବ ଯାଞ୍ଚ (ମୁଖ ସ୍ୱାସ୍ଥ୍ୟ)' : '👄 Oral Health & Pre-Cancer Screening (Mukh Swasthya)');
+        icon = '📸';
+        title = isHi ? 'मुख स्वास्थ्य व कैंसर पूर्व जांच (Mukh Swasthya)' : (isOr ? 'ମୁଖ ସ୍ୱାସ୍ଥ୍ୟ ଓ କର୍କଟ ପୂର୍ବ ଯାଞ୍ଚ (ମୁଖ ସ୍ୱାସ୍ଥ୍ୟ)' : 'Oral Health & Pre-Cancer Screening (Mukh Swasthya)');
         subtitle = isHi ? 'मुँह के छाले, तंबाकू व ल्यूकोप्लाकिया सुरक्षा जांच' : (isOr ? 'ତମାଖୁ, ଗୁଟ୍‌ଖା, ପାନ ଓ ଘା\' ଯାଞ୍ଚ ପ୍ରୋଟୋକଲ୍' : 'Aphthous Ulcers, OSMF & Pre-Malignancy Triage');
       } else if (dept === 'pediatric') {
-        icon = '👶';
-        title = isHi ? '👶 शिशु स्वास्थ्य व नवजात मूल्यांकन (Shishu Swasthya)' : (isOr ? '👶 ଶିଶୁ ସ୍ୱାସ୍ଥ୍ୟ ଓ ନବଜାତ ଯତ୍ନ (ଶିଶୁ ସ୍ୱାସ୍ଥ୍ୟ)' : '👶 Pediatrics & Newborn Triage (Shishu Swasthya)');
+        icon = '📸';
+        title = isHi ? 'शिशु स्वास्थ्य व नवजात मूल्यांकन (Shishu Swasthya)' : (isOr ? 'ଶିଶୁ ସ୍ୱାସ୍ଥ୍ୟ ଓ ନବଜାତ ଯତ୍ନ (ଶିଶୁ ସ୍ୱାସ୍ଥ୍ୟ)' : 'Pediatrics & Newborn Triage (Shishu Swasthya)');
         subtitle = isHi ? 'नवजात पीलिया (Jaundice), डायपर रैश व निर्जलीकरण जांच' : (isOr ? 'କାମଳ (Jaundice), ଡାଏପର ରାସ୍ ଓ ଶିଶୁ ସୁରକ୍ଷା' : 'Neonatal Jaundice, Dehydration & Pediatric Triage');
       } else if (dept === 'wound') {
-        icon = '🩹';
-        title = isHi ? '🩹 घाव, जलन व पशु काटना (Khyata & Porajala)' : (isOr ? '🩹 ଘା\', ପୋଡ଼ାଜଳା ଓ ପଶୁ କାମୁଡ଼ା (କ୍ଷତ ଓ ପୋଡ଼ାଜଳା)' : '🩹 Wounds, Burns & Animal Bites (Khyata & Porajala)');
+        icon = '📸';
+        title = isHi ? 'घाव, जलन व पशु काटना (Khyata & Porajala)' : (isOr ? 'ଘା\', ପୋଡ଼ାଜଳା ଓ ପଶୁ କାମୁଡ଼ା (କ୍ଷତ ଓ ପୋଡ଼ାଜଳା)' : 'Wounds, Burns & Animal Bites (Khyata & Porajala)');
         subtitle = isHi ? 'कुत्ता काटने पर 15 मिनट पानी से धोने व रेबीज सुरक्षा प्रोटोकॉल' : (isOr ? 'କୁକୁର କାମୁଡ଼ା ରେବିସ୍ ସୁରକ୍ଷା ଓ ୧୫ ମିନିଟ୍ ଧୋଇବା ପ୍ରୋଟୋକଲ୍' : '15-Min Running Water Rabies Wash & Burn Triage');
       } else if (dept === 'nail') {
-        icon = '💅';
-        title = isHi ? '💅 नाखून व एनीमिया दृश्य मूल्यांकन (Nakha Pariksha)' : (isOr ? '💅 ନଖ ଓ ରକ୍ତହୀନତା ପରୀକ୍ଷା (ନଖ ପରୀକ୍ଷା)' : '💅 Nails & Anemia Visual Screening (Nakha Pariksha)');
+        icon = '📸';
+        title = isHi ? 'नाखून व एनीमिया दृश्य मूल्यांकन (Nakha Pariksha)' : (isOr ? 'ନଖ ଓ ରକ୍ତହୀନତା ପରୀକ୍ଷା (ନଖ ପରୀକ୍ଷା)' : 'Nails & Anemia Visual Screening (Nakha Pariksha)');
         subtitle = isHi ? 'रक्तहीनता (Pallor), ऑक्सीजन स्तर व पोषण जांच' : (isOr ? 'ରକ୍ତହୀନତା (Pallor), ଅକ୍ସିଜେନ୍ ଓ ପୋଷଣ ଯାଞ୍ଚ' : 'Subungual Pallor, Koilonychia & Hemoglobin Triage');
       }
 
@@ -1276,7 +1275,7 @@
         const speakBtn = document.createElement('button');
         speakBtn.type = 'button';
         speakBtn.className = 'speak-btn';
-        const btnTitle = isHi ? '🔊 सुनें' : (isOr ? '🔊 ଶୁଣନ୍ତୁ' : '🔊 Listen');
+        const btnTitle = isHi ? 'सुनें' : (isOr ? 'ଶୁଣନ୍ତୁ' : 'Listen');
         const btnAria = isHi ? 'सुनें' : (isOr ? 'ଶୁଣନ୍ତୁ' : 'Listen');
         speakBtn.title = btnTitle;
         speakBtn.setAttribute('aria-label', btnAria);
@@ -1324,12 +1323,12 @@
       const isHi = currentLang === 'hi';
       emCard.innerHTML = `
         <div class="emergency-chat-map-header">
-          <span class="emergency-chat-map-badge">${isHi ? '🚨 तत्काल चिकित्सकीय सहायता' : (isOr ? '🚨 ତୁରନ୍ତ ଡାକ୍ତରୀ ସହାୟତା ଆବଶ୍ୟକ' : '🚨 Immediate Medical Care Required')}</span>
+          <span class="emergency-chat-map-badge">${isHi ? 'तत्काल चिकित्सकीय सहायता' : (isOr ? 'ତୁରନ୍ତ ଡାକ୍ତରୀ ସହାୟତା ଆବଶ୍ୟକ' : 'Immediate Medical Care Required')}</span>
           <strong>${isHi ? 'निकटतम 24x7 अस्पताल व आपातकालीन दिशा-निर्देश' : (isOr ? 'ନିକଟସ୍ଥ ୨୪x୭ ଡାକ୍ତରଖାନା ଓ ରାସ୍ତା ଦେଖନ୍ତୁ' : 'Find Nearest Emergency Hospital & Route')}</strong>
           <p>${isHi ? 'अपने पास के सरकारी अस्पताल, ट्रॉमा सेंटर या सीएचसी का लाइव नक्शा देखें।' : (isOr ? 'ଆପଣଙ୍କ ନିକଟସ୍ଥ ସରକାରୀ ହସ୍ପିଟାଲ, ଟ୍ରମା ସେଣ୍ଟର ବା CHC ର ଲାଇଭ୍ ମ୍ୟାପ୍ ଦେଖନ୍ତୁ ।' : 'Locate the closest government hospital, trauma centre, or CHC with live directions.')}</p>
         </div>
         <button class="btn danger small emergency-locate-btn" type="button">
-          📍 ${isHi ? 'निकटतम अस्पताल खोजें (GPS नक्शा)' : (isOr ? 'ନିକଟସ୍ଥ ଡାକ୍ତରଖାନା ଖୋଜନ୍ତୁ (GPS ମ୍ୟାପ୍)' : 'Locate Nearest Hospital (GPS Live Map)')}
+          ${isHi ? 'निकटतम अस्पताल खोजें (GPS नक्शा)' : (isOr ? 'ନିକଟସ୍ଥ ଡାକ୍ତରଖାନା ଖୋଜନ୍ତୁ (GPS ମ୍ୟାପ୍)' : 'Locate Nearest Hospital (GPS Live Map)')}
         </button>
       `;
       const locBtn = emCard.querySelector('.emergency-locate-btn');
@@ -1697,7 +1696,7 @@
     const voiceBoxTitle = $('voiceBoxTitle');
     const voiceBoxSub = $('voiceBoxSub');
     if (voiceBoxTitle) {
-      voiceBoxTitle.textContent = isHi ? '🎙️ आवाज़ (Voice)' : (isOr ? '🎙️ ଭଏସ୍ (Voice)' : '🎙️ Voice Message');
+      voiceBoxTitle.textContent = isHi ? 'बोलकर परामर्श' : (isOr ? 'ଭଏସ୍ ପରାମର୍ଶ' : 'Voice Consultation');
     }
     if (voiceBoxSub) {
       voiceBoxSub.textContent = isHi ? 'बोलकर पूछें' : (isOr ? 'ଓଡ଼ିଆରେ କୁହନ୍ତୁ' : 'Tap to speak');
@@ -1749,8 +1748,8 @@
           const voiceBoxSub = $('voiceBoxSub');
           if (voiceBoxTitle) {
             voiceBoxTitle.textContent = isHi
-              ? '🔴 सुन रहा हूँ... (रोकने के लिए टैप करें)'
-              : (isOr ? '🔴 ଶୁଣୁଛି... (ରୋକିବାକୁ ଟ୍ୟାପ୍ କରନ୍ତୁ)' : '🔴 Listening... (Tap to Send)');
+              ? 'सुन रहा हूँ... (रोकने के लिए टैप करें)'
+              : (isOr ? 'ଶୁଣୁଛି... (ରୋକିବାକୁ ଟ୍ୟାପ୍ କରନ୍ତୁ)' : 'Listening... (Tap mic to stop)');
           }
           if (voiceBoxSub) {
             voiceBoxSub.textContent = isHi
@@ -1979,7 +1978,7 @@
         installBtn.hidden = false;
         const isOr = currentLang === 'or';
         const isHi = currentLang === 'hi';
-        installBtn.textContent = isHi ? '📲 ऐप इंस्टॉल करें' : (isOr ? '📲 ଆପ୍ ଇନଷ୍ଟଲ୍' : '📲 Install App');
+        installBtn.textContent = isHi ? 'ऐप इंस्टॉल करें' : (isOr ? 'ଆପ୍ ଇନଷ୍ଟଲ୍' : 'Install App');
         installBtn.onclick = async () => {
           installBtn.hidden = true;
           if (deferredPrompt) {
@@ -6177,9 +6176,9 @@
     const center = DISTRICT_CENTERS[districtKeyOrName];
     if (center) {
       const cleanName = center.name.split('(')[0].trim();
-      label.textContent = `📍 ${cleanName}`;
+      label.textContent = cleanName;
     } else {
-      label.textContent = `📍 ${districtKeyOrName}`;
+      label.textContent = districtKeyOrName;
     }
   }
 
@@ -6246,7 +6245,7 @@
     const isHi = currentLang === 'hi';
     const title = $('hospitalMapModalTitle');
     if (title) {
-      title.textContent = isHi ? '🏥 आपातकालीन अस्पताल लोकेटर' : (isOr ? '🏥 ଜରୁରୀକାଳୀନ ଡାକ୍ତରଖାନା ଲୋକେଟର୍' : '🏥 Emergency Hospital Locator');
+      title.textContent = isHi ? 'आपातकालीन अस्पताल लोकेटर' : (isOr ? 'ଜରୁରୀକାଳୀନ ଡାକ୍ତରଖାନା ଲୋକେଟର୍' : 'Emergency Hospital Locator');
     }
     const heading = $('nearestHospitalsHeading');
     if (heading) {
@@ -6254,17 +6253,17 @@
     }
     const pillLabel = $('emergencyMapPillLabel');
     if (pillLabel) {
-      pillLabel.textContent = isHi ? '📍 अस्पताल नक्शा' : (isOr ? '📍 ଡାକ୍ତରଖାନା ମ୍ୟାପ୍' : '📍 Nearest Hospital');
+      pillLabel.textContent = isHi ? 'अस्पताल नक्शा' : (isOr ? 'ଡାକ୍ତରଖାନା ମ୍ୟାପ୍' : 'Nearest Hospital');
     }
     const refreshBtn = $('refreshGpsBtn');
     if (refreshBtn) {
-      refreshBtn.textContent = isHi ? '🔄 जीपीएस रिफ्रेश' : (isOr ? '🔄 GPS ରିଫ୍ରେଶ୍' : '🔄 Refresh GPS');
+      refreshBtn.textContent = isHi ? 'जीपीएस रिफ्रेश' : (isOr ? 'GPS ରିଫ୍ରେଶ୍' : 'Refresh GPS');
     }
     const searchInput = $('hospitalSearchInput');
     if (searchInput) {
       searchInput.placeholder = isHi
-        ? '🔍 अस्पताल, सीएचसी, ब्लॉक या जिला खोजें...'
-        : (isOr ? '🔍 ଡାକ୍ତରଖାନା, ସିଏଚସି, ବ୍ଲକ ବା ଜିଲ୍ଲା ଖୋଜନ୍ତୁ...' : '🔍 Search hospital, CHC, block, or district...');
+        ? 'अस्पताल, सीएचसी, ब्लॉक या जिला खोजें...'
+        : (isOr ? 'ଡାକ୍ତରଖାନା, ସିଏଚସି, ବ୍ଲକ ବା ଜିଲ୍ଲା ଖୋଜନ୍ତୁ...' : 'Search hospital, CHC, block, or district...');
     }
     const filterAll = $('filterHospAll');
     if (filterAll) filterAll.textContent = isHi ? 'सभी (249)' : (isOr ? 'ସମସ୍ତ (୨୪୯)' : 'All (249)');
@@ -6278,7 +6277,7 @@
     if (filterChc) filterChc.textContent = isHi ? 'ग्रामीण सीएचसी (CHC)' : (isOr ? 'ଗ୍ରାମୀଣ ସିଏଚସି (CHC)' : 'Rural CHC');
     const districtSelectLabel = $('districtSelectLabel');
     if (districtSelectLabel) {
-      districtSelectLabel.textContent = isHi ? '📍 अपना जिला / क्षेत्र चुनें:' : (isOr ? '📍 ନିଜ ଜିଲ୍ଲା / ଅଞ୍ଚଳ ବାଛନ୍ତୁ:' : '📍 District / Region:');
+      districtSelectLabel.textContent = isHi ? 'अपना जिला / क्षेत्र चुनें:' : (isOr ? 'ନିଜ ଜିଲ୍ଲା / ଅଞ୍ଚଳ ବାଛନ୍ତୁ:' : 'District / Region:');
     }
     const extGmapsLabel = $('externalGmapsLabel');
     if (extGmapsLabel) {
@@ -6338,8 +6337,8 @@
       updateQuickDistrictPill(selectedDistrict);
       if (statusText) {
         statusText.textContent = isHi
-          ? `📍 चयनित जिला: ${center.name}`
-          : (isOr ? `📍 ଚୟନିତ ଜିଲ୍ଲା: ${center.name}` : `📍 Selected District: ${center.name}`);
+          ? `चयनित जिला: ${center.name}`
+          : (isOr ? `ଚୟନିତ ଜିଲ୍ଲା: ${center.name}` : `Selected District: ${center.name}`);
       }
       renderHospitalMapAndCards(userLocationCoords);
       return;
@@ -6380,7 +6379,7 @@
           } catch {}
           updateQuickDistrictPill(distKey);
           if (statusText) {
-            statusText.textContent = isHi ? '🟢 लाइव जीपीएस सक्रिय' : (isOr ? '🟢 ଲାଇଭ୍ GPS ସକ୍ରିୟ' : '🟢 Live GPS Active');
+            statusText.textContent = isHi ? 'लाइव जीपीएस सक्रिय' : (isOr ? 'ଲାଇଭ୍ GPS ସକ୍ରିୟ' : 'Live GPS Active');
           }
           if (districtSelect && districtSelect.value !== 'auto') {
             districtSelect.value = 'auto';
@@ -6413,8 +6412,8 @@
           userLocationCoords = defaultLocation;
           if (statusText) {
             statusText.textContent = isHi
-              ? '📍 GPS अक्षम: ऊपर दिए गए ड्रॉपडाउन से अपना जिला चुनें'
-              : (isOr ? '📍 GPS ଅନୁମତି ମିଳିନାହିଁ: ଉପର ତାଲିକାରୁ ନିଜ ଜିଲ୍ଲା ବାଛନ୍ତୁ' : '📍 GPS Unavailable: Select your District above');
+              ? 'GPS अक्षम: ऊपर दिए गए ड्रॉपडाउन से अपना जिला चुनें'
+              : (isOr ? 'GPS ଅନୁମତି ମିଳିନାହିଁ: ଉପର ତାଲିକାରୁ ନିଜ ଜିଲ୍ଲା ବାଛନ୍ତୁ' : 'GPS Unavailable: Select your District above');
           }
           renderHospitalMapAndCards(userLocationCoords);
         },
@@ -6424,8 +6423,8 @@
       userLocationCoords = defaultLocation;
       if (statusText) {
         statusText.textContent = isHi
-          ? '📍 ऊपर ड्रॉपडाउन से अपना जिला चुनें'
-          : (isOr ? '📍 ଉପର ତାଲିକାରୁ ନିଜ ଜିଲ୍ଲା ବାଛନ୍ତୁ' : '📍 Select your District from the dropdown above');
+          ? 'ऊपर ड्रॉपडाउन से अपना जिला चुनें'
+          : (isOr ? 'ଉପର ତାଲିକାରୁ ନିଜ ଜିଲ୍ଲା ବାଛନ୍ତୁ' : 'Select your District from the dropdown above');
       }
       renderHospitalMapAndCards(userLocationCoords);
     }
@@ -6470,8 +6469,8 @@
       if (hudName) hudName.textContent = displayName;
       if (hudEta) {
         hudEta.textContent = isHi
-          ? `🚗 ${closest.dist.toFixed(1)} किमी • ~${closest.eta} मिनट ड्राइव`
-          : (isOr ? `🚗 ${closest.dist.toFixed(1)} କିମି • ~${closest.eta} ମିନିଟ୍ ଡ୍ରାଇଭ୍` : `🚗 ${closest.dist.toFixed(1)} km • ~${closest.eta} min drive`);
+          ? `${closest.dist.toFixed(1)} किमी • ~${closest.eta} मिनट ड्राइव`
+          : (isOr ? `${closest.dist.toFixed(1)} କିମି • ~${closest.eta} ମିନିଟ୍ ଡ୍ରାଇଭ୍` : `${closest.dist.toFixed(1)} km • ~${closest.eta} min drive`);
       }
       if (hudBtn) {
         hudBtn.href = `https://www.google.com/maps/dir/?api=1&destination=${closest.lat},${closest.lng}&travelmode=driving`;
@@ -6528,21 +6527,21 @@
               <h4 class="hospital-card-name">${dispName} <span class="cat-badge ${catClass}">${catLabel}</span></h4>
               <div class="hospital-card-sub">${h.address}</div>
             </div>
-            <span class="hospital-card-badge">${idx === 0 ? (isHi ? '🏆 सबसे पास' : (isOr ? '🏆 ନିକଟତମ' : '🏆 Closest')) : '🚨 24x7'}</span>
+            <span class="hospital-card-badge">${idx === 0 ? (isHi ? 'सबसे पास' : (isOr ? 'ନିକଟତମ' : 'Closest')) : '24x7 Emergency'}</span>
           </div>
           <div class="hospital-card-meta">
             <span class="hospital-meta-dist">
-              🚗 ${h.dist.toFixed(1)} km • ~${h.eta} min drive
+              ${h.dist.toFixed(1)} km • ~${h.eta} min drive
             </span>
             <span style="color:var(--muted);">&bull;</span>
             <span style="font-size:0.75rem;color:var(--muted);">${h.type}</span>
           </div>
           <div class="hospital-card-actions">
             <a href="${gmapsDirUrl}" target="_blank" rel="noopener noreferrer" class="btn-nav-gmaps">
-              🧭 ${isHi ? 'Google Maps पर लाइव रास्ता' : (isOr ? 'Google Maps ରେ ରାସ୍ତା ଦେଖନ୍ତୁ' : 'Start Google Maps Navigation')}
+              ${isHi ? 'Google Maps पर लाइव रास्ता' : (isOr ? 'Google Maps ରେ ରାସ୍ତା ଦେଖନ୍ତୁ' : 'Start Google Maps Navigation')}
             </a>
             <a href="tel:${phone}" class="btn-call-hospital">
-              📞 ${isHi ? 'हेल्पलाइन कॉल' : (isOr ? 'କଲ୍ କରନ୍ତୁ' : 'Call Desk')}
+              ${isHi ? 'हेल्पलाइन कॉल' : (isOr ? 'କଲ୍ କରନ୍ତୁ' : 'Call Desk')}
             </a>
           </div>
         `;
@@ -6555,8 +6554,8 @@
         moreBtn.type = 'button';
         const remaining = filtered.length - hospitalVisibleCount;
         moreBtn.textContent = isHi
-          ? `➕ और अस्पताल देखें (${remaining} और बाकी)`
-          : (isOr ? `➕ ଅଧିକ ଡାକ୍ତରଖାନା ଦେଖନ୍ତୁ (${remaining}ଟି ବାକି)` : `➕ Load More Hospitals (${remaining} remaining)`);
+          ? `और अस्पताल देखें (${remaining} और बाकी)`
+          : (isOr ? `ଅଧିକ ଡାକ୍ତରଖାନା ଦେଖନ୍ତୁ (${remaining}ଟି ବାକି)` : `Load More Hospitals (${remaining} remaining)`);
         moreBtn.addEventListener('click', () => {
           hospitalVisibleCount += 12;
           renderHospitalMapAndCards(userPos);
@@ -6591,19 +6590,19 @@
           iconAnchor: [9, 9]
         });
         const userMarker = window.L.marker([userPos.lat, userPos.lng], { icon: userRadarIcon }).addTo(hospitalMapInstance);
-        userMarker.bindPopup(isHi ? '📍 आपकी लाइव स्थिति' : (isOr ? '📍 ଆପଣଙ୍କ ଲାଇଭ୍ ସ୍ଥିତି' : '📍 Your Live Location'));
+        userMarker.bindPopup(isHi ? 'आपकी लाइव स्थिति' : (isOr ? 'ଆପଣଙ୍କ ଲାଇଭ୍ ସ୍ଥିତି' : 'Your Live Location'));
 
         const bounds = [[userPos.lat, userPos.lng]];
         filtered.slice(0, 10).forEach((h) => {
           const hospIcon = window.L.divIcon({
             className: 'hospital-beacon-pin',
-            html: h.category === 'mch' ? '🏛️' : (h.category === 'dhh' ? '🏥' : '🩺'),
+            html: '<span class="map-marker-dot ' + (h.category || 'chc') + '"></span>', 
             iconSize: [32, 32],
             iconAnchor: [16, 16]
           });
           const m = window.L.marker([h.lat, h.lng], { icon: hospIcon }).addTo(hospitalMapInstance);
           const dispName = isHi ? h.nameHi : (isOr ? h.nameOr : h.name);
-          m.bindPopup(`<strong>${dispName}</strong><br/>🚗 ${h.dist.toFixed(1)} km (~${h.eta} min)<br/><a href="https://www.google.com/maps/dir/?api=1&destination=${h.lat},${h.lng}" target="_blank">Navigate ↗</a>`);
+          m.bindPopup(`<strong>${dispName}</strong><br/>${h.dist.toFixed(1)} km (~${h.eta} min)<br/><a href="https://www.google.com/maps/dir/?api=1&destination=${h.lat},${h.lng}" target="_blank">Navigate</a>`);
           bounds.push([h.lat, h.lng]);
         });
 
@@ -6848,7 +6847,7 @@
 
       ctx.fillStyle = '#a7f3d0';
       ctx.font = '15px "Plus Jakarta Sans", "Noto Sans Oriya", "Noto Sans Devanagari", sans-serif';
-      ctx.fillText('Government of Odisha • Public Health Digital Triage System', 145, 82);
+      ctx.fillText('Public Health Digital Triage Companion • Odisha', 145, 82);
 
       // Top Right Digital Badge (Compact)
       ctx.fillStyle = 'rgba(255, 255, 255, 0.18)';
@@ -6859,7 +6858,7 @@
       ctx.fillStyle = '#ffffff';
       ctx.font = 'bold 13.5px "Plus Jakarta Sans", sans-serif';
       ctx.textAlign = 'center';
-      ctx.fillText('OFFICIAL DIGITAL SLIP', 1047, 60);
+      ctx.fillText('DIGITAL TRIAGE SLIP', 1047, 60);
       ctx.textAlign = 'left';
 
       // 3. Metadata Info Bar (Compact Y: 110 to 168)
@@ -7020,10 +7019,10 @@
 
       ctx.fillStyle = '#1e293b';
       ctx.font = 'bold 15px "Plus Jakarta Sans", sans-serif';
-      ctx.fillText('🚑 Ambulance: 108', 65, curY + 48);
-      ctx.fillText('🚨 National Emergency: 112', 320, curY + 48);
-      ctx.fillText('📞 State Health Helpline: 104', 600, curY + 48);
-      ctx.fillText('🧠 Tele-MANAS: 14416', 890, curY + 48);
+      ctx.fillText('Ambulance: 108', 65, curY + 48);
+      ctx.fillText('National Emergency: 112', 320, curY + 48);
+      ctx.fillText('State Health Helpline: 104', 600, curY + 48);
+      ctx.fillText('Tele-MANAS: 14416', 890, curY + 48);
       curY += box4H + gap;
 
       // 8. SECTION 5: NEAREST RECOMMENDED GOVERNMENT HEALTHCARE FACILITY & DISTANCE IN KM
@@ -7076,11 +7075,11 @@
       const isOr = lang === 'or';
       const isHi = lang === 'hi';
       const hospDisplayName = (isOr && nearestHosp.nameOr) ? `${nearestHosp.name} (${nearestHosp.nameOr})` : nearestHosp.name;
-      const distBadge = nearestHosp.distanceKm < 0.5 ? '📍 Distance: ~0.4 km (Immediate Emergency Reach)' : `📍 Distance: ~${nearestHosp.distanceKm.toFixed(1)} km from current location`;
+      const distBadge = nearestHosp.distanceKm < 0.5 ? 'Distance: ~0.4 km (Immediate Emergency Reach)' : `Distance: ~${nearestHosp.distanceKm.toFixed(1)} km from current location`;
 
       ctx.fillStyle = '#0f172a';
       ctx.font = 'bold 15px "Plus Jakarta Sans", "Noto Sans Oriya", sans-serif';
-      ctx.fillText('🏥 ' + hospDisplayName, 65, curY + 48);
+      ctx.fillText(hospDisplayName, 65, curY + 48);
 
       // Distance Badge in Emerald
       ctx.fillStyle = '#047857';
@@ -7187,7 +7186,7 @@
   const OFFLINE_PROTOCOLS = [
   {
     "id": "snakebite",
-    "icon": "🐍",
+    "icon": "[FIRST AID]",
     "title": {
       "en": "Snakebite Emergency Protocol",
       "or": "ସାପ କାମୁଡ଼ା ଜରୁରୀକାଳୀନ ଚିକିତ୍ସା",
@@ -7268,7 +7267,7 @@
   },
   {
     "id": "diarrhea",
-    "icon": "💧",
+    "icon": "[ORS CARE]",
     "title": {
       "en": "Acute Diarrhea & Dehydration (WHO ORS)",
       "or": "ତରଳ ଝାଡ଼ା ଓ ନିର୍ଜଳନ (WHO ORS ପଦ୍ଧତି)",
@@ -7343,7 +7342,7 @@
   },
   {
     "id": "heatstroke",
-    "icon": "☀️",
+    "icon": "[HEATSTROKE]",
     "title": {
       "en": "Heatstroke & Loo Emergency",
       "or": "ଅଂଶୁଘାତ (ଲୁ) ଜରୁରୀକାଳୀନ ପ୍ରାଥମିକ ଚିକିତ୍ସା",
@@ -7419,7 +7418,7 @@
   },
   {
     "id": "pregnancy",
-    "icon": "🤰",
+    "icon": "[MATERNAL]",
     "title": {
       "en": "Maternal Red Flags in Pregnancy",
       "or": "ଗର୍ଭାବସ୍ଥାରେ ଜରୁରୀକାଳୀନ ବିପଦ ଲକ୍ଷଣ",
@@ -7494,7 +7493,7 @@
   },
   {
     "id": "chestpain",
-    "icon": "❤️",
+    "icon": "[CARDIAC]",
     "title": {
       "en": "Chest Pain & Suspected Heart Attack",
       "or": "ଛାତି ଯନ୍ତ୍ରଣା ଓ ହୃଦଘାତ ଆପାତକାଳୀନ ପଦକ୍ଷେପ",
@@ -7563,7 +7562,7 @@
   },
   {
     "id": "burns",
-    "icon": "🔥",
+    "icon": "[BURN CARE]",
     "title": {
       "en": "Burn Injuries & Scalds First Aid",
       "or": "ପୋଡ଼ିଯିବା ଆଘାତର ପ୍ରାଥମିକ ଚିକିତ୍ସା",
@@ -7633,7 +7632,7 @@
   },
   {
     "id": "dogbite",
-    "icon": "🐕",
+    "icon": "[RABIES AID]",
     "title": {
       "en": "Dog Bite & Rabies Prevention Protocol",
       "or": "କୁକୁର କାମୁଡ଼ା ଓ ରେବିସ୍ ସୁରକ୍ଷା ପ୍ରୋଟୋକଲ୍",
@@ -7702,7 +7701,7 @@
   },
   {
     "id": "choking",
-    "icon": "🗣️",
+    "icon": "[CHOKING AID]",
     "title": {
       "en": "Choking & Airway Emergency",
       "or": "ଶ୍ୱାସରୁଦ୍ଧ (ତଣ୍ଟିରେ ଖାଦ୍ୟ ଲାଗିଯିବା) ପ୍ରାଥମିକ ଚିକିତ୍ସା",
@@ -7762,7 +7761,7 @@
   },
   {
     "id": "febrile",
-    "icon": "🌡️",
+    "icon": "[FEVER CARE]",
     "title": {
       "en": "Pediatric High Fever & Febrile Fits",
       "or": "ଶିଶୁଙ୍କ ଅତ୍ୟଧିକ ଜ୍ୱର ଓ କମ୍ପଜ୍ୱର (ବାତ ମାରିବା)",
@@ -7829,7 +7828,7 @@
   },
   {
     "id": "drowning",
-    "icon": "🏊",
+    "icon": "[RESCUE AID]",
     "title": {
       "en": "Drowning & CPR First Aid Protocol",
       "or": "ପାଣିରେ ବୁଡ଼ିଯିବା ଓ CPR ପ୍ରାଥମିକ ଚିକିତ୍ସା",
@@ -7915,20 +7914,20 @@
     const dosList = isHi ? proto.dos.hi : (isOr ? proto.dos.or : proto.dos.en);
     const dontsList = isHi ? proto.donts.hi : (isOr ? proto.donts.or : proto.donts.en);
 
-    const dosHeader = isHi ? '✅ क्या करें (प्राथमिक उपचार):' : (isOr ? '✅ କ\'ଣ କରିବେ (ପ୍ରାଥମିକ ଚିକିତ୍ସା):' : '✅ WHAT TO DO (First Aid):');
-    const dontsHeader = isHi ? '❌ क्या न करें (सख्त मना):' : (isOr ? '❌ କ\'ଣ କରିବେ ନାହିଁ (କଡ଼ା ନିଷେଧ):' : '❌ WHAT NOT TO DO (Dangerous):');
-    const doctorHeader = isHi ? '🏥 डॉक्टर परामर्श:' : (isOr ? '🏥 ଡାକ୍ତରଙ୍କ ପରାମର୍ଶ:' : '🏥 Hospital Consultation:');
+    const dosHeader = isHi ? 'क्या करें (प्राथमिक उपचार):' : (isOr ? 'କ\'ଣ କରିବେ (ପ୍ରାଥମିକ ଚିକିତ୍ସା):' : 'WHAT TO DO (First Aid):');
+    const dontsHeader = isHi ? 'क्या न करें (सख्त मना):' : (isOr ? 'କ\'ଣ କରିବେ ନାହିଁ (କଡ଼ା ନିଷେଧ):' : 'WHAT NOT TO DO (Dangerous):');
+    const doctorHeader = isHi ? 'डॉक्टर परामर्श:' : (isOr ? 'ଡାକ୍ତରଙ୍କ ପରାମର୍ଶ:' : 'Hospital Consultation:');
     const doctorText = isHi
       ? 'तत्काल नजदीकी सीएचसी (CHC) या सरकारी अस्पताल ले जाएं। 108 पर कॉल करें।'
       : (isOr
         ? 'ତୁରନ୍ତ ନିକଟସ୍ଥ ସରକାରୀ ହସ୍ପିଟାଲ ବା CHC କୁ ନିଅନ୍ତୁ । ଆମ୍ବୁଲାନ୍ସ ପାଇଁ ୧୦୮ କୁ କଲ୍ କରନ୍ତୁ ।'
         : 'Immediately transfer to nearest Community Health Centre (CHC) or District Hospital. Call 108 for ambulance.');
 
-    let out = '⚡ **' + title + '**\n\n';
-    out += '📘 **' + (isHi ? 'प्रोटोकॉल सारांश' : (isOr ? 'ପ୍ରୋଟୋକଲ୍ ସାରାଂଶ' : 'Protocol Overview')) + ':** ' + summary + '\n\n';
-    out += '🏠 **' + dosHeader + '**\n' + dosList.map((d) => '• ' + d).join('\n') + '\n\n';
-    out += '⚠️ **' + dontsHeader + '**\n' + dontsList.map((d) => '• ' + d).join('\n') + '\n\n';
-    out += '🏥 **' + doctorHeader + '** ' + doctorText;
+    let out = '**' + title + '**\n\n';
+    out += '**' + (isHi ? 'प्रोटोकॉल सारांश' : (isOr ? 'ପ୍ରୋଟୋକଲ୍ ସାରାଂଶ' : 'Protocol Overview')) + ':** ' + summary + '\n\n';
+    out += '**' + dosHeader + '**\n' + dosList.map((d) => '• ' + d).join('\n') + '\n\n';
+    out += '**' + dontsHeader + '**\n' + dontsList.map((d) => '• ' + d).join('\n') + '\n\n';
+    out += '**' + doctorHeader + '** ' + doctorText;
     return out;
   }
 
@@ -7936,12 +7935,12 @@
     const isOr = lang === 'or';
     const isHi = lang === 'hi';
     if (isHi) {
-      return '⚡ **ऑफ़लाइन आपातकालीन सेवा सक्रिय**\n\n📘 **ऑफ़लाइन गाइड:** इंटरनेट कनेक्शन उपलब्ध नहीं है। स्वास्थ एआई में 10 जीवनरक्षक आपातकालीन प्रोटोकॉल और ओडिशा के सभी 249 सरकारी अस्पताल पहले से सुरक्षित (Pre-installed) हैं।\n\n🏠 **उपलब्ध सुविधाएँ:**\n• ऊपर "⚡ आपातकालीन ऑफ़लाइन गाइड" बटन दबाकर सर्पदंश, लू, दस्त, प्रसव व जलने के प्रोटोकॉल देखें।\n• सभी 30 जिलों के 249 अस्पतालों की सूची बिना इंटरनेट के देखें।\n\n⚠️ **आपातकालीन हेल्पलाइन:**\n• एम्बुलेंस: 108 | आपदा व पुलिस: 112 | स्वास्थ्य सलाह: 104';
+      return '**ऑफ़लाइन आपातकालीन सेवा सक्रिय**\n\n**ऑफ़लाइन गाइड:** इंटरनेट कनेक्शन उपलब्ध नहीं है। स्वास्थ एआई में 10 जीवनरक्षक आपातकालीन प्रोटोकॉल और ओडिशा के सभी 249 सरकारी अस्पताल पहले से सुरक्षित (Pre-installed) हैं।\n\n**उपलब्ध सुविधाएँ:**\n• ऊपर "आपातकालीन ऑफ़लाइन गाइड" बटन दबाकर सर्पदंश, लू, दस्त, प्रसव व जलने के प्रोटोकॉल देखें।\n• सभी 30 जिलों के 249 अस्पतालों की सूची बिना इंटरनेट के देखें।\n\n**आपातकालीन हेल्पलाइन:**\n• एम्बुलेंस: 108 | आपदा व पुलिस: 112 | स्वास्थ्य सलाह: 104';
     }
     if (isOr) {
-      return '⚡ **ଅଫଲାଇନ୍ ଜରୁରୀକାଳୀନ ସେବା ସକ୍ରିୟ**\n\n📘 **ଅଫଲାଇନ୍ ସୂଚନା:** ଇଣ୍ଟରନେଟ୍ ସଂଯୋଗ ଉପଲବ୍ଧ ନାହିଁ । ସ୍ୱାସ୍ଥ୍ୟ AI ରେ ୧୦ଟି ପ୍ରମୁଖ ଜରୁରୀକାଳୀନ ଚିକିତ୍ସା ନିର୍ଦ୍ଦେଶାବଳୀ ଏବଂ ଓଡ଼ିଶାର ସମସ୍ତ ୨୪୯ ସରକାରୀ ଡାକ୍ତରଖାନା ପୂର୍ବରୁ ଆପଣଙ୍କ ଫୋନରେ ସୁରକ୍ଷିତ ଅଛି ।\n\n🏠 **ଅଫଲାଇନ୍ ଉପଲବ୍ଧ ସୁବିଧା:**\n• ଉପରେ ଥିବା "⚡ ଜରୁରୀକାଳୀନ ଅଫଲାଇନ୍ କେୟାର" ବଟନ୍ ଦବାଇ ସାପ କାମୁଡ଼ା, ଅଂଶୁଘାତ, ଝାଡ଼ା ଓ ଗର୍ଭବତୀ ବିପଦ ଲକ୍ଷଣ ଦେଖନ୍ତୁ ।\n• ୩୦ଟି ଜିଲ୍ଲାର ୨୪୯ ସରକାରୀ ଡାକ୍ତରଖାନା ବିନା ଇଣ୍ଟରନେଟରେ ଖୋଜନ୍ତୁ ।\n\n⚠️ **ଜରୁରୀକାଳୀନ ନମ୍ବର:**\n• ଆମ୍ବୁଲାନ୍ସ: ୧୦୮ | ଜରୁରୀ ସହାୟତା: ୧୧୨ | ସ୍ୱାସ୍ଥ୍ୟ ପରାମର୍ଶ: ୧୦୪';
+      return '**ଅଫଲାଇନ୍ ଜରୁରୀକାଳୀନ ସେବା ସକ୍ରିୟ**\n\n**ଅଫଲାଇନ୍ ସୂଚନା:** ଇଣ୍ଟରନେଟ୍ ସଂଯୋଗ ଉପଲବ୍ଧ ନାହିଁ । ସ୍ୱାସ୍ଥ୍ୟ AI ରେ ୧୦ଟି ପ୍ରମୁଖ ଜରୁରୀକାଳୀନ ଚିକିତ୍ସା ନିର୍ଦ୍ଦେଶାବଳୀ ଏବଂ ଓଡ଼ିଶାର ସମସ୍ତ ୨୪୯ ସରକାରୀ ଡାକ୍ତରଖାନା ପୂର୍ବରୁ ଆପଣଙ୍କ ଫୋନରେ ସୁରକ୍ଷିତ ଅଛି ।\n\n**ଅଫଲାଇନ୍ ଉପଲବ୍ଧ ସୁବିଧା:**\n• ଉପରେ ଥିବା "ଜରୁରୀକାଳୀନ ଅଫଲାଇନ୍ କେୟାର" ବଟନ୍ ଦବାଇ ସାପ କାମୁଡ଼ା, ଅଂଶୁଘାତ, ଝାଡ଼ା ଓ ଗର୍ଭବତୀ ବିପଦ ଲକ୍ଷଣ ଦେଖନ୍ତୁ ।\n• ୩୦ଟି ଜିଲ୍ଲାର ୨୪୯ ସରକାରୀ ଡାକ୍ତରଖାନା ବିନା ଇଣ୍ଟରନେଟରେ ଖୋଜନ୍ତୁ ।\n\n**ଜରୁରୀକାଳୀନ ନମ୍ବର:**\n• ଆମ୍ବୁଲାନ୍ସ: ୧୦୮ | ଜରୁରୀ ସହାୟତା: ୧୧୨ | ସ୍ୱାସ୍ଥ୍ୟ ପରାମର୍ଶ: ୧୦୪';
     }
-    return '⚡ **Offline Emergency Protocol Active**\n\n📘 **Offline Mode:** No active internet connection detected. Swasth AI has 10 pre-installed emergency life-saving protocols and all 249 Odisha government hospitals stored locally on your device.\n\n🏠 **Offline Capabilities:**\n• Tap the "⚡ Offline Care" button above to browse Snakebite, Heatstroke, Diarrhea, Maternal, and Burn protocols.\n• Search all 249 government hospitals across 30 districts completely offline.\n\n⚠️ **Emergency Helplines:**\n• Ambulance: 108 | National Emergency: 112 | Health Helpline: 104';
+    return '**Offline Emergency Protocol Active**\n\n**Offline Mode:** No active internet connection detected. Swasth AI has 10 pre-installed emergency life-saving protocols and all 249 Odisha government hospitals stored locally on your device.\n\n**Offline Capabilities:**\n• Tap the "Offline Protocols" button above to browse Snakebite, Heatstroke, Diarrhea, Maternal, and Burn protocols.\n• Search all 249 government hospitals across 30 districts completely offline.\n\n**Emergency Helplines:**\n• Ambulance: 108 | National Emergency: 112 | Health Helpline: 104';
   }
 
   function renderOfflineProtocols(searchQuery = '') {
@@ -7988,20 +7987,20 @@
         <div class="offline-proto-body">
           <p class="offline-summary-text">${summary}</p>
           <div class="offline-section-box box-dos">
-            <strong>${isHi ? '✅ क्या करें (DOs):' : (isOr ? '✅ କ\'ଣ କରିବେ:' : '✅ What to do (DOs):')}</strong>
+            <strong>${isHi ? 'क्या करें (DOs):' : (isOr ? 'କ\'ଣ କରିବେ:' : 'What to do (DOs):')}</strong>
             <ul class="offline-list">
               ${dosList.map((item) => '<li>' + item + '</li>').join('')}
             </ul>
           </div>
           <div class="offline-section-box box-donts">
-            <strong>${isHi ? '❌ क्या न करें (DON\'Ts):' : (isOr ? '❌ କ\'ଣ କରିବେ ନାହିଁ:' : '❌ What NOT to do (DON\'Ts):')}</strong>
+            <strong>${isHi ? 'क्या न करें (DON\'Ts):' : (isOr ? 'କ\'ଣ କରିବେ ନାହିଁ:' : 'What NOT to do (DON\'Ts):')}</strong>
             <ul class="offline-list">
               ${dontsList.map((item) => '<li>' + item + '</li>').join('')}
             </ul>
           </div>
           <div class="offline-proto-foot">
             <span style="font-size:0.75rem; color:#64748b;">${isHi ? 'आपातकालीन सहायता:' : (isOr ? 'ଜରୁରୀକାଳୀନ ସେବା:' : 'Emergency Helpline:')}</span>
-            <a href="tel:${p.helpline}" class="btn-offline-call">📞 Call ${p.helpline}</a>
+            <a href="tel:${p.helpline}" class="btn-offline-call">Call ${p.helpline}</a>
           </div>
         </div>
       `;
@@ -8071,10 +8070,10 @@
     if (statusText) {
       if (isOff) {
         statusText.textContent = currentLang === 'hi'
-          ? '⚡ ऑफ़लाइन आपातकालीन सेवा सक्रिय • 10 प्रोटोकॉल व 249 अस्पताल सुरक्षित'
+          ? 'ऑफ़लाइन आपातकालीन सेवा सक्रिय • 10 प्रोटोकॉल व 249 अस्पताल सुरक्षित'
           : (currentLang === 'or'
-            ? '⚡ ଜରୁରୀକାଳୀନ ଅଫଲାଇନ୍ ମୋଡ୍ ସକ୍ରିୟ • ୧୦ଟି ପ୍ରୋଟୋକଲ୍ ଓ ୨୪୯ ଡାକ୍ତରଖାନା ଉପଲବ୍ଧ'
-            : '⚡ Offline Emergency Care Active • 10 Critical Protocols & 249 Hospitals Offline');
+            ? 'ଜରୁରୀକାଳୀନ ଅଫଲାଇନ୍ ମୋଡ୍ ସକ୍ରିୟ • ୧୦ଟି ପ୍ରୋଟୋକଲ୍ ଓ ୨୪୯ ଡାକ୍ତରଖାନା ଉପଲବ୍ଧ'
+            : 'Offline Emergency Care Active • 10 Critical Protocols & 249 Hospitals Offline');
       } else {
         statusText.textContent = currentLang === 'hi'
           ? 'प्रमाणित स्वास्थ्य मार्गदर्शन सक्रिय • आपातकालीन 108 प्रोटोकॉल'

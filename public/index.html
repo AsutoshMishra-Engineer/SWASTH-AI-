@@ -25,16 +25,14 @@
   <aside class="emergency" role="alert" aria-label="Emergency warning">
     <div class="emergency-inner">
       <div class="emergency-text-wrap">
-        <span class="emergency-icon" aria-hidden="true">🚨</span>
+        <span class="emergency-badge" style="background:#dc2626;color:#ffffff;font-size:0.7rem;font-weight:800;padding:2px 6px;border-radius:4px;margin-right:6px;letter-spacing:0.5px;">EMERGENCY</span>
         <span id="emergencyText"><strong>Medical Emergency?</strong> Severe chest pain, trouble breathing, or heavy bleeding? Call <a href="tel:108">108</a> (Ambulance) or <a href="tel:112">112</a>.</span>
       </div>
       <div class="emergency-actions-wrap">
         <button id="quickDistrictPillBtn" class="quick-district-pill" type="button" aria-label="Select Current District or Location" title="Click to change your location or district for precise hospital triage">
-          <span id="quickDistrictPillIcon">📍</span>
           <span id="quickDistrictPillLabel">Location: Auto GPS</span>
         </button>
         <button id="offlineCareBtn" class="offline-care-pill" type="button" aria-label="Offline Emergency Protocols">
-          <span class="offline-bolt">⚡</span>
           <span id="offlineCareLabel">Offline Emergency Care</span>
         </button>
         <button id="emergencyMapPillBtn" class="emergency-map-pill" type="button" aria-label="Locate Nearest Emergency Hospital on Map">
@@ -42,7 +40,7 @@
             <path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/>
             <circle cx="12" cy="10" r="3"/>
           </svg>
-          <span id="emergencyMapPillLabel">📍 Nearest Hospital</span>
+          <span id="emergencyMapPillLabel">Nearest Hospital</span>
         </button>
       </div>
     </div>
@@ -59,7 +57,6 @@
         </span>
         <div class="brand-text">
           <span class="brand-name">Swasth AI</span>
-          <span class="brand-sih-sub">SIH 25049</span>
         </div>
       </button>
       <div class="top-actions">
@@ -78,10 +75,10 @@
           <span class="guidance-btn-text">Important Medical Notice</span>
         </button>
         <button id="pwaInstallBtn" class="btn primary small pwa-install-btn" type="button" hidden title="Install Swasth AI App">
-          📲 Install App
+          Install App
         </button>
         <button id="navHomeBtn" class="btn ghost small nav-home-btn" type="button" hidden title="Return to Home Page">
-          🏠 Home
+          Home
         </button>
         <button id="navChatBtn" class="btn primary small" type="button" hidden title="Open Health Chat Assistant">
           💬 Chat
@@ -89,7 +86,7 @@
         <div id="userbar" class="userbar" hidden>
           <span id="userEmail" class="user-email"></span>
           <button id="signOut" class="btn ghost small" type="button">Sign out</button>
-          <button id="navDeleteAccountBtn" class="btn danger-subtle small nav-del-btn" type="button" title="Delete account">🗑️ Delete</button>
+          <button id="navDeleteAccountBtn" class="btn danger-subtle small nav-del-btn" type="button" title="Delete account">Delete Account</button>
         </div>
       </div>
     </div>
@@ -107,11 +104,7 @@
         <div class="hero-brand-header">
           <div class="hero-brand-title-row">
             <span class="hero-brand-name">Swasth AI</span>
-            <span class="sih-badge sih-badge-hero">SIH 25049</span>
           </div>
-        </div>
-        <div class="demo-project-box">
-          <div class="demo-project-title">It is a F-204 DEMO PROJECT</div>
         </div>
         <div id="heroLoggedInBanner" class="logged-in-hero-banner" hidden>
           <div class="logged-in-badge-row">
@@ -136,24 +129,24 @@
             </div>
           </div>
           <div class="feat-item">
-            <span class="feat-icon" aria-hidden="true">🎙️</span>
+            <span class="feat-icon" aria-hidden="true" style="font-weight:700;font-size:0.9rem;color:var(--primary);">VOICE</span>
             <div>
               <strong>Odia & Hindi Voice Consultation (ଓଡ଼ିଆ ଭଏସ୍)</strong>
               <small>Speak your symptoms naturally to receive instant spoken voice guidance in native Odia, Hindi, or English.</small>
             </div>
           </div>
           <div class="feat-item">
-            <span class="feat-icon" aria-hidden="true">🏥</span>
+            <span class="feat-icon" aria-hidden="true" style="font-weight:700;font-size:0.9rem;color:#b91c1c;">TRIAGE</span>
             <div>
-              <strong>When to See a Doctor & 0ms Emergency</strong>
-              <small>Learn mild home care vs. danger signs that need hospital visits. Emergency chest pain triggers 108 ambulance referral with 0ms latency.</small>
+              <strong>When to See a Doctor & Emergency Care</strong>
+              <small>Learn mild home care vs. danger signs that need hospital visits. Emergency chest pain triggers immediate 108 ambulance referral.</small>
             </div>
           </div>
           <div class="feat-item">
-            <span class="feat-icon" aria-hidden="true">📋</span>
+            <span class="feat-icon" aria-hidden="true" style="font-weight:700;font-size:0.9rem;color:var(--primary);">CLINICAL</span>
             <div>
-              <strong>608 Grounded Clinical Medical Cases</strong>
-              <small>Guidance strictly backed by official WHO and Ministry of Health (MoHFW) validated clinical protocols.</small>
+              <strong>Evidence-Based Clinical Guidelines</strong>
+              <small>Guidance strictly backed by official WHO and Ministry of Health validated clinical protocols.</small>
             </div>
           </div>
         </div>
@@ -167,12 +160,14 @@
 
       <div class="card auth-card" id="authCard">
         <div id="loggedInCardContent" class="logged-in-card" hidden>
-          <div class="logged-in-avatar">✨</div>
+          <div class="logged-in-avatar">
+            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
+          </div>
           <h3>Signed In</h3>
           <p id="loggedInCardEmail" class="logged-in-card-email"></p>
           <p class="fine">You are actively signed in. Click below to chat with the public health assistant.</p>
           <button id="cardChatBtn" class="btn primary full-width" type="button">💬 Open Health Chat →</button>
-          <button id="cardDeleteAccountBtn" class="btn danger-outline full-width" type="button" style="margin-top: 12px;">🗑️ Delete Your Account</button>
+          <button id="cardDeleteAccountBtn" class="btn danger-outline full-width" type="button" style="margin-top: 12px;">Delete Your Account</button>
         </div>
         <div id="loggedOutAuthContent">
           <div class="tabs" role="group" aria-label="Choose sign in or sign up">
@@ -203,7 +198,7 @@
           </form>
           <p id="authMsg" class="msg" role="status" aria-live="polite"></p>
           <button id="resendBtn" class="btn ghost full-width" type="button" hidden>Resend verification email</button>
-          <p class="fine">🔒 We only use your email to authenticate verified access. Your questions remain strictly private.</p>
+          <p class="fine">We only use your email to authenticate verified access. Your questions remain strictly private.</p>
         </div>
       </div>
     </section>
@@ -229,18 +224,18 @@
           <div class="image-preview-meta">
             <span id="imagePreviewLabel" class="image-preview-label">📷 Clinical Photo Attached</span>
             <div id="deptPillRow" class="dept-pill-row" role="group" aria-label="Select Clinical Department">
-              <button class="dept-pill active" type="button" data-dept="auto" title="Auto-Detect Department"><span class="dept-pill-icon">🌐</span> <span class="dept-pill-text">Auto</span></button>
-              <button class="dept-pill" type="button" data-dept="photo" title="General & Skin"><span class="dept-pill-icon">📸</span> <span class="dept-pill-text">Skin</span></button>
-              <button class="dept-pill" type="button" data-dept="eye" title="Ophthalmology & Eye (Netra Pariksha)"><span class="dept-pill-icon">👁️</span> <span class="dept-pill-text">Eye</span></button>
-              <button class="dept-pill" type="button" data-dept="oral" title="Oral Health & Pre-Cancer (Mukh Swasthya)"><span class="dept-pill-icon">👄</span> <span class="dept-pill-text">Oral</span></button>
-              <button class="dept-pill" type="button" data-dept="pediatric" title="Pediatrics & Newborn (Shishu Swasthya)"><span class="dept-pill-icon">👶</span> <span class="dept-pill-text">Baby</span></button>
-              <button class="dept-pill" type="button" data-dept="wound" title="Wounds, Burns & Bites (Khyata & Porajala)"><span class="dept-pill-icon">🩹</span> <span class="dept-pill-text">Wound</span></button>
-              <button class="dept-pill" type="button" data-dept="nail" title="Nails & Anemia (Nakha Pariksha)"><span class="dept-pill-icon">💅</span> <span class="dept-pill-text">Nails</span></button>
+              <button class="dept-pill active" type="button" data-dept="auto" title="Auto-Detect Department"><span class="dept-pill-text">Auto</span></button>
+              <button class="dept-pill" type="button" data-dept="photo" title="General & Skin"><span class="dept-pill-text">Skin</span></button>
+              <button class="dept-pill" type="button" data-dept="eye" title="Ophthalmology & Eye (Netra Pariksha)"><span class="dept-pill-text">Eye</span></button>
+              <button class="dept-pill" type="button" data-dept="oral" title="Oral Health & Pre-Cancer (Mukh Swasthya)"><span class="dept-pill-text">Oral</span></button>
+              <button class="dept-pill" type="button" data-dept="pediatric" title="Pediatrics & Newborn (Shishu Swasthya)"><span class="dept-pill-text">Pediatric</span></button>
+              <button class="dept-pill" type="button" data-dept="wound" title="Wounds, Burns & Bites (Khyata & Porajala)"><span class="dept-pill-text">Wounds</span></button>
+              <button class="dept-pill" type="button" data-dept="nail" title="Nails & Anemia (Nakha Pariksha)"><span class="dept-pill-text">Nails</span></button>
             </div>
             <div class="image-preview-actions">
               <span id="imagePreviewHint" class="image-preview-hint">Tap below to analyze with AI</span>
               <button id="analyzePhotoBtn" class="btn primary small analyze-photo-btn" type="button" aria-label="Scan & Analyze Photo">
-                🔍 <span id="analyzePhotoBtnText">Scan & Analyze Photo</span>
+                <span id="analyzePhotoBtnText">Scan & Analyze Photo</span>
               </button>
             </div>
           </div>
@@ -303,7 +298,7 @@
             </svg>
           </div>
           <div class="action-box-text">
-            <strong id="voiceBoxTitle">🎙️ Voice Message</strong>
+            <strong id="voiceBoxTitle">Voice Consultation</strong>
             <span id="voiceBoxSub">Tap to speak</span>
           </div>
         </button>
@@ -344,7 +339,7 @@
       </div>
       <div class="modal-body">
         <div id="modalNoticeCard" class="notice-card highlight">
-          <strong>⚠️ Swasth AI is an Informational Guide, Not a Doctor</strong>
+          <strong>Notice: Swasth AI is an Informational Guide, Not a Doctor</strong>
           <p>This service provides educational public health advice and symptom awareness. It cannot replace a clinical physical examination, diagnostic blood tests, or prescribed medication from a licensed medical professional.</p>
         </div>
 
@@ -375,7 +370,7 @@
         <div class="arch-step">
           <span class="step-num">4</span>
           <div>
-            <strong id="modalStep4Title">24/7 National Emergency Helplines</strong>
+            <strong id="modalStep4Title">24/7 Emergency Helplines</strong>
             <p id="modalStep4P">• Medical Ambulance: <strong>108</strong><br>• National Emergency: <strong>112</strong><br>• Tele-MANAS Mental Health Support: <strong>14416</strong> (Toll-Free)</p>
           </div>
         </div>
@@ -387,7 +382,7 @@
   <dialog id="deleteAccountModal" class="modal" aria-labelledby="deleteModalTitle">
     <div class="modal-card">
       <div class="modal-head">
-        <h2 id="deleteModalTitle" style="color: #b91c1c;">⚠️ Delete Your Account?</h2>
+        <h2 id="deleteModalTitle" style="color: #b91c1c;">Delete Your Account?</h2>
         <button id="closeDeleteModalBtn" class="modal-close" type="button" aria-label="Close dialog">&times;</button>
       </div>
       <div class="modal-body">
@@ -407,12 +402,11 @@
     </div>
   </dialog>
 
-  <!-- EMERGENCY HOSPITAL LOCATOR & DELIVERY-AGENT STYLE LIVE MAP MODAL -->
+  <!-- EMERGENCY HOSPITAL LOCATOR & LIVE ROUTE MAP MODAL -->
   <dialog id="hospitalMapModal" class="hospital-map-dialog" aria-labelledby="hospitalMapModalTitle">
     <div class="hospital-modal-wrapper">
       <div class="hospital-modal-header">
         <div class="hospital-modal-title-box">
-          <span class="hospital-modal-icon">🏥</span>
           <div>
             <h3 id="hospitalMapModalTitle" class="hospital-modal-title">Emergency Hospital Locator</h3>
             <span id="hospitalMapGpsStatus" class="hospital-gps-status">
@@ -423,11 +417,11 @@
         <button id="closeHospitalMapBtn" class="btn-icon-close" type="button" aria-label="Close hospital locator">✕</button>
       </div>
 
-      <!-- INTERACTIVE DELIVERY-STYLE LIVE MAP -->
+      <!-- INTERACTIVE LIVE MAP -->
       <div class="hospital-map-frame">
         <div id="hospitalLiveMap" class="hospital-live-map" role="region" aria-label="Interactive map showing your location and nearest hospitals"></div>
         
-        <!-- LIVE ROUTE HUD (DELIVERY AGENT STYLE) -->
+        <!-- LIVE ROUTE HUD -->
         <div id="liveRouteHud" class="live-route-hud" hidden>
           <div class="live-route-hud-inner">
             <div class="live-route-dot-box">
@@ -436,10 +430,10 @@
             </div>
             <div class="live-route-text">
               <span id="liveRouteHospitalName" class="hud-target-name">Capital Hospital</span>
-              <strong id="liveRouteEta" class="hud-eta">🚗 1.8 km • ~5 min drive</strong>
+              <strong id="liveRouteEta" class="hud-eta">1.8 km • ~5 min drive</strong>
             </div>
             <a id="liveRouteGmapsBtn" href="#" target="_blank" rel="noopener noreferrer" class="hud-navigate-btn">
-              Navigate ↗
+              Navigate
             </a>
           </div>
         </div>
@@ -450,9 +444,9 @@
         <!-- DISTRICT QUICK-SELECTOR & LIVE GPS CONTROLS -->
         <div class="hospital-controls-bar">
           <div class="district-select-box">
-            <label for="districtSelect" id="districtSelectLabel" class="district-select-label">📍 District / Region:</label>
+            <label for="districtSelect" id="districtSelectLabel" class="district-select-label">District / Region:</label>
             <select id="districtSelect" class="district-select">
-              <option value="auto">📍 Live GPS (Current Location)</option>
+              <option value="auto">Live GPS (Current Location)</option>
               <option value="angul">Angul (ଅନୁଗୋଳ)</option>
               <option value="balangir">Balangir (ବଲାଙ୍ଗୀର)</option>
               <option value="balasore">Balasore (ବାଲେଶ୍ୱର)</option>
@@ -485,17 +479,17 @@
               <option value="sundargarh">Sundargarh / Rourkela (ସୁନ୍ଦରଗଡ଼)</option>
             </select>
           </div>
-          <button id="refreshGpsBtn" class="refresh-gps-btn" type="button">🔄 Refresh GPS</button>
+          <button id="refreshGpsBtn" class="refresh-gps-btn" type="button">Refresh GPS</button>
         </div>
 
         <!-- 1-CLICK LIVE GOOGLE MAPS GPS SEARCH (OPENS NATIVE GOOGLE MAPS WITH LIVE GPS) -->
         <a id="externalGmapsNearMe" href="https://www.google.com/maps/search/hospitals+near+me/" target="_blank" rel="noopener noreferrer" class="btn-gmaps-live-hub">
-          🧭 <span id="externalGmapsLabel">Open Nearest Live Hospitals on Google Maps App</span> ↗
+          <span id="externalGmapsLabel">Open Nearest Live Hospitals on Google Maps App</span>
         </a>
 
         <!-- SEARCH & FACILITY TYPE FILTER TRAY (Covering all 249 Facilities across Odisha) -->
         <div class="hospital-search-bar">
-          <input id="hospitalSearchInput" type="search" class="hospital-search-input" placeholder="🔍 Search hospital, CHC, block, or district...">
+          <input id="hospitalSearchInput" type="search" class="hospital-search-input" placeholder="Search hospital, CHC, block, or district...">
         </div>
         <div class="hospital-filter-row" role="tablist" aria-label="Filter hospitals by facility type">
           <button id="filterHospAll" class="hosp-filter-btn active" type="button" data-filter="all">All (୨୪୯ଟି ସ୍ୱାସ୍ଥ୍ୟକେନ୍ଦ୍ର)</button>
@@ -522,7 +516,6 @@
     <div class="offline-modal-wrapper">
       <div class="offline-modal-header">
         <div class="offline-modal-title-box">
-          <span class="offline-modal-icon">⚡</span>
           <div>
             <h3 id="offlineModalTitle" class="offline-modal-title">Offline Emergency Protocols</h3>
             <span class="offline-modal-sub" id="offlineModalSub">100% Pre-Installed • Zero Internet Required • Odisha Public Health</span>
@@ -535,42 +528,38 @@
         <!-- 24x7 DIRECT CALL BUTTONS -->
         <div class="offline-helpline-row">
           <a href="tel:108" class="offline-helpline-card card-108">
-            <span class="hl-icon">🚑</span>
             <div class="hl-info">
               <strong>108 (Ambulance)</strong>
               <span>Odisha Emergency</span>
             </div>
-            <span class="hl-call-btn">Call ↗</span>
+            <span class="hl-call-btn">Call</span>
           </a>
           <a href="tel:112" class="offline-helpline-card card-112">
-            <span class="hl-icon">🚨</span>
             <div class="hl-info">
               <strong>112 (Disaster/Police)</strong>
               <span>National All-in-One</span>
             </div>
-            <span class="hl-call-btn">Call ↗</span>
+            <span class="hl-call-btn">Call</span>
           </a>
           <a href="tel:104" class="offline-helpline-card card-104">
-            <span class="hl-icon">📞</span>
             <div class="hl-info">
               <strong>104 (Health Advice)</strong>
               <span>Govt. Medical Help</span>
             </div>
-            <span class="hl-call-btn">Call ↗</span>
+            <span class="hl-call-btn">Call</span>
           </a>
           <a href="tel:14416" class="offline-helpline-card card-14416">
-            <span class="hl-icon">🧠</span>
             <div class="hl-info">
               <strong>14416 (Tele-MANAS)</strong>
               <span>Mental Health Help</span>
             </div>
-            <span class="hl-call-btn">Call ↗</span>
+            <span class="hl-call-btn">Call</span>
           </a>
         </div>
 
         <!-- SEARCH PROTOCOLS -->
         <div class="offline-search-box">
-          <input id="offlineSearchInput" type="search" class="offline-search-input" placeholder="🔍 Search emergency (e.g., Snakebite, Burns, Diarrhea, ସାପ, ଝାଡ଼ା)...">
+          <input id="offlineSearchInput" type="search" class="offline-search-input" placeholder="Search emergency (e.g., Snakebite, Burns, Diarrhea, ସାପ, ଝାଡ଼ା)...">
         </div>
 
         <!-- 10 PRE-INSTALLED EMERGENCY CARDS GRID -->
@@ -581,7 +570,7 @@
         <!-- OFFLINE HOSPITALS QUICK LINK -->
         <div class="offline-footer-card">
           <div>
-            <strong>🏥 249 Odisha Government Hospitals Directory</strong>
+            <strong>249 Odisha Government Hospitals Directory</strong>
             <p>Our complete 30-district hospital list is stored directly on your phone and works completely offline.</p>
           </div>
           <button id="offlineOpenHospitalsBtn" class="btn primary small" type="button">Open Hospital Directory</button>
@@ -594,12 +583,7 @@
   <footer id="mainFooter" class="foot">
     <div class="foot-inner">
       <p id="footDisclaimer">Swasth AI provides public health guidance from verified WHO & Ministry of Health sources. It is <strong>not</strong> a medical doctor and cannot issue prescriptions. In an emergency, call <strong>108</strong> or <strong>112</strong>.</p>
-      <div class="foot-site-bar">
-        <a href="https://swasth-ai.pages.dev" target="_blank" rel="noopener noreferrer" class="foot-site-link">
-          🌐 Official Website: swasth-ai.pages.dev
-        </a>
-      </div>
-      <small id="footCopyrightCombined">&copy; 2026 Swasth AI &bull; All Rights Reserved &bull; Odisha Public Health Assistant &bull; F-204 DEMO PROJECT &bull; <a href="https://swasth-ai.pages.dev" target="_blank" rel="noopener noreferrer" style="color:var(--primary);font-weight:700;text-decoration:underline;">swasth-ai.pages.dev</a></small>
+      <small id="footCopyrightCombined">&copy; 2026 Swasth AI &bull; All Rights Reserved &bull; Odisha Public Health Assistant &bull; <a href="https://swasth-ai.pages.dev" target="_blank" rel="noopener noreferrer" style="color:var(--primary);font-weight:700;text-decoration:underline;">swasth-ai.pages.dev</a></small>
     </div>
   </footer>
 
