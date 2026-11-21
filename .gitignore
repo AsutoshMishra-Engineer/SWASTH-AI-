@@ -3,3 +3,6 @@ node_modules/
 .env
 .wrangler/
 *.log
+
+*Pitch_Dossier.pdf
+private_*
