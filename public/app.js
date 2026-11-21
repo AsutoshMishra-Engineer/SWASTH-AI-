@@ -6469,32 +6469,23 @@
       const guidanceLines = wrapTextToLines(careGuidanceText, 1070, gFont);
       const doctorLines = wrapTextToLines(doctorSignsText, 1070, dFont);
 
-      // Dynamic Section Heights: If one box requires less space, give it to other boxes
+      // Consistent uniform inter-box gap (removes excessive gaps between sections)
+      const gap = 16;
+
+      // Exact text-fitting box heights: actual lines needed + maximum 1 line of bottom breathing space
       const box1Lines = Math.min(3, Math.max(1, complaintLines.length));
-      const box1H = Math.max(76, 36 + box1Lines * 24 + 12);
+      const box1H = 34 + (box1Lines * 24) + 18;
 
-      // Section 4 (24x7 Helplines) & Section 5 (Nearest Hospital) fixed clean heights
-      const box4H = 70;
-      const box5H = 78;
-      const noticeH = 155;
+      const box2Lines = guidanceLines.length;
+      const box2H = 34 + (box2Lines * 24) + 20;
 
-      // Vertical space budgeting: Total available content height from Y: 185 to 1635 is 1450px
-      const totalBudget = 1450;
-      const fixedTotal = box1H + box4H + box5H + noticeH; // ~379px
-      const remainingFor2and3andGaps = totalBudget - fixedTotal; // ~1071px
+      const box3Lines = doctorLines.length;
+      const box3H = 34 + (box3Lines * 24) + 20;
 
-      // Target lines: Box 2 clinical guidance and Box 3 danger signs
-      const neededBox2 = Math.min(500, Math.max(300, 40 + Math.min(16, guidanceLines.length) * 25 + 16));
-      const neededBox3 = Math.min(270, Math.max(180, 40 + Math.min(8, doctorLines.length) * 25 + 16));
-
-      // Calculate dynamic gap so the page is filled cleanly and interactively without blank holes
-      const rawGap = Math.floor((remainingFor2and3andGaps - neededBox2 - neededBox3) / 5);
-      const gap = Math.max(14, Math.min(24, rawGap));
-
-      // Reallocate any surplus space to Box 2 for extra clinical reading comfort
-      const surplus = Math.max(0, remainingFor2and3andGaps - neededBox2 - neededBox3 - (5 * gap));
-      const box2H = neededBox2 + Math.floor(surplus * 0.7);
-      const box3H = neededBox3 + Math.floor(surplus * 0.3);
+      // Section 4 (24x7 Helplines) & Section 5 (Nearest Hospital) tight clean heights
+      const box4H = 68;
+      const box5H = 80;
+      const noticeH = 152;
 
       let curY = 185;
 
@@ -6502,40 +6493,38 @@
       drawBox(45, curY, 1110, box1H, '#f8fafc', '#e2e8f0', '#0d9488');
       ctx.fillStyle = '#0f766e';
       ctx.font = 'bold 16px "Plus Jakarta Sans", "Noto Sans Oriya", "Noto Sans Devanagari", sans-serif';
-      ctx.fillText('1. PATIENT REPORTED COMPLAINT (Chief Symptoms / ସମସ୍ୟା):', 65, curY + 28);
-      renderLines(complaintLines, 65, curY + 56, 24, box1Lines, qFont, '#1e293b');
+      ctx.fillText('1. PATIENT REPORTED COMPLAINT (Chief Symptoms / ସମସ୍ୟା):', 65, curY + 26);
+      renderLines(complaintLines, 65, curY + 52, 24, box1Lines, qFont, '#1e293b');
       curY += box1H + gap;
 
-      // 5. SECTION 2: CLINICAL TRIAGE GUIDANCE & SAFE HOME CARE
+      // 5. SECTION 2: CLINICAL TRIAGE GUIDANCE & SAFE HOME CARE (Fitted tightly to text + 1 line)
       drawBox(45, curY, 1110, box2H, '#ffffff', '#cbd5e1', '#0284c7');
       ctx.fillStyle = '#0284c7';
       ctx.font = 'bold 16px "Plus Jakarta Sans", "Noto Sans Oriya", "Noto Sans Devanagari", sans-serif';
-      ctx.fillText('2. CLINICAL TRIAGE GUIDANCE & SAFE HOME CARE:', 65, curY + 30);
-      const maxGuidanceLines = Math.floor((box2H - 52) / 25);
-      renderLines(guidanceLines, 65, curY + 60, 25, maxGuidanceLines, gFont, '#1e293b');
+      ctx.fillText('2. CLINICAL TRIAGE GUIDANCE & SAFE HOME CARE:', 65, curY + 26);
+      renderLines(guidanceLines, 65, curY + 52, 24, box2Lines, gFont, '#1e293b');
       curY += box2H + gap;
 
-      // 6. SECTION 3: WHEN TO SEE A DOCTOR / RED FLAG WARNING SIGNS
+      // 6. SECTION 3: WHEN TO SEE A DOCTOR / RED FLAG WARNING SIGNS (Fitted tightly to text + 1 line)
       drawBox(45, curY, 1110, box3H, '#fef2f2', '#fca5a5', '#dc2626');
       ctx.fillStyle = '#b91c1c';
       ctx.font = 'bold 16px "Plus Jakarta Sans", "Noto Sans Oriya", "Noto Sans Devanagari", sans-serif';
-      ctx.fillText('3. WHEN TO SEE A DOCTOR / RED FLAG WARNING SIGNS (ତୁରନ୍ତ ଡାକ୍ତରଖାନା ଯିବା ବିପଦ ଲକ୍ଷଣ):', 65, curY + 30);
-      const maxDoctorLines = Math.floor((box3H - 52) / 25);
-      renderLines(doctorLines, 65, curY + 60, 25, maxDoctorLines, dFont, '#991b1b');
+      ctx.fillText('3. WHEN TO SEE A DOCTOR / RED FLAG WARNING SIGNS (ତୁରନ୍ତ ଡାକ୍ତରଖାନା ଯିବା ବିପଦ ଲକ୍ଷଣ):', 65, curY + 26);
+      renderLines(doctorLines, 65, curY + 52, 24, box3Lines, dFont, '#991b1b');
       curY += box3H + gap;
 
       // 7. SECTION 4: 24×7 ODISHA STATE EMERGENCY DIRECTORY & HELPLINES (Exact Screenshot Format)
       drawBox(45, curY, 1110, box4H, '#f0fdf4', '#86efac', '#059669');
       ctx.fillStyle = '#059669';
       ctx.font = 'bold 16px "Plus Jakarta Sans", "Noto Sans Oriya", sans-serif';
-      ctx.fillText('4. 24×7 ODISHA STATE EMERGENCY DIRECTORY & HELPLINES:', 65, curY + 26);
+      ctx.fillText('4. 24×7 ODISHA STATE EMERGENCY DIRECTORY & HELPLINES:', 65, curY + 24);
 
       ctx.fillStyle = '#1e293b';
       ctx.font = 'bold 15px "Plus Jakarta Sans", sans-serif';
-      ctx.fillText('🚑 Ambulance: 108', 65, curY + 52);
-      ctx.fillText('🚨 National Emergency: 112', 320, curY + 52);
-      ctx.fillText('📞 State Health Helpline: 104', 600, curY + 52);
-      ctx.fillText('🧠 Tele-MANAS: 14416', 890, curY + 52);
+      ctx.fillText('🚑 Ambulance: 108', 65, curY + 48);
+      ctx.fillText('🚨 National Emergency: 112', 320, curY + 48);
+      ctx.fillText('📞 State Health Helpline: 104', 600, curY + 48);
+      ctx.fillText('🧠 Tele-MANAS: 14416', 890, curY + 48);
       curY += box4H + gap;
 
       // 8. SECTION 5: NEAREST RECOMMENDED GOVERNMENT HEALTHCARE FACILITY & DISTANCE IN KM
@@ -6568,7 +6557,7 @@
       drawBox(45, curY, 1110, box5H, '#ecfdf5', '#a7f3d0', '#0d9488');
       ctx.fillStyle = '#0f766e';
       ctx.font = 'bold 16px "Plus Jakarta Sans", "Noto Sans Oriya", "Noto Sans Devanagari", sans-serif';
-      ctx.fillText('5. NEAREST RECOMMENDED GOVERNMENT HEALTHCARE FACILITY (ନିକଟସ୍ଥ ସରକାରୀ ଡାକ୍ତରଖାନା):', 65, curY + 26);
+      ctx.fillText('5. NEAREST RECOMMENDED GOVERNMENT HEALTHCARE FACILITY (ନିକଟସ୍ଥ ସରକାରୀ ଡାକ୍ତରଖାନା):', 65, curY + 24);
 
       const isOr = lang === 'or';
       const isHi = lang === 'hi';
@@ -6577,13 +6566,13 @@
 
       ctx.fillStyle = '#0f172a';
       ctx.font = 'bold 15px "Plus Jakarta Sans", "Noto Sans Oriya", sans-serif';
-      ctx.fillText('🏥 ' + hospDisplayName, 65, curY + 50);
+      ctx.fillText('🏥 ' + hospDisplayName, 65, curY + 48);
 
       // Distance Badge in Emerald
       ctx.fillStyle = '#047857';
       ctx.font = 'bold 15px "Plus Jakarta Sans", sans-serif';
       ctx.textAlign = 'right';
-      ctx.fillText(distBadge, 1130, curY + 50);
+      ctx.fillText(distBadge, 1130, curY + 48);
       ctx.textAlign = 'left';
 
       // Facility Details Line

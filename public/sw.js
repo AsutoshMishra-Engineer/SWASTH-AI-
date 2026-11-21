@@ -1,5 +1,5 @@
 // Swasth AI - Ultra-Lightweight Service Worker (PWA Cache & Offline Shell)
-const CACHE_NAME = 'swasth-ai-v20261121_09';
+const CACHE_NAME = 'swasth-ai-v20261121_10';
 const ASSETS_TO_CACHE = [
   '/',
   '/index.html',
