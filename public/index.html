@@ -16,7 +16,7 @@
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+Devanagari:wght@400;500;600;700&family=Noto+Sans+Oriya:wght@400;500;600;700&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="/vendor/leaflet.css">
-  <link rel="stylesheet" href="/style.css?v=20261121_04">
+  <link rel="stylesheet" href="/style.css?v=20261121_05">
 </head>
 <body>
   <a class="skip" href="#main">Skip to content</a>
@@ -483,8 +483,21 @@
           🧭 <span id="externalGmapsLabel">Open Nearest Live Hospitals on Google Maps App</span> ↗
         </a>
 
+        <!-- SEARCH & FACILITY TYPE FILTER TRAY (Covering all 249 Facilities across Odisha) -->
+        <div class="hospital-search-bar">
+          <input id="hospitalSearchInput" type="search" class="hospital-search-input" placeholder="🔍 Search hospital, CHC, block, or district...">
+        </div>
+        <div class="hospital-filter-row" role="tablist" aria-label="Filter hospitals by facility type">
+          <button id="filterHospAll" class="hosp-filter-btn active" type="button" data-filter="all">All (୨୪୯ଟି ସ୍ୱାସ୍ଥ୍ୟକେନ୍ଦ୍ର)</button>
+          <button id="filterHospMch" class="hosp-filter-btn" type="button" data-filter="mch">MCH (ମେଡିକାଲ କଲେଜ)</button>
+          <button id="filterHospDhh" class="hosp-filter-btn" type="button" data-filter="dhh">DHH (ଜିଲ୍ଲା ମୁଖ୍ୟ)</button>
+          <button id="filterHospSdh" class="hosp-filter-btn" type="button" data-filter="sdh">SDH (ଉପ-ଖଣ୍ଡ)</button>
+          <button id="filterHospChc" class="hosp-filter-btn" type="button" data-filter="chc">Rural CHC (ସିଏଚସି)</button>
+        </div>
+
         <div class="hospital-list-header">
           <strong id="nearestHospitalsHeading">Nearest 24x7 Government Hospitals & CHCs</strong>
+          <span id="hospitalCountBadge" class="hospital-count-badge">249 Facilities Active</span>
         </div>
 
         <div id="hospitalListContainer" class="hospital-list-container">
@@ -509,7 +522,7 @@
 
   <script src="/vendor/leaflet.js"></script>
   <script src="/vendor/supabase.js"></script>
-  <script src="/config.js?v=20261121_04"></script>
-  <script src="/app.js?v=20261121_04"></script>
+  <script src="/config.js?v=20261121_05"></script>
+  <script src="/app.js?v=20261121_05"></script>
 </body>
 </html>
