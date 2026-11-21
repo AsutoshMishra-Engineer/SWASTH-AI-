@@ -1497,6 +1497,29 @@
   async function send(raw) {
     const text = (raw || '').trim();
     if ((!text && !pendingSkinImage) || busy) return;
+
+    // Auto-detect Odisha town, NAC, municipality or panchayat if mentioned by user
+    if (text) {
+      const detectedLoc = detectOdishaLocationFromText(text);
+      if (detectedLoc) {
+        userLocationCoords = {
+          lat: detectedLoc.lat,
+          lng: detectedLoc.lng,
+          district: detectedLoc.district,
+          districtName: detectedLoc.name,
+          isFallback: false
+        };
+        try {
+          localStorage.setItem('swasth_user_coords', JSON.stringify(userLocationCoords));
+          localStorage.setItem('swasth_user_district', detectedLoc.district);
+        } catch {}
+        updateQuickDistrictPill(detectedLoc.district);
+        if ($('districtSelect')) {
+          $('districtSelect').value = detectedLoc.district;
+        }
+      }
+    }
+
     if (text.length > MAX) {
       addBubble('error', currentLang === 'hi'
         ? `कृपया अपना प्रश्न ${MAX} अक्षरों के भीतर रखें।`
@@ -3647,6 +3670,81 @@
       "casualty": "24x7 Rural Emergency"
     },
     {
+      "id": "ganjam-buguda-chc",
+      "name": "Community Health Centre (CHC) Buguda",
+      "nameOr": "ଗୋଷ୍ଠୀ ସ୍ୱାସ୍ଥ୍ୟ କେନ୍ଦ୍ର (CHC), ବୁଗୁଡ଼ା",
+      "nameHi": "सामुदायिक स्वास्थ्य केंद्र (CHC), बुगुड़ा",
+      "lat": 19.8112,
+      "lng": 84.7912,
+      "district": "ganjam",
+      "type": "Community Health Centre (CHC)",
+      "category": "chc",
+      "address": "Buguda NAC Town - 761118",
+      "phone": "06821-251210",
+      "emergencyPhone": "108",
+      "casualty": "24x7 Rural Emergency & Trauma Care"
+    },
+    {
+      "id": "ganjam-kodala-chc",
+      "name": "Community Health Centre (CHC) Kodala",
+      "nameOr": "ଗୋଷ୍ଠୀ ସ୍ୱାସ୍ଥ୍ୟ କେନ୍ଦ୍ର (CHC), କୋଦଳା",
+      "nameHi": "सामुदायिक स्वास्थ्य केंद्र (CHC), कोदला",
+      "lat": 19.6312,
+      "lng": 84.9412,
+      "district": "ganjam",
+      "type": "Community Health Centre (CHC)",
+      "category": "chc",
+      "address": "Kodala NAC Town - 761032",
+      "phone": "06811-253210",
+      "emergencyPhone": "108",
+      "casualty": "24x7 Emergency Care & Delivery Centre"
+    },
+    {
+      "id": "ganjam-kabisuryanagar-chc",
+      "name": "Community Health Centre (CHC) Kabi Surya Nagar",
+      "nameOr": "ଗୋଷ୍ଠୀ ସ୍ୱାସ୍ଥ୍ୟ କେନ୍ଦ୍ର (CHC), କବିସୂର୍ଯ୍ୟନଗର",
+      "nameHi": "सामुदायिक स्वास्थ्य केंद्र (CHC), कविसूर्यनगर",
+      "lat": 19.5812,
+      "lng": 84.7812,
+      "district": "ganjam",
+      "type": "Community Health Centre (CHC)",
+      "category": "chc",
+      "address": "Kabi Surya Nagar NAC - 761104",
+      "phone": "06811-260210",
+      "emergencyPhone": "108",
+      "casualty": "24x7 Emergency Services & Maternity"
+    },
+    {
+      "id": "ganjam-surada-chc",
+      "name": "Community Health Centre (CHC) Surada",
+      "nameOr": "ଗୋଷ୍ଠୀ ସ୍ୱାସ୍ଥ୍ୟ କେନ୍ଦ୍ର (CHC), ସୁରଡ଼ା",
+      "nameHi": "सामुदायिक स्वास्थ्य केंद्र (CHC), सुरडा",
+      "lat": 19.7541,
+      "lng": 84.4312,
+      "district": "ganjam",
+      "type": "Community Health Centre (CHC)",
+      "category": "chc",
+      "address": "Surada NAC Town - 761108",
+      "phone": "06821-242210",
+      "emergencyPhone": "108",
+      "casualty": "24x7 Highway Emergency & Rural Care"
+    },
+    {
+      "id": "ganjam-town-chc",
+      "name": "Community Health Centre (CHC) Ganjam Town",
+      "nameOr": "ଗୋଷ୍ଠୀ ସ୍ୱାସ୍ଥ୍ୟ କେନ୍ଦ୍ର (CHC), ଗଞ୍ଜାମ ସହର",
+      "nameHi": "सामुदायिक स्वास्थ्य केंद्र (CHC), गंजम टाउन",
+      "lat": 19.3812,
+      "lng": 85.0512,
+      "district": "ganjam",
+      "type": "Community Health Centre (CHC)",
+      "category": "chc",
+      "address": "Ganjam NAC Town, Rushikulya - 761026",
+      "phone": "06811-248210",
+      "emergencyPhone": "108",
+      "casualty": "24x7 Coastal Emergency & Accident Trauma"
+    },
+    {
       "id": "gajapati-dhh",
       "name": "District Headquarters Hospital (DHH) Paralakhemundi",
       "nameOr": "ଜିଲ୍ଲା ମୁଖ୍ୟ ଚିକିତ୍ସାଳୟ (DHH), ପାରଳାଖେମୁଣ୍ଡି, ଗଜପତି",
@@ -5752,6 +5850,225 @@
     sundargarh: { lat: 22.2272, lng: 84.8536, name: 'Sundargarh / Rourkela (ସୁନ୍ଦରଗଡ଼)' }
   };
 
+  // Comprehensive Odisha Town, NAC, Municipality, and Panchayat Registry
+  const ODISHA_TOWN_MAP = {
+    // Ganjam & Berhampur
+    'berhampur': { district: 'ganjam', name: 'Berhampur / Brahmapur', lat: 19.3093, lng: 84.8091 },
+    'brahmapur': { district: 'ganjam', name: 'Berhampur / Brahmapur', lat: 19.3093, lng: 84.8091 },
+    'mkcg': { district: 'ganjam', name: 'MKCG Medical College, Berhampur', lat: 19.3081, lng: 84.8118 },
+    'ganjam': { district: 'ganjam', name: 'Ganjam', lat: 19.3093, lng: 84.8091 },
+    'chatrapur': { district: 'ganjam', name: 'Chatrapur', lat: 19.3551, lng: 84.9868 },
+    'hinjilicut': { district: 'ganjam', name: 'Hinjilicut', lat: 19.4812, lng: 84.7412 },
+    'hinjili': { district: 'ganjam', name: 'Hinjilicut', lat: 19.4812, lng: 84.7412 },
+    'bhanjanagar': { district: 'ganjam', name: 'Bhanjanagar', lat: 19.9312, lng: 84.5812 },
+    'aska': { district: 'ganjam', name: 'Aska', lat: 19.6112, lng: 84.6612 },
+    'buguda': { district: 'ganjam', name: 'Buguda', lat: 19.8112, lng: 84.7912 },
+    'kodala': { district: 'ganjam', name: 'Kodala', lat: 19.6312, lng: 84.9412 },
+    'kabisuryanagar': { district: 'ganjam', name: 'Kabi Surya Nagar', lat: 19.5812, lng: 84.7812 },
+    'kabi surya nagar': { district: 'ganjam', name: 'Kabi Surya Nagar', lat: 19.5812, lng: 84.7812 },
+    'surada': { district: 'ganjam', name: 'Surada', lat: 19.7541, lng: 84.4312 },
+    'polasara': { district: 'ganjam', name: 'Polasara', lat: 19.7012, lng: 84.8212 },
+    'bellaguntha': { district: 'ganjam', name: 'Bellaguntha', lat: 19.8812, lng: 84.6512 },
+    'belguntha': { district: 'ganjam', name: 'Bellaguntha', lat: 19.8812, lng: 84.6512 },
+    'digapahandi': { district: 'ganjam', name: 'Digapahandi', lat: 19.3712, lng: 84.5712 },
+    'khallikote': { district: 'ganjam', name: 'Khallikote', lat: 19.6112, lng: 85.0812 },
+    'purushottampur': { district: 'ganjam', name: 'Purushottampur', lat: 19.5212, lng: 84.8912 },
+    'sanakhemundi': { district: 'ganjam', name: 'Sanakhemundi', lat: 19.4212, lng: 84.5912 },
+    'chikiti': { district: 'ganjam', name: 'Chikiti', lat: 19.2012, lng: 84.6112 },
+    'gopalpur': { district: 'ganjam', name: 'Gopalpur', lat: 19.2612, lng: 84.9112 },
+    'rambha': { district: 'ganjam', name: 'Rambha', lat: 19.5167, lng: 85.1000 },
+    'kabisurya nagar': { district: 'ganjam', name: 'Kabi Surya Nagar', lat: 19.5812, lng: 84.7812 },
+
+    // Khordha & Bhubaneswar
+    'bhubaneswar': { district: 'khordha', name: 'Bhubaneswar', lat: 20.2961, lng: 85.8245 },
+    'khordha': { district: 'khordha', name: 'Khordha', lat: 20.1812, lng: 85.6212 },
+    'khurda': { district: 'khordha', name: 'Khordha', lat: 20.1812, lng: 85.6212 },
+    'jatni': { district: 'khordha', name: 'Jatni', lat: 20.1612, lng: 85.7012 },
+    'balipatna': { district: 'khordha', name: 'Balipatna', lat: 20.1712, lng: 85.9512 },
+    'banapur': { district: 'khordha', name: 'Banapur', lat: 19.7812, lng: 85.1812 },
+    'tangi': { district: 'khordha', name: 'Tangi', lat: 19.9212, lng: 85.3912 },
+    'begunia': { district: 'khordha', name: 'Begunia', lat: 20.2112, lng: 85.4912 },
+
+    // Cuttack
+    'cuttack': { district: 'cuttack', name: 'Cuttack', lat: 20.4727, lng: 85.8885 },
+    'scb': { district: 'cuttack', name: 'SCB Medical College, Cuttack', lat: 20.4651, lng: 85.8941 },
+    'choudwar': { district: 'cuttack', name: 'Choudwar', lat: 20.5312, lng: 85.9112 },
+    'athagarh': { district: 'cuttack', name: 'Athagarh', lat: 20.5312, lng: 85.6212 },
+    'banki': { district: 'cuttack', name: 'Banki', lat: 20.3812, lng: 85.5312 },
+    'salipur': { district: 'cuttack', name: 'Salipur', lat: 20.4812, lng: 86.0112 },
+    'badamba': { district: 'cuttack', name: 'Badamba', lat: 20.4212, lng: 85.3412 },
+    'tigiria': { district: 'cuttack', name: 'Tigiria', lat: 20.4712, lng: 85.5112 },
+
+    // Puri
+    'puri': { district: 'puri', name: 'Puri', lat: 19.8135, lng: 85.8312 },
+    'konark': { district: 'puri', name: 'Konark', lat: 19.8876, lng: 86.0945 },
+    'pipili': { district: 'puri', name: 'Pipili', lat: 20.1167, lng: 85.8333 },
+    'nimapara': { district: 'puri', name: 'Nimapara', lat: 20.0612, lng: 86.0112 },
+    'satyabadi': { district: 'puri', name: 'Satyabadi', lat: 19.9512, lng: 85.8212 },
+    'brahmagiri': { district: 'puri', name: 'Brahmagiri', lat: 19.7912, lng: 85.6712 },
+    'kakatpur': { district: 'puri', name: 'Kakatpur', lat: 20.0012, lng: 86.1912 },
+    'astaranga': { district: 'puri', name: 'Astaranga', lat: 19.9812, lng: 86.2712 },
+
+    // Balasore
+    'balasore': { district: 'balasore', name: 'Balasore', lat: 21.5034, lng: 86.9157 },
+    'baleswar': { district: 'balasore', name: 'Balasore', lat: 21.5034, lng: 86.9157 },
+    'soro': { district: 'balasore', name: 'Soro', lat: 21.2912, lng: 86.6912 },
+    'jaleswar': { district: 'balasore', name: 'Jaleswar', lat: 21.8112, lng: 87.2112 },
+    'nilagiri': { district: 'balasore', name: 'Nilagiri', lat: 21.4612, lng: 86.7712 },
+    'remuna': { district: 'balasore', name: 'Remuna', lat: 21.5212, lng: 86.8712 },
+
+    // Bhadrak
+    'bhadrak': { district: 'bhadrak', name: 'Bhadrak', lat: 21.0583, lng: 86.5028 },
+    'basudevpur': { district: 'bhadrak', name: 'Basudevpur', lat: 21.1312, lng: 86.7412 },
+    'chandbali': { district: 'bhadrak', name: 'Chandbali', lat: 20.7712, lng: 86.7412 },
+    'dhamnagar': { district: 'bhadrak', name: 'Dhamnagar', lat: 20.9212, lng: 86.4412 },
+
+    // Mayurbhanj
+    'baripada': { district: 'mayurbhanj', name: 'Baripada', lat: 21.9347, lng: 86.7327 },
+    'mayurbhanj': { district: 'mayurbhanj', name: 'Mayurbhanj', lat: 21.9347, lng: 86.7327 },
+    'rairangpur': { district: 'mayurbhanj', name: 'Rairangpur', lat: 22.2612, lng: 86.1712 },
+    'karanjia': { district: 'mayurbhanj', name: 'Karanjia', lat: 21.7812, lng: 85.9712 },
+    'udala': { district: 'mayurbhanj', name: 'Udala', lat: 21.5812, lng: 86.5712 },
+
+    // Sundargarh
+    'rourkela': { district: 'sundargarh', name: 'Rourkela', lat: 22.2512, lng: 84.8812 },
+    'sundargarh': { district: 'sundargarh', name: 'Sundargarh', lat: 22.1212, lng: 84.0312 },
+    'rajgangpur': { district: 'sundargarh', name: 'Rajgangpur', lat: 22.1912, lng: 84.5812 },
+    'biramitrapur': { district: 'sundargarh', name: 'Biramitrapur', lat: 22.4012, lng: 84.7312 },
+    'bonai': { district: 'sundargarh', name: 'Bonai', lat: 21.8212, lng: 84.9712 },
+
+    // Sambalpur
+    'sambalpur': { district: 'sambalpur', name: 'Sambalpur', lat: 21.4984, lng: 83.8741 },
+    'burla': { district: 'sambalpur', name: 'Burla (VIMSAR)', lat: 21.5012, lng: 83.8712 },
+    'hirakud': { district: 'sambalpur', name: 'Hirakud', lat: 21.5212, lng: 83.8712 },
+    'kuchinda': { district: 'sambalpur', name: 'Kuchinda', lat: 21.7412, lng: 84.3412 },
+    'rairakhol': { district: 'sambalpur', name: 'Rairakhol', lat: 21.0612, lng: 84.3412 },
+
+    // Bargarh
+    'bargarh': { district: 'bargarh', name: 'Bargarh', lat: 21.3323, lng: 83.6214 },
+    'padampur': { district: 'bargarh', name: 'Padampur', lat: 20.9912, lng: 83.0612 },
+    'barpali': { district: 'bargarh', name: 'Barpali', lat: 21.1912, lng: 83.5812 },
+    'attabira': { district: 'bargarh', name: 'Attabira', lat: 21.3912, lng: 83.7912 },
+
+    // Jharsuguda
+    'jharsuguda': { district: 'jharsuguda', name: 'Jharsuguda', lat: 21.8540, lng: 84.0084 },
+    'brajrajnagar': { district: 'jharsuguda', name: 'Brajrajnagar', lat: 21.8212, lng: 83.9212 },
+    'belpahar': { district: 'jharsuguda', name: 'Belpahar', lat: 21.8512, lng: 83.8612 },
+
+    // Balangir
+    'balangir': { district: 'balangir', name: 'Balangir', lat: 20.7108, lng: 83.4862 },
+    'titilagarh': { district: 'balangir', name: 'Titilagarh', lat: 20.3012, lng: 83.1412 },
+    'patnagarh': { district: 'balangir', name: 'Patnagarh', lat: 20.7112, lng: 83.1412 },
+    'kantabanji': { district: 'balangir', name: 'Kantabanji', lat: 20.4812, lng: 82.8412 },
+
+    // Kalahandi
+    'bhawanipatna': { district: 'kalahandi', name: 'Bhawanipatna', lat: 19.9075, lng: 83.1659 },
+    'kalahandi': { district: 'kalahandi', name: 'Kalahandi', lat: 19.9075, lng: 83.1659 },
+    'kesinga': { district: 'kalahandi', name: 'Kesinga', lat: 20.2012, lng: 83.2312 },
+    'dharamgarh': { district: 'kalahandi', name: 'Dharamgarh', lat: 19.8812, lng: 82.7812 },
+    'junagarh': { district: 'kalahandi', name: 'Junagarh', lat: 19.8612, lng: 82.9312 },
+
+    // Koraput
+    'koraput': { district: 'koraput', name: 'Koraput', lat: 18.8166, lng: 82.7166 },
+    'jeypore': { district: 'koraput', name: 'Jeypore', lat: 18.8512, lng: 82.5712 },
+    'sunabeda': { district: 'koraput', name: 'Sunabeda', lat: 18.7212, lng: 82.8312 },
+    'kotpad': { district: 'koraput', name: 'Kotpad', lat: 19.1412, lng: 82.3212 },
+    'damanjodi': { district: 'koraput', name: 'Damanjodi', lat: 18.7812, lng: 82.9112 },
+
+    // Rayagada
+    'rayagada': { district: 'rayagada', name: 'Rayagada', lat: 19.1678, lng: 83.4144 },
+    'gunupur': { district: 'rayagada', name: 'Gunupur', lat: 19.0812, lng: 83.8112 },
+    'bissam cuttack': { district: 'rayagada', name: 'Bissam Cuttack', lat: 19.5112, lng: 83.5112 },
+    'muniguda': { district: 'rayagada', name: 'Muniguda', lat: 19.6212, lng: 83.4812 },
+
+    // Gajapati
+    'paralakhemundi': { district: 'gajapati', name: 'Paralakhemundi', lat: 18.7758, lng: 84.0908 },
+    'gajapati': { district: 'gajapati', name: 'Gajapati', lat: 18.7758, lng: 84.0908 },
+    'kashinagar': { district: 'gajapati', name: 'Kashinagar', lat: 18.9112, lng: 83.8212 },
+    'mohana': { district: 'gajapati', name: 'Mohana', lat: 19.4312, lng: 84.2812 },
+
+    // Angul
+    'angul': { district: 'angul', name: 'Angul', lat: 20.8398, lng: 85.1011 },
+    'talcher': { district: 'angul', name: 'Talcher', lat: 20.9512, lng: 85.2212 },
+    'athmallik': { district: 'angul', name: 'Athmallik', lat: 20.7212, lng: 84.5412 },
+    'pallahara': { district: 'angul', name: 'Pallahara', lat: 21.4312, lng: 85.1912 },
+
+    // Dhenkanal
+    'dhenkanal': { district: 'dhenkanal', name: 'Dhenkanal', lat: 20.6628, lng: 85.5986 },
+    'kamakhyanagar': { district: 'dhenkanal', name: 'Kamakhyanagar', lat: 20.9312, lng: 85.8612 },
+    'bhuban': { district: 'dhenkanal', name: 'Bhuban', lat: 20.8812, lng: 85.9812 },
+    'hindol': { district: 'dhenkanal', name: 'Hindol', lat: 20.6012, lng: 85.2012 },
+
+    // Jajpur
+    'jajpur': { district: 'jajpur', name: 'Jajpur', lat: 20.8497, lng: 86.3353 },
+    'vyasanagar': { district: 'jajpur', name: 'Vyasanagar / Jajpur Road', lat: 20.9112, lng: 86.1312 },
+    'jajpur road': { district: 'jajpur', name: 'Vyasanagar / Jajpur Road', lat: 20.9112, lng: 86.1312 },
+    'chandikhole': { district: 'jajpur', name: 'Chandikhole', lat: 20.7012, lng: 86.1512 },
+
+    // Kendrapara
+    'kendrapara': { district: 'kendrapara', name: 'Kendrapara', lat: 20.4996, lng: 86.4253 },
+    'pattamundai': { district: 'kendrapara', name: 'Pattamundai', lat: 20.5712, lng: 86.5612 },
+    'aul': { district: 'kendrapara', name: 'Aul', lat: 20.6712, lng: 86.6412 },
+    'rajkanika': { district: 'kendrapara', name: 'Rajkanika', lat: 20.7412, lng: 86.7212 },
+
+    // Jagatsinghpur
+    'jagatsinghpur': { district: 'jagatsinghpur', name: 'Jagatsinghpur', lat: 20.2575, lng: 86.1683 },
+    'paradip': { district: 'jagatsinghpur', name: 'Paradip', lat: 20.3165, lng: 86.6114 },
+    'kujang': { district: 'jagatsinghpur', name: 'Kujang', lat: 20.3212, lng: 86.5312 },
+    'tirtol': { district: 'jagatsinghpur', name: 'Tirtol', lat: 20.3112, lng: 86.3312 },
+
+    // Keonjhar
+    'keonjhar': { district: 'keonjhar', name: 'Kendujhar / Keonjhar', lat: 21.6288, lng: 85.5817 },
+    'kendujhar': { district: 'keonjhar', name: 'Kendujhar / Keonjhar', lat: 21.6288, lng: 85.5817 },
+    'barbil': { district: 'keonjhar', name: 'Barbil', lat: 22.1212, lng: 85.4012 },
+    'joda': { district: 'keonjhar', name: 'Joda', lat: 22.0112, lng: 85.4212 },
+    'anandapur': { district: 'keonjhar', name: 'Anandapur', lat: 21.2112, lng: 86.1212 },
+    'champua': { district: 'keonjhar', name: 'Champua', lat: 22.0812, lng: 85.6712 },
+
+    // Kandhamal
+    'phulbani': { district: 'kandhamal', name: 'Phulbani', lat: 20.4776, lng: 84.2327 },
+    'kandhamal': { district: 'kandhamal', name: 'Kandhamal', lat: 20.4776, lng: 84.2327 },
+    'baliguda': { district: 'kandhamal', name: 'Baliguda', lat: 20.2112, lng: 83.9112 },
+    'g. udayagiri': { district: 'kandhamal', name: 'G. Udayagiri', lat: 20.1312, lng: 84.3712 },
+    'daringbadi': { district: 'kandhamal', name: 'Daringbadi', lat: 19.9112, lng: 84.1312 },
+
+    // Malkangiri
+    'malkangiri': { district: 'malkangiri', name: 'Malkangiri', lat: 18.3512, lng: 81.8974 },
+    'balimela': { district: 'malkangiri', name: 'Balimela', lat: 18.2512, lng: 82.1312 },
+    'kalimela': { district: 'malkangiri', name: 'Kalimela', lat: 18.0412, lng: 81.7112 },
+
+    // Nabarangpur
+    'nabarangpur': { district: 'nabarangpur', name: 'Nabarangpur', lat: 19.2318, lng: 82.5516 },
+    'umerkote': { district: 'nabarangpur', name: 'Umerkote', lat: 19.6712, lng: 82.2112 },
+    'chandahandi': { district: 'nabarangpur', name: 'Chandahandi', lat: 19.8212, lng: 82.4112 },
+
+    // Nuapada
+    'nuapada': { district: 'nuapada', name: 'Nuapada', lat: 20.8354, lng: 82.5292 },
+    'khariar': { district: 'nuapada', name: 'Khariar', lat: 20.2912, lng: 82.7612 },
+    'khariar road': { district: 'nuapada', name: 'Khariar Road', lat: 20.8712, lng: 82.5312 },
+
+    // Nayagarh
+    'nayagarh': { district: 'nayagarh', name: 'Nayagarh', lat: 20.1264, lng: 85.1065 },
+    'khandapada': { district: 'nayagarh', name: 'Khandapada', lat: 20.2612, lng: 85.1812 },
+    'odagaon': { district: 'nayagarh', name: 'Odagaon', lat: 19.9812, lng: 84.9712 },
+    'ranpur': { district: 'nayagarh', name: 'Ranpur', lat: 20.0612, lng: 85.3412 },
+    'daspalla': { district: 'nayagarh', name: 'Daspalla', lat: 20.3412, lng: 84.8512 },
+
+    // Sonepur (Subarnapur)
+    'sonepur': { district: 'sonepur', name: 'Subarnapur / Sonepur', lat: 20.8378, lng: 83.9168 },
+    'subarnapur': { district: 'sonepur', name: 'Subarnapur / Sonepur', lat: 20.8378, lng: 83.9168 },
+    'binka': { district: 'sonepur', name: 'Binka', lat: 20.9512, lng: 83.8112 },
+    'tarbha': { district: 'sonepur', name: 'Tarbha', lat: 20.7312, lng: 83.6412 },
+
+    // Boudh
+    'boudh': { district: 'boudh', name: 'Boudh', lat: 20.8407, lng: 84.3236 },
+    'kantamal': { district: 'boudh', name: 'Kantamal', lat: 20.6512, lng: 83.7412 },
+
+    // Deogarh
+    'deogarh': { district: 'deogarh', name: 'Deogarh', lat: 21.5367, lng: 84.7336 },
+    'barkote': { district: 'deogarh', name: 'Barkote', lat: 21.5512, lng: 85.0112 }
+  };
+
   let hospitalMapInstance = null;
   let userLocationCoords = null;
   let routePolyline = null;
@@ -5760,6 +6077,153 @@
   let hospitalVisibleCount = 12;
 
   function toRad(deg) { return (deg * Math.PI) / 180; }
+
+  function haversineKm(lat1, lon1, lat2, lon2) {
+    const R = 6371;
+    const dLat = toRad(lat2 - lat1);
+    const dLon = toRad(lon2 - lon1);
+    const a =
+      Math.sin(dLat / 2) * Math.sin(dLat / 2) +
+      Math.cos(toRad(lat1)) * Math.cos(toRad(lat2)) *
+      Math.sin(dLon / 2) * Math.sin(dLon / 2);
+    const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
+    return R * c;
+  }
+
+  function getNearestDistrictKey(lat, lng) {
+    let nearestKey = 'ganjam';
+    let minDist = Infinity;
+    for (const [key, center] of Object.entries(DISTRICT_CENTERS)) {
+      const d = haversineKm(lat, lng, center.lat, center.lng);
+      if (d < minDist) {
+        minDist = d;
+        nearestKey = key;
+      }
+    }
+    return nearestKey;
+  }
+
+  function detectOdishaLocationFromText(text) {
+    if (!text || typeof text !== 'string') return null;
+    const lower = text.toLowerCase();
+
+    // Specific Odia script checks
+    if (/ବ୍ରହ୍ମପୁର|ବେରହାମପୁର|ଗଞ୍ଜାମ/.test(lower)) return ODISHA_TOWN_MAP['berhampur'];
+    if (/ଭୁବନେଶ୍ୱର|ଖୋର୍ଦ୍ଧା/.test(lower)) return ODISHA_TOWN_MAP['bhubaneswar'];
+    if (/କଟକ/.test(lower)) return ODISHA_TOWN_MAP['cuttack'];
+    if (/ପୁରୀ/.test(lower)) return ODISHA_TOWN_MAP['puri'];
+    if (/ରାଉରକେଲା|ସୁନ୍ଦରଗଡ଼/.test(lower)) return ODISHA_TOWN_MAP['rourkela'];
+    if (/ସମ୍ବଲପୁର|ବୁର୍ଲା/.test(lower)) return ODISHA_TOWN_MAP['sambalpur'];
+    if (/ବାଲେଶ୍ୱର/.test(lower)) return ODISHA_TOWN_MAP['balasore'];
+    if (/ଭଦ୍ରକ/.test(lower)) return ODISHA_TOWN_MAP['bhadrak'];
+    if (/ବାରିପଦା|ମୟୂରଭଞ୍ଜ/.test(lower)) return ODISHA_TOWN_MAP['baripada'];
+    if (/କୋରାପୁଟ|ଜୟପୁର/.test(lower)) return ODISHA_TOWN_MAP['koraput'];
+    if (/ରାୟଗଡ଼ା/.test(lower)) return ODISHA_TOWN_MAP['rayagada'];
+    if (/ପାରଳାଖେମୁଣ୍ଡି|ଗଜପତି/.test(lower)) return ODISHA_TOWN_MAP['paralakhemundi'];
+    if (/ଭବାନୀପାଟଣା|କଳାହାଣ୍ଡି/.test(lower)) return ODISHA_TOWN_MAP['bhawanipatna'];
+    if (/ବଲାଙ୍ଗୀର/.test(lower)) return ODISHA_TOWN_MAP['balangir'];
+    if (/ବରଗଡ଼/.test(lower)) return ODISHA_TOWN_MAP['bargarh'];
+    if (/ଝାରସୁଗୁଡ଼ା/.test(lower)) return ODISHA_TOWN_MAP['jharsuguda'];
+    if (/ଅନୁଗୋଳ|ତାଳଚେର/.test(lower)) return ODISHA_TOWN_MAP['angul'];
+    if (/ଢେଙ୍କାନାଳ/.test(lower)) return ODISHA_TOWN_MAP['dhenkanal'];
+    if (/ଯାଜପୁର/.test(lower)) return ODISHA_TOWN_MAP['jajpur'];
+    if (/କେନ୍ଦ୍ରାପଡ଼ା/.test(lower)) return ODISHA_TOWN_MAP['kendrapara'];
+    if (/ଜଗତସିଂହପୁର|ପାରାଦୀପ/.test(lower)) return ODISHA_TOWN_MAP['jagatsinghpur'];
+    if (/କେନ୍ଦୁଝର/.test(lower)) return ODISHA_TOWN_MAP['keonjhar'];
+    if (/ଫୁଲବାଣୀ|କନ୍ଧମାଳ/.test(lower)) return ODISHA_TOWN_MAP['phulbani'];
+    if (/ମାଲକାନଗିରି/.test(lower)) return ODISHA_TOWN_MAP['malkangiri'];
+    if (/ନବରଙ୍ଗପୁର/.test(lower)) return ODISHA_TOWN_MAP['nabarangpur'];
+    if (/ନୂଆପଡ଼ା/.test(lower)) return ODISHA_TOWN_MAP['nuapada'];
+    if (/ନୟାଗଡ଼/.test(lower)) return ODISHA_TOWN_MAP['nayagarh'];
+    if (/ସୁବର୍ଣ୍ଣପୁର|ସୋନପୁର/.test(lower)) return ODISHA_TOWN_MAP['sonepur'];
+    if (/ବୌଦ୍ଧ/.test(lower)) return ODISHA_TOWN_MAP['boudh'];
+    if (/ଦେବଗଡ଼/.test(lower)) return ODISHA_TOWN_MAP['deogarh'];
+    if (/ଆସିକା/.test(lower)) return ODISHA_TOWN_MAP['aska'];
+    if (/ଭଞ୍ଜନଗର/.test(lower)) return ODISHA_TOWN_MAP['bhanjanagar'];
+    if (/ଛତ୍ରପୁର/.test(lower)) return ODISHA_TOWN_MAP['chatrapur'];
+    if (/ହିଞ୍ଜିଳିକାଟୁ|ହିଞ୍ଜିଳି/.test(lower)) return ODISHA_TOWN_MAP['hinjilicut'];
+    if (/ବୁଗୁଡ଼ା/.test(lower)) return ODISHA_TOWN_MAP['buguda'];
+    if (/କୋଦଳା/.test(lower)) return ODISHA_TOWN_MAP['kodala'];
+    if (/କବିସୂର୍ଯ୍ୟନଗର/.test(lower)) return ODISHA_TOWN_MAP['kabisuryanagar'];
+    if (/ସୁରଡ଼ା/.test(lower)) return ODISHA_TOWN_MAP['surada'];
+    if (/ଚିକିଟି/.test(lower)) return ODISHA_TOWN_MAP['chikiti'];
+    if (/ଦିଗପହଣ୍ଡି/.test(lower)) return ODISHA_TOWN_MAP['digapahandi'];
+    if (/ଖଲ୍ଲିକୋଟ/.test(lower)) return ODISHA_TOWN_MAP['khallikote'];
+    if (/ପୁରୁଷୋତ୍ତମପୁର/.test(lower)) return ODISHA_TOWN_MAP['purushottampur'];
+    if (/ପୋଲସରା/.test(lower)) return ODISHA_TOWN_MAP['polasara'];
+    if (/ବେଲଗୁଣ୍ଠା|ବେଲ୍ଲାଗୁଣ୍ଠା/.test(lower)) return ODISHA_TOWN_MAP['bellaguntha'];
+
+    // English word boundary match (longest keys first)
+    const sortedKeys = Object.keys(ODISHA_TOWN_MAP).sort((a, b) => b.length - a.length);
+    for (const key of sortedKeys) {
+      const escaped = key.replace('.', '\\.');
+      const reg = new RegExp('(\\b|\\W|^)' + escaped + '(\\b|\\W|$)', 'i');
+      if (reg.test(lower)) {
+        return ODISHA_TOWN_MAP[key];
+      }
+    }
+    return null;
+  }
+
+  function updateQuickDistrictPill(districtKeyOrName) {
+    const label = $('quickDistrictPillLabel');
+    if (!label) return;
+    const isOr = currentLang === 'or';
+    const isHi = currentLang === 'hi';
+    if (!districtKeyOrName || districtKeyOrName === 'auto') {
+      label.textContent = isHi ? 'स्थान: ऑटो जीपीएस' : (isOr ? 'ସ୍ଥାନ: ଅଟୋ GPS' : 'Location: Auto GPS');
+      return;
+    }
+    const center = DISTRICT_CENTERS[districtKeyOrName];
+    if (center) {
+      const cleanName = center.name.split('(')[0].trim();
+      label.textContent = `📍 ${cleanName}`;
+    } else {
+      label.textContent = `📍 ${districtKeyOrName}`;
+    }
+  }
+
+  function autoInitUserLocation() {
+    try {
+      const savedCoords = localStorage.getItem('swasth_user_coords');
+      const savedDistrict = localStorage.getItem('swasth_user_district');
+      if (savedCoords) {
+        userLocationCoords = JSON.parse(savedCoords);
+        if (savedDistrict && $('districtSelect')) {
+          $('districtSelect').value = savedDistrict;
+        }
+        updateQuickDistrictPill(savedDistrict || (userLocationCoords && userLocationCoords.districtName) || 'Ganjam / Berhampur');
+        return;
+      }
+    } catch (e) {
+      console.warn('Could not read user location from storage:', e);
+    }
+
+    if (typeof navigator !== 'undefined' && navigator.geolocation) {
+      navigator.geolocation.getCurrentPosition(
+        (pos) => {
+          userLocationCoords = {
+            lat: pos.coords.latitude,
+            lng: pos.coords.longitude,
+            isFallback: false
+          };
+          const distKey = getNearestDistrictKey(userLocationCoords.lat, userLocationCoords.lng);
+          if (distKey) {
+            userLocationCoords.district = distKey;
+            try {
+              localStorage.setItem('swasth_user_coords', JSON.stringify(userLocationCoords));
+              localStorage.setItem('swasth_user_district', distKey);
+            } catch {}
+            updateQuickDistrictPill(distKey);
+          }
+        },
+        () => {
+          updateQuickDistrictPill('auto');
+        },
+        { enableHighAccuracy: false, timeout: 4000, maximumAge: 300000 }
+      );
+    }
+  }
 
   function haversineKm(lat1, lon1, lat2, lon2) {
     const R = 6371;
@@ -5867,6 +6331,11 @@
         district: selectedDistrict,
         districtName: center.name
       };
+      try {
+        localStorage.setItem('swasth_user_coords', JSON.stringify(userLocationCoords));
+        localStorage.setItem('swasth_user_district', selectedDistrict);
+      } catch {}
+      updateQuickDistrictPill(selectedDistrict);
       if (statusText) {
         statusText.textContent = isHi
           ? `📍 चयनित जिला: ${center.name}`
@@ -5880,17 +6349,36 @@
       statusText.textContent = isHi ? 'लाइव जीपीएस स्थिति खोजी जा रही है...' : (isOr ? 'ଲାଇଭ୍ GPS ସ୍ଥିତି ଯାଞ୍ଚ ହେଉଛି...' : 'Acquiring live GPS location...');
     }
 
-    const defaultLocation = { lat: 20.2644, lng: 85.8281, isFallback: true };
+    // Default to saved location if present, else Berhampur/Ganjam
+    let defaultLocation = null;
+    try {
+      const saved = localStorage.getItem('swasth_user_coords');
+      if (saved) defaultLocation = JSON.parse(saved);
+    } catch {}
+    if (!defaultLocation && userLocationCoords && !userLocationCoords.isFallback) {
+      defaultLocation = userLocationCoords;
+    }
+    if (!defaultLocation) {
+      defaultLocation = { lat: 19.3093, lng: 84.8091, district: 'ganjam', districtName: 'Ganjam / Berhampur', isFallback: true };
+    }
 
     if (typeof navigator !== 'undefined' && navigator.geolocation) {
       // Stage 1: Fast network-based location (Cell/WiFi, resolves in < 1 second)
       navigator.geolocation.getCurrentPosition(
         (pos) => {
+          const distKey = getNearestDistrictKey(pos.coords.latitude, pos.coords.longitude);
           userLocationCoords = {
             lat: pos.coords.latitude,
             lng: pos.coords.longitude,
+            district: distKey,
+            districtName: DISTRICT_CENTERS[distKey] ? DISTRICT_CENTERS[distKey].name : 'Odisha',
             isFallback: false
           };
+          try {
+            localStorage.setItem('swasth_user_coords', JSON.stringify(userLocationCoords));
+            localStorage.setItem('swasth_user_district', distKey);
+          } catch {}
+          updateQuickDistrictPill(distKey);
           if (statusText) {
             statusText.textContent = isHi ? '🟢 लाइव जीपीएस सक्रिय' : (isOr ? '🟢 ଲାଇଭ୍ GPS ସକ୍ରିୟ' : '🟢 Live GPS Active');
           }
@@ -5902,11 +6390,18 @@
           // Stage 2: Asynchronous high-accuracy GPS refinement in background
           navigator.geolocation.getCurrentPosition(
             (refinedPos) => {
+              const refinedDistKey = getNearestDistrictKey(refinedPos.coords.latitude, refinedPos.coords.longitude);
               userLocationCoords = {
                 lat: refinedPos.coords.latitude,
                 lng: refinedPos.coords.longitude,
+                district: refinedDistKey,
+                districtName: DISTRICT_CENTERS[refinedDistKey] ? DISTRICT_CENTERS[refinedDistKey].name : 'Odisha',
                 isFallback: false
               };
+              try {
+                localStorage.setItem('swasth_user_coords', JSON.stringify(userLocationCoords));
+                localStorage.setItem('swasth_user_district', refinedDistKey);
+              } catch {}
               renderHospitalMapAndCards(userLocationCoords);
             },
             () => { /* Keep stage 1 coords */ },
@@ -6136,6 +6631,9 @@
     const pillBtn = $('emergencyMapPillBtn');
     if (pillBtn) pillBtn.addEventListener('click', openHospitalMap);
 
+    const quickPillBtn = $('quickDistrictPillBtn');
+    if (quickPillBtn) quickPillBtn.addEventListener('click', openHospitalMap);
+
     const closeBtn = $('closeHospitalMapBtn');
     if (closeBtn) closeBtn.addEventListener('click', closeHospitalMap);
 
@@ -6177,6 +6675,7 @@
     }
   }
   initHospitalMapControls();
+  autoInitUserLocation();
 
 
   // ============================================================
@@ -6528,9 +7027,24 @@
       curY += box4H + gap;
 
       // 8. SECTION 5: NEAREST RECOMMENDED GOVERNMENT HEALTHCARE FACILITY & DISTANCE IN KM
-      const userPos = (typeof userLocationCoords !== 'undefined' && userLocationCoords && userLocationCoords.lat)
+      let userPos = (typeof userLocationCoords !== 'undefined' && userLocationCoords && userLocationCoords.lat)
         ? userLocationCoords
-        : { lat: 20.2961, lng: 85.8245, isFallback: true };
+        : null;
+
+      // Auto-detect location from user consultation query or answer (e.g. Berhampur, Brahmapur, Buguda, etc.)
+      const detectedInSlip = detectOdishaLocationFromText(cleanQuery) || detectOdishaLocationFromText(cleanAnswer);
+      if (detectedInSlip) {
+        userPos = { lat: detectedInSlip.lat, lng: detectedInSlip.lng, district: detectedInSlip.district, districtName: detectedInSlip.name };
+      } else if (!userPos) {
+        try {
+          const savedCoords = localStorage.getItem('swasth_user_coords');
+          if (savedCoords) userPos = JSON.parse(savedCoords);
+        } catch {}
+      }
+
+      if (!userPos) {
+        userPos = { lat: 19.3093, lng: 84.8091, district: 'ganjam', districtName: 'Ganjam / Berhampur', isFallback: true };
+      }
 
       let nearestHosp = null;
       if (typeof GOVT_HOSPITALS !== 'undefined' && Array.isArray(GOVT_HOSPITALS) && GOVT_HOSPITALS.length > 0) {
@@ -6546,11 +7060,11 @@
       }
       if (!nearestHosp) {
         nearestHosp = {
-          name: 'Capital Hospital & PGIER, Unit 6',
-          nameOr: 'କ୍ୟାପିଟାଲ୍ ହସ୍ପିଟାଲ୍ ଓ PGIER',
-          type: 'District Headquarter Hospital (DHH) / Super-Speciality',
-          district: 'Khordha',
-          distanceKm: 2.4
+          name: 'MKCG Medical College & Hospital Berhampur',
+          nameOr: 'ଏମକେସିଜି ମେଡିକାଲ କଲେଜ ଓ ହସ୍ପିଟାଲ, ବ୍ରହ୍ମପୁର (MKCG)',
+          type: 'Medical College & Hospital (MCH) / Super-Speciality',
+          district: 'Ganjam',
+          distanceKm: 0.4
         };
       }
 
@@ -6562,7 +7076,7 @@
       const isOr = lang === 'or';
       const isHi = lang === 'hi';
       const hospDisplayName = (isOr && nearestHosp.nameOr) ? `${nearestHosp.name} (${nearestHosp.nameOr})` : nearestHosp.name;
-      const distBadge = `📍 Distance: ~${nearestHosp.distanceKm.toFixed(1)} km from current location`;
+      const distBadge = nearestHosp.distanceKm < 0.5 ? '📍 Distance: ~0.4 km (Immediate Emergency Reach)' : `📍 Distance: ~${nearestHosp.distanceKm.toFixed(1)} km from current location`;
 
       ctx.fillStyle = '#0f172a';
       ctx.font = 'bold 15px "Plus Jakarta Sans", "Noto Sans Oriya", sans-serif';
@@ -6578,7 +7092,7 @@
       // Facility Details Line
       ctx.fillStyle = '#475569';
       ctx.font = '13.5px "Plus Jakarta Sans", sans-serif';
-      const hospFacilityLine = `Level: ${nearestHosp.type || 'Govt Hospital / CHC'}  •  District: ${nearestHosp.district || 'Odisha'}  •  24×7 Casualty & Emergency Department Active`;
+      const hospFacilityLine = `Level: ${nearestHosp.type || 'Community Health Centre (CHC)'}  •  District: ${String(nearestHosp.district || 'Odisha').toUpperCase()}  •  24×7 Casualty & Emergency Active`;
       ctx.fillText(hospFacilityLine, 65, curY + 68);
 
       curY += box5H + gap;

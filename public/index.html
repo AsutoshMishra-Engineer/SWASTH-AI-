@@ -16,7 +16,7 @@
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+Devanagari:wght@400;500;600;700&family=Noto+Sans+Oriya:wght@400;500;600;700&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="/vendor/leaflet.css">
-  <link rel="stylesheet" href="/style.css?v=20261121_07">
+  <link rel="stylesheet" href="/style.css?v=20261122_01">
 </head>
 <body>
   <a class="skip" href="#main">Skip to content</a>
@@ -29,6 +29,10 @@
         <span id="emergencyText"><strong>Medical Emergency?</strong> Severe chest pain, trouble breathing, or heavy bleeding? Call <a href="tel:108">108</a> (Ambulance) or <a href="tel:112">112</a>.</span>
       </div>
       <div class="emergency-actions-wrap">
+        <button id="quickDistrictPillBtn" class="quick-district-pill" type="button" aria-label="Select Current District or Location" title="Click to change your location or district for precise hospital triage">
+          <span id="quickDistrictPillIcon">📍</span>
+          <span id="quickDistrictPillLabel">Location: Auto GPS</span>
+        </button>
         <button id="offlineCareBtn" class="offline-care-pill" type="button" aria-label="Offline Emergency Protocols">
           <span class="offline-bolt">⚡</span>
           <span id="offlineCareLabel">Offline Emergency Care</span>
@@ -601,7 +605,7 @@
 
   <script src="/vendor/leaflet.js"></script>
   <script src="/vendor/supabase.js"></script>
-  <script src="/config.js?v=20261121_07"></script>
-  <script src="/app.js?v=20261121_10"></script>
+  <script src="/config.js?v=20261122_01"></script>
+  <script src="/app.js?v=20261122_01"></script>
 </body>
 </html>

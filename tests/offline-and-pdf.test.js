@@ -6,7 +6,7 @@ const appjs = readFileSync('public/app.js', 'utf8');
 
 test('offline protocols: exactly 10 emergency protocols defined with full trilingual content', () => {
   assert.ok(appjs.includes('const OFFLINE_PROTOCOLS ='));
-  const match = appjs.match(/const OFFLINE_PROTOCOLS = (\[[\s\S]*?\]);\n\n/);
+  const match = appjs.match(/const OFFLINE_PROTOCOLS = (\[[\s\S]*?\]);\r?\n\r?\n/);
   assert.ok(match, 'OFFLINE_PROTOCOLS array should be found');
   const protocols = JSON.parse(match[1]);
   assert.equal(protocols.length, 10);
