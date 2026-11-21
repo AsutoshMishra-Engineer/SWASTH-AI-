@@ -69,3 +69,17 @@ revoke all on function public.bump_usage(text, int) from public, anon, authentic
 revoke all on function public.match_knowledge(vector, int, float, text) from public, anon, authenticated;
 grant execute on function public.bump_usage(text, int) to service_role;
 grant execute on function public.match_knowledge(vector, int, float, text) to service_role;
+
+-- 7) Triage encounters & reference IDs (Safety, tracking and doctor slip audit).
+create table if not exists public.triage_records (
+  id           bigserial primary key,
+  reference_id text not null unique,
+  user_id      uuid,
+  complaint    text not null,
+  language     text not null default 'en',
+  status       text not null default 'AI DIAGNOSED',
+  created_at   timestamptz not null default now()
+);
+create index if not exists triage_records_ref_idx on public.triage_records (reference_id);
+create index if not exists triage_records_user_idx on public.triage_records (user_id);
+alter table public.triage_records enable row level security;
