@@ -84,6 +84,9 @@
         <button id="navSignInBtn" class="btn primary small nav-signin-btn" type="button" hidden title="Sign in or create account">
           Sign In
         </button>
+        <button id="navGuestBtn" class="btn ghost small nav-guest-pill" type="button" title="Try Guest Mode">
+          ⚡ Guest Mode
+        </button>
         <button id="navChatBtn" class="btn primary small" type="button" hidden title="Open Health Chat Assistant">
           💬 Chat
         </button>
@@ -112,6 +115,12 @@
           <p class="hero-subhead" style="margin: 8px 0 0; color: var(--ink-secondary); font-size: 1.05rem; line-height: 1.45;">
             Public Health Digital Triage & Clinical Guidance Companion • Odisha
           </p>
+          <div class="hero-guest-box">
+            <button id="heroGuestBtn" class="btn hero-guest-btn" type="button">
+              ⚡ Try Guest Mode (5 Questions/Day) →
+            </button>
+            <span class="hero-guest-tag">Instant Access &bull; No Sign Up or Email Required</span>
+          </div>
         </div>
       </div>
 
@@ -127,9 +136,10 @@
           <button id="cardDeleteAccountBtn" class="btn danger-outline full-width" type="button" style="margin-top: 12px;">Delete Your Account</button>
         </div>
         <div id="loggedOutAuthContent">
-          <div class="tabs" role="group" aria-label="Choose sign in or sign up">
+          <div class="tabs" role="group" aria-label="Choose sign in, sign up, or guest mode">
             <button id="tabSignIn" class="tab active" type="button" aria-pressed="true">Sign In</button>
             <button id="tabSignUp" class="tab" type="button" aria-pressed="false">Create Account</button>
+            <button id="tabGuest" class="tab tab-guest-btn" type="button" aria-pressed="false">⚡ Guest Mode</button>
           </div>
           <form id="authForm" novalidate>
             <div class="field">
