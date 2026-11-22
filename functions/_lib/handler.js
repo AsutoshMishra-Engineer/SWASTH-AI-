@@ -170,15 +170,24 @@ export async function handleChat(request, env) {
   for (const k of ['SUPABASE_URL', 'SUPABASE_ANON_KEY', 'SUPABASE_SERVICE_ROLE_KEY', 'GEMINI_API_KEY'])
     if (!env[k]) return json({ error: 'server_misconfigured', message: 'Server is not configured yet.' }, 500);
 
-  // 1) Who is asking? Must be a signed-in user with a VERIFIED email.
+  // 1) Who is asking? Must be a signed-in user with a VERIFIED email OR a Guest session (5 chats/day).
   const m = /^Bearer (.+)$/.exec(request.headers.get('Authorization') || '');
   if (!m) return json({ error: 'unauthorized', message: 'Please sign in.' }, 401);
 
+  const token = m[1].trim();
+  const isGuest = /^guest[_\:]/i.test(token);
+  const GUEST_DAILY_LIMIT = 5;
+
   try {
-    const user = await getUser(env, m[1], L);
-    if (!user || !user.id) return json({ error: 'unauthorized', message: 'Please sign in again.' }, 401);
-    if (!(user.email_confirmed_at || user.confirmed_at))
-      return json({ error: 'email_not_verified', message: 'Please verify your email first.' }, 403);
+    let user;
+    if (isGuest) {
+      user = { id: token.slice(0, 64), email_confirmed_at: '2026-01-01', is_guest: true };
+    } else {
+      user = await getUser(env, token, L);
+      if (!user || !user.id) return json({ error: 'unauthorized', message: 'Please sign in again.' }, 401);
+      if (!(user.email_confirmed_at || user.confirmed_at))
+        return json({ error: 'email_not_verified', message: 'Please verify your email first.' }, 403);
+    }
 
     // 2) Validate the request.
     const len = Number(request.headers.get('Content-Length') || 0);
@@ -200,11 +209,18 @@ export async function handleChat(request, env) {
     if (verdict.type !== 'ok') return fixed(verdict.type, langCode);
 
     // 4) Daily limits (protect free quotas).
-    const u = await bumpUsage(env, `user:${user.id}`, L.USER_DAILY_LIMIT, L);
-    if (u === -1) return json({ error: 'user_limit', message: `You have reached today's limit of ${L.USER_DAILY_LIMIT} questions. Please come back tomorrow.` }, 429);
+    const limit = isGuest ? GUEST_DAILY_LIMIT : L.USER_DAILY_LIMIT;
+    const rateKey = isGuest ? `guest:${user.id}` : `user:${user.id}`;
+    const u = await bumpUsage(env, rateKey, limit, L);
+    if (u === -1) {
+      const limitMsg = isGuest
+        ? "You have reached today's limit of 5 guest questions. Please sign in or create a free account to continue."
+        : `You have reached today's limit of ${L.USER_DAILY_LIMIT} questions. Please come back tomorrow.`;
+      return json({ error: isGuest ? 'guest_limit' : 'user_limit', message: limitMsg }, 429);
+    }
     const g = await bumpUsage(env, 'global', L.GLOBAL_DAILY_LIMIT, L);
     if (g === -1) return json({ error: 'global_limit', message: 'The service is very busy today. Please try again tomorrow.' }, 429);
-    const remaining = L.USER_DAILY_LIMIT - u;
+    const remaining = limit - u;
 
     // 5) Retrieve verified knowledge.
     const searchMsg = isHindi ? normalizeHindiQuery(message) : (isOdia ? normalizeOdiaQuery(message) : message);

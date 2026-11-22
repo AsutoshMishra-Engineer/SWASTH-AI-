@@ -49,6 +49,81 @@
 
   // ---------- Navigation / Routing ----------
   let currentSession = null;
+  let isGuestMode = false;
+  const GUEST_DAILY_LIMIT = 5;
+
+  function getGuestId() {
+    let gid = '';
+    try { gid = localStorage.getItem('swasth_guest_id'); } catch {}
+    if (!gid) {
+      gid = 'guest_' + Math.random().toString(36).substring(2, 10) + Date.now().toString(36);
+      try { localStorage.setItem('swasth_guest_id', gid); } catch {}
+    }
+    return gid;
+  }
+
+  function getGuestRemaining() {
+    const today = new Date().toISOString().slice(0, 10);
+    let storedDate = '';
+    let used = 0;
+    try {
+      storedDate = localStorage.getItem('swasth_guest_date');
+      if (storedDate !== today) {
+        localStorage.setItem('swasth_guest_date', today);
+        localStorage.setItem('swasth_guest_used', '0');
+        return GUEST_DAILY_LIMIT;
+      }
+      used = parseInt(localStorage.getItem('swasth_guest_used') || '0', 10);
+    } catch {
+      return GUEST_DAILY_LIMIT;
+    }
+    return Math.max(0, GUEST_DAILY_LIMIT - used);
+  }
+
+  function recordGuestQuestionUsed() {
+    const today = new Date().toISOString().slice(0, 10);
+    let used = 0;
+    try {
+      const storedDate = localStorage.getItem('swasth_guest_date');
+      if (storedDate === today) {
+        used = parseInt(localStorage.getItem('swasth_guest_used') || '0', 10);
+      } else {
+        localStorage.setItem('swasth_guest_date', today);
+      }
+      used += 1;
+      localStorage.setItem('swasth_guest_used', String(used));
+    } catch {}
+    updateGuestUI();
+    return Math.max(0, GUEST_DAILY_LIMIT - used);
+  }
+
+  function updateGuestUI() {
+    const rem = getGuestRemaining();
+    const banner = $('guestChatBanner');
+    const txt = $('guestRemainingText');
+    if (banner) banner.hidden = !isGuestMode;
+    if (txt) {
+      const isHi = currentLang === 'hi';
+      const isOr = currentLang === 'or';
+      txt.textContent = isHi
+        ? `अतिथि मोड: आज 5 में से ${rem} प्रश्न शेष`
+        : (isOr ? `ଅତିଥି ମୋଡ୍: ଆଜି ୫ ରୁ ${rem} ଟି ପ୍ରଶ୍ନ ବାକି` : `${rem} of ${GUEST_DAILY_LIMIT} questions left today`);
+    }
+    setRemaining(rem);
+  }
+
+  function enterGuestMode() {
+    isGuestMode = true;
+    viewingLanding = false;
+    if (typeof window !== 'undefined') window.viewingLanding = false;
+    showChatPage();
+    updateGuestUI();
+  }
+
+  function exitGuestMode() {
+    isGuestMode = false;
+    showLandingPage();
+  }
 
   // Detect if running on Android (Native App, WebView, or Mobile Android Browser) or requesting home view
   const isAndroidClient = typeof navigator !== 'undefined' && (
@@ -65,16 +140,20 @@
 
   function showLandingPage() {
     viewingLanding = true;
+    isGuestMode = false;
     if (typeof window !== 'undefined') window.viewingLanding = true;
     if (typeof document !== 'undefined' && document.body) {
       document.body.classList.remove('chat-active');
       document.body.classList.remove('chat-has-results');
+      document.body.classList.remove('guest-active');
     }
     if ($('authView')) $('authView').hidden = false;
     if ($('chatView')) $('chatView').hidden = true;
     const ok = isVerified(currentSession);
     if ($('navChatBtn')) $('navChatBtn').hidden = true;
     if ($('navHomeBtn')) $('navHomeBtn').hidden = true;
+    if ($('navSignInBtn')) $('navSignInBtn').hidden = true;
+    if ($('guestChatBanner')) $('guestChatBanner').hidden = true;
     if ($('heroLoggedInBanner')) $('heroLoggedInBanner').hidden = true;
     if ($('loggedInCardContent')) $('loggedInCardContent').hidden = !ok;
     if ($('loggedOutAuthContent')) $('loggedOutAuthContent').hidden = ok;
@@ -107,9 +186,15 @@
   function showChatPage() {
     viewingLanding = false;
     if (typeof window !== 'undefined') window.viewingLanding = false;
-    if (isVerified(currentSession)) {
+    const ok = isVerified(currentSession);
+    if (ok || isGuestMode) {
       if (typeof document !== 'undefined' && document.body) {
         document.body.classList.add('chat-active');
+        if (isGuestMode) {
+          document.body.classList.add('guest-active');
+        } else {
+          document.body.classList.remove('guest-active');
+        }
         const bubbleCount = ($('messages') && $('messages').querySelectorAll('.bubble').length) || 0;
         if (bubbleCount > 1) {
           document.body.classList.add('chat-has-results');
@@ -120,11 +205,14 @@
       if ($('authView')) $('authView').hidden = true;
       if ($('chatView')) $('chatView').hidden = false;
       if ($('navChatBtn')) $('navChatBtn').hidden = true;
-      if ($('navHomeBtn')) $('navHomeBtn').hidden = true;
+      if ($('navHomeBtn')) $('navHomeBtn').hidden = !isGuestMode;
+      if ($('navSignInBtn')) $('navSignInBtn').hidden = !isGuestMode;
+      if ($('guestChatBanner')) $('guestChatBanner').hidden = !isGuestMode;
       if ($('signOut')) $('signOut').hidden = true;
       if ($('userEmail')) $('userEmail').hidden = true;
-      if ($('navDeleteAccountBtn')) $('navDeleteAccountBtn').hidden = false;
+      if ($('navDeleteAccountBtn')) $('navDeleteAccountBtn').hidden = isGuestMode || !ok;
       if ($('heroLoggedInBanner')) $('heroLoggedInBanner').hidden = true;
+      if (isGuestMode) updateGuestUI();
       startChat();
       applyLanguage(currentLang);
     } else {
@@ -144,9 +232,14 @@
         showChatPage();
       }
     } else {
+      if (isGuestMode) {
+        showChatPage();
+        return;
+      }
       viewingLanding = isAndroidClient;
       if ($('navChatBtn')) $('navChatBtn').hidden = true;
       if ($('navHomeBtn')) $('navHomeBtn').hidden = true;
+      if ($('navSignInBtn')) $('navSignInBtn').hidden = true;
       if ($('heroLoggedInBanner')) $('heroLoggedInBanner').hidden = true;
       if ($('loggedInCardContent')) $('loggedInCardContent').hidden = true;
       if ($('loggedOutAuthContent')) $('loggedOutAuthContent').hidden = false;
@@ -160,6 +253,8 @@
   if (typeof window !== 'undefined') {
     window.showLandingPage = showLandingPage;
     window.showChatPage = showChatPage;
+    window.enterGuestMode = enterGuestMode;
+    window.exitGuestMode = exitGuestMode;
     window.viewingLanding = viewingLanding;
   }
 
@@ -170,6 +265,8 @@
       if (isVerified(currentSession)) {
         if (viewingLanding) showChatPage();
         else showLandingPage();
+      } else if (isGuestMode) {
+        showChatPage();
       } else {
         showLandingPage();
       }
@@ -177,7 +274,16 @@
   }
 
   const navHomeBtn = $('navHomeBtn');
-  if (navHomeBtn) navHomeBtn.addEventListener('click', () => showLandingPage());
+  if (navHomeBtn) navHomeBtn.addEventListener('click', () => {
+    isGuestMode = false;
+    showLandingPage();
+  });
+  const navSignInBtn = $('navSignInBtn');
+  if (navSignInBtn) navSignInBtn.addEventListener('click', exitGuestMode);
+  const guestModeBtn = $('guestModeBtn');
+  if (guestModeBtn) guestModeBtn.addEventListener('click', enterGuestMode);
+  const guestSignInBtn = $('guestSignInBtn');
+  if (guestSignInBtn) guestSignInBtn.addEventListener('click', exitGuestMode);
   const navChatBtn = $('navChatBtn');
   if (navChatBtn) navChatBtn.addEventListener('click', () => showChatPage());
   const heroChatBtn = $('heroChatBtn');
@@ -818,11 +924,20 @@
     started = true;
     const isOr = currentLang === 'or';
     const isHi = currentLang === 'hi';
-    const welcome = isHi
-      ? 'नमस्ते! मैं स्वास्थ्य AI, आपका स्वास्थ्य सहायक। अपने लक्षण या स्वास्थ्य प्रश्न पूछें या नीचे माइक बटन दबाकर बोलें। मैं केवल WHO और स्वास्थ्य मंत्रालय के आधिकारिक व सत्यापित स्रोतों से सलाह देता हूँ।'
-      : (isOr
-        ? 'ନମସ୍କାର! ମୁଁ ସ୍ୱାସ୍ଥ୍ୟ AI, ଓଡ଼ିଶାର ଜନସ୍ୱାସ୍ଥ୍ୟ ସହାୟକ । ଆପଣଙ୍କର ସ୍ୱାସ୍ଥ୍ୟ ସମସ୍ୟା କହିବା ପାଇଁ ତଳେ ଥିବା ବଡ଼ ମାଇକ୍ ବଟନ୍ ଦବାନ୍ତୁ । ମୁଁ କେବଳ WHO ଏବଂ ସ୍ୱାସ୍ଥ୍ୟ ମନ୍ତ୍ରଣାଳୟର ସଠିକ୍ ତଥ୍ୟ ଅନୁଯାୟୀ ଘରୋଇ ଉପଚାର ଓ ଡାକ୍ତରୀ ପରାମର୍ଶ ଦେବି ।'
-        : 'Namaskar! I am Swasth AI, your public health assistant for Odisha. Describe your symptoms or ask a health question. I answer only using verified WHO and Ministry of Health sources.');
+    let welcome;
+    if (isGuestMode) {
+      welcome = isHi
+        ? 'नमस्ते! आप स्वास्थ AI अतिथि मोड (Guest Mode) में हैं। आज आपके पास 5 निःशुल्क स्वास्थ्य प्रश्न हैं। अपने लक्षण पूछें या नीचे माइक दबाकर बोलें। डॉक्टर पर्ची (PDF) व असीमित प्रश्नों के लिए कभी भी साइन इन करें।'
+        : (isOr
+          ? 'ନମସ୍କାର! ଆପଣ ସ୍ୱାସ୍ଥ୍ୟ AI ଅତିଥି ମୋଡ୍ (Guest Mode) ରେ ଅଛନ୍ତି । ଆଜି ଆପଣଙ୍କ ପାଇଁ ୫ ଟି ମାଗଣା ସ୍ୱାସ୍ଥ୍ୟ ପ୍ରଶ୍ନ ରହିଛି । ଲକ୍ଷଣ ପଚାରିବା ପାଇଁ ମାଇକ୍ ବଟନ୍ ଦବାନ୍ତୁ । ଡାକ୍ତର ରିପୋର୍ଟ (PDF) ଓ ଅସୀମିତ ପରାମର୍ଶ ପାଇଁ ସାଇନ୍ ଇନ୍ କରନ୍ତୁ ।'
+          : 'Namaskar! You are in Swasth AI Guest Mode with 5 free health questions today. Ask symptoms or tap mic to speak. Sign in anytime to unlock unlimited consultations and official Doctor Triage PDF reports.');
+    } else {
+      welcome = isHi
+        ? 'नमस्ते! मैं स्वास्थ्य AI, आपका स्वास्थ्य सहायक। अपने लक्षण या स्वास्थ्य प्रश्न पूछें या नीचे माइक बटन दबाकर बोलें। मैं केवल WHO और स्वास्थ्य मंत्रालय के आधिकारिक व सत्यापित स्रोतों से सलाह देता हूँ।'
+        : (isOr
+          ? 'ନମସ୍କାର! ମୁଁ ସ୍ୱାସ୍ଥ୍ୟ AI, ଓଡ଼ିଶାର ଜନସ୍ୱାସ୍ଥ୍ୟ ସହାୟକ । ଆପଣଙ୍କର ସ୍ୱାସ୍ଥ୍ୟ ସମସ୍ୟା କହିବା ପାଇଁ ତଳେ ଥିବା ବଡ଼ ମାଇକ୍ ବଟନ୍ ଦବାନ୍ତୁ । ମୁଁ କେବଳ WHO ଏବଂ ସ୍ୱାସ୍ଥ୍ୟ ମନ୍ତ୍ରଣାଳୟର ସଠିକ୍ ତଥ୍ୟ ଅନୁଯାୟୀ ଘରୋଇ ଉପଚାର ଓ ଡାକ୍ତରୀ ପରାମର୍ଶ ଦେବି ।'
+          : 'Namaskar! I am Swasth AI, your public health assistant for Odisha. Describe your symptoms or ask a health question. I answer only using verified WHO and Ministry of Health sources.');
+    }
     addBubble('bot', welcome);
     renderChips();
     applyLanguage(currentLang);
@@ -1050,16 +1165,19 @@
     if (audioCache.has(cacheKey)) return audioCache.get(cacheKey);
 
     try {
-      let { data } = await sb.auth.getSession();
-      let token = data?.session?.access_token;
+      let token = isGuestMode ? getGuestId() : null;
       if (!token) {
-        try {
-          const refreshed = await sb.auth.refreshSession();
-          token = refreshed?.data?.session?.access_token;
-        } catch {}
-      }
-      if (!token && cfg.SUPABASE_ANON_KEY) {
-        token = cfg.SUPABASE_ANON_KEY;
+        let { data } = await sb.auth.getSession();
+        token = data?.session?.access_token;
+        if (!token) {
+          try {
+            const refreshed = await sb.auth.refreshSession();
+            token = refreshed?.data?.session?.access_token;
+          } catch {}
+        }
+        if (!token && cfg.SUPABASE_ANON_KEY) {
+          token = cfg.SUPABASE_ANON_KEY;
+        }
       }
       if (!token) return null;
 
@@ -1345,20 +1463,28 @@
         }
       }
 
-      // 1-Click Doctor Triage Slip (PDF) Button
-      const pdfBtn = document.createElement('button');
-      pdfBtn.type = 'button';
-      pdfBtn.className = 'btn-triage-pdf';
-      const pdfBtnText = isHi ? 'डॉक्टर पर्ची (PDF)' : (isOr ? 'ଡାକ୍ତର ରିପୋର୍ଟ (PDF)' : 'Doctor Triage Slip (PDF)');
-      pdfBtn.title = isHi ? 'सीएचसी/पीएचसी डॉक्टर के लिए पर्ची डाउनलोड करें' : (isOr ? 'ଡାକ୍ତରଙ୍କୁ ଦେଖାଇବା ପାଇଁ PDF ଡାଉନଲୋଡ୍ କରନ୍ତୁ' : 'Download Doctor Triage Slip for CHC/PHC Doctor');
-      pdfBtn.innerHTML = '<span>📄</span> <span class="pdf-btn-label">' + pdfBtnText + '</span>';
-      pdfBtn.addEventListener('click', () => {
-        downloadDoctorTriageSlip(lastUserQuery, data.answer, currentLang, {
-          isVision,
-          department: data.department || selectedDepartment
-        }, pdfBtn);
-      });
-      actionsBar.appendChild(pdfBtn);
+      // 1-Click Doctor Triage Slip (PDF) Button (Omitted in Guest mode)
+      if (!isGuestMode) {
+        const pdfBtn = document.createElement('button');
+        pdfBtn.type = 'button';
+        pdfBtn.className = 'btn-triage-pdf';
+        const pdfBtnText = isHi ? 'डॉक्टर पर्ची (PDF)' : (isOr ? 'ଡାକ୍ତର ରିପୋର୍ଟ (PDF)' : 'Doctor Triage Slip (PDF)');
+        pdfBtn.title = isHi ? 'सीएचसी/पीएचसी डॉक्टर के लिए पर्ची डाउनलोड करें' : (isOr ? 'ଡାକ୍ତରଙ୍କୁ ଦେଖାଇବା ପାଇଁ PDF ଡାଉନଲୋଡ୍ କରନ୍ତୁ' : 'Download Doctor Triage Slip for CHC/PHC Doctor');
+        pdfBtn.innerHTML = '<span>📄</span> <span class="pdf-btn-label">' + pdfBtnText + '</span>';
+        pdfBtn.addEventListener('click', () => {
+          downloadDoctorTriageSlip(lastUserQuery, data.answer, currentLang, {
+            isVision,
+            department: data.department || selectedDepartment
+          }, pdfBtn);
+        });
+        actionsBar.appendChild(pdfBtn);
+      } else {
+        const guestPdfNotice = document.createElement('span');
+        guestPdfNotice.className = 'guest-pdf-notice';
+        guestPdfNotice.textContent = isHi ? '🔒 डॉक्टर पर्ची (PDF): साइन इन आवश्यक' : (isOr ? '🔒 ଡାକ୍ତର ରିପୋର୍ଟ (PDF): ସାଇନ୍ ଇନ୍ ଆବଶ୍ୟକ' : '🔒 Doctor PDF: Sign in required');
+        guestPdfNotice.title = 'Sign in or create a free account to download clinical doctor triage PDFs';
+        actionsBar.appendChild(guestPdfNotice);
+      }
 
       d.appendChild(actionsBar);
     }
@@ -1418,11 +1544,18 @@
 
   function setRemaining(n) {
     if ($('remaining')) {
-      $('remaining').textContent = typeof n === 'number'
-        ? (currentLang === 'hi'
-          ? `आज आप ${n} और प्रश्न पूछ सकते हैं`
-          : (currentLang === 'or' ? `ଆଜି ଆଉ ${n} ଟି ପ୍ରଶ୍ନ ପଚାରିପାରିବେ` : `${n} question${n === 1 ? '' : 's'} left today`))
-        : '';
+      if (isGuestMode) {
+        const rem = typeof n === 'number' ? n : getGuestRemaining();
+        $('remaining').textContent = currentLang === 'hi'
+          ? `अतिथि मोड: आज ${rem} प्रश्न शेष`
+          : (currentLang === 'or' ? `ଅତିଥି ମୋଡ୍: ଆଜି ${rem} ଟି ପ୍ରଶ୍ନ ବାକି` : `Guest Mode: ${rem} question${rem === 1 ? '' : 's'} left today`);
+      } else {
+        $('remaining').textContent = typeof n === 'number'
+          ? (currentLang === 'hi'
+            ? `आज आप ${n} और प्रश्न पूछ सकते हैं`
+            : (currentLang === 'or' ? `ଆଜି ଆଉ ${n} ଟି ପ୍ରଶ୍ନ ପଚାରିପାରିବେ` : `${n} question${n === 1 ? '' : 's'} left today`))
+          : '';
+      }
     }
   }
 
@@ -1638,17 +1771,39 @@
     }
 
     try {
-      const { data } = await sb.auth.getSession();
-      const session = data && data.session;
-      if (!session) {
-        wait.remove();
-        addBubble('error', currentLang === 'hi'
-          ? 'आपका सत्र समाप्त हो गया है। कृपया पुनः लॉग इन करें।'
-          : (currentLang === 'or'
-            ? 'ଆପଣଙ୍କ ସେସନ୍ ସମାପ୍ତ ହୋଇଛି । ଦୟାକରି ପୁଣି ଲଗ୍ ଇନ୍ କରନ୍ତୁ ।'
-            : 'Your session has ended. Please sign in again.'));
-        await sb.auth.signOut();
-        return;
+      let token = null;
+      if (isGuestMode) {
+        const rem = getGuestRemaining();
+        if (rem <= 0) {
+          wait.remove();
+          addBubble('bot warning', currentLang === 'hi'
+            ? '⚠️ आपके आज के 5 अतिथि प्रश्न समाप्त हो चुके हैं। असीमित स्वास्थ्य परामर्श और डॉक्टर पर्ची (PDF) के लिए कृपया साइन इन करें।'
+            : (currentLang === 'or'
+              ? '⚠️ ଆପଣଙ୍କ ଆଜିର ୫ ଟି ଅତିଥି ପ୍ରଶ୍ନ ସମାପ୍ତ ହୋଇଛି । ଅସୀମିତ ସ୍ୱାସ୍ଥ୍ୟ ପରାମର୍ଶ ଓ ଡାକ୍ତର ରିପୋର୍ଟ (PDF) ପାଇଁ ଦୟାକରି ସାଇନ୍ ଇନ୍ କରନ୍ତୁ ।'
+              : '⚠️ You have used your 5 free guest questions for today. Please sign in or create an account to unlock unlimited health consultations and downloadable Doctor Triage PDF reports.'));
+          updateGuestUI();
+          busy = false;
+          $('sendBtn').disabled = false;
+          $('question').focus();
+          return;
+        }
+        token = getGuestId();
+      } else {
+        const { data } = await sb.auth.getSession();
+        const session = data && data.session;
+        if (!session) {
+          wait.remove();
+          addBubble('error', currentLang === 'hi'
+            ? 'आपका सत्र समाप्त हो गया है। कृपया पुनः लॉग इन करें।'
+            : (currentLang === 'or'
+              ? 'ଆପଣଙ୍କ ସେସନ୍ ସମାପ୍ତ ହୋଇଛି । ଦୟାକରି ପୁଣି ଲଗ୍ ଇନ୍ କରନ୍ତୁ ।'
+              : 'Your session has ended. Please sign in again.'));
+          await sb.auth.signOut();
+          busy = false;
+          $('sendBtn').disabled = false;
+          return;
+        }
+        token = session.access_token;
       }
 
       const endpoint = activeImage ? '/api/vision-skin' : '/api/chat';
@@ -1660,7 +1815,7 @@
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
-          Authorization: 'Bearer ' + session.access_token
+          Authorization: 'Bearer ' + token
         },
         body: JSON.stringify(payload)
       });
@@ -1668,15 +1823,29 @@
       try { body = await res.json(); } catch (e) {}
       wait.remove();
       if (res.ok) {
+        if (isGuestMode) {
+          recordGuestQuestionUsed();
+        }
         renderAnswer(body);
         if (body.remaining !== undefined) setRemaining(body.remaining);
       } else if (res.status === 401) {
-        addBubble('error', currentLang === 'hi'
-          ? 'आपका सत्र समाप्त हो गया है। कृपया पुनः लॉग इन करें।'
+        if (isGuestMode) {
+          addBubble('error', 'Guest session error. Please try again or sign in.');
+        } else {
+          addBubble('error', currentLang === 'hi'
+            ? 'आपका सत्र समाप्त हो गया है। कृपया पुनः लॉग इन करें।'
+            : (currentLang === 'or'
+              ? 'ଆପଣଙ୍କ ସେସନ୍ ସମାପ୍ତ ହୋଇଛି । ଦୟାକରି ପୁଣି ଲଗ୍ ଇନ୍ କରନ୍ତୁ ।'
+              : 'Your session has ended. Please sign in again.'));
+          await sb.auth.signOut();
+        }
+      } else if (res.status === 429 && (body.error === 'guest_limit' || isGuestMode)) {
+        addBubble('bot warning', currentLang === 'hi'
+          ? '⚠️ आज के 5 अतिथि प्रश्न पूरे हो चुके हैं। असीमित परामर्श और डॉक्टर पर्ची (PDF) के लिए कृपया साइन इन करें।'
           : (currentLang === 'or'
-            ? 'ଆପଣଙ୍କ ସେସନ୍ ସମାପ୍ତ ହୋଇଛି । ଦୟାକରି ପୁଣି ଲଗ୍ ଇନ୍ କରନ୍ତୁ ।'
-            : 'Your session has ended. Please sign in again.'));
-        await sb.auth.signOut();
+            ? '⚠️ ଆଜିର ୫ ଟି ଅତିଥି ପ୍ରଶ୍ନ ସମାପ୍ତ ହୋଇଛି । ଅସୀମିତ ପରାମର୍ଶ ଓ ଡାକ୍ତର ରିପୋର୍ଟ (PDF) ପାଇଁ ଦୟାକରି ସାଇନ୍ ଇନ୍ କରନ୍ତୁ ।'
+            : '⚠️ You have reached your limit of 5 free guest questions today. Please sign in to continue with unlimited consultations and PDF doctor reports.'));
+        updateGuestUI();
       } else {
         const defaultErr = currentLang === 'hi'
           ? 'कुछ गलत हो गया। कृपया पुनः प्रयास करें।'
@@ -1842,8 +2011,11 @@
                 return;
               }
 
-              const { data } = await sb.auth.getSession();
-              const token = data?.session?.access_token;
+              let token = isGuestMode ? getGuestId() : null;
+              if (!token) {
+                const { data } = await sb.auth.getSession();
+                token = data?.session?.access_token;
+              }
               if (!token) {
                 resetOdiaVoiceBtn();
                 addBubble('error', currentLang === 'hi'

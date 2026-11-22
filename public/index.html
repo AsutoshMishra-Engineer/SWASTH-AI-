@@ -81,6 +81,9 @@
         <button id="navHomeBtn" class="btn ghost small nav-home-btn" type="button" hidden title="Return to Home Page">
           Home
         </button>
+        <button id="navSignInBtn" class="btn primary small nav-signin-btn" type="button" hidden title="Sign in or create account">
+          Sign In
+        </button>
         <button id="navChatBtn" class="btn primary small" type="button" hidden title="Open Health Chat Assistant">
           💬 Chat
         </button>
@@ -153,6 +156,13 @@
           <p id="authMsg" class="msg" role="status" aria-live="polite"></p>
           <button id="resendBtn" class="btn ghost full-width" type="button" hidden>Resend verification email</button>
           <p class="fine">We only use your email to authenticate verified access. Your questions remain strictly private.</p>
+          <div class="guest-divider">
+            <span>or</span>
+          </div>
+          <button id="guestModeBtn" class="btn guest-mode-btn full-width" type="button">
+            Try Guest Mode (5 Questions/Day) →
+          </button>
+          <p class="guest-mode-note">Instant health consultation without signing up &bull; 5 chats/day limit</p>
         </div>
       </div>
     </section>
@@ -163,6 +173,13 @@
         <div class="status-indicator">
           <span class="pulse-dot" aria-hidden="true"></span>
           <span>Verified Health Guidance Active &bull; Emergency Referral Protocol</span>
+        </div>
+        <div id="guestChatBanner" class="guest-chat-banner" hidden>
+          <div class="guest-banner-info">
+            <span class="guest-badge">Guest Mode</span>
+            <span id="guestRemainingText">5 of 5 questions left today</span>
+          </div>
+          <button id="guestSignInBtn" class="btn primary small guest-signin-btn" type="button">Sign In for Unlimited &amp; PDF</button>
         </div>
       </div>
 

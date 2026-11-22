@@ -419,6 +419,107 @@ main {
   padding: 28px;
   box-shadow: var(--shadow-lg);
 }
+
+/* --- GUEST MODE BUTTON & WORKFLOW --- */
+.guest-divider {
+  display: flex;
+  align-items: center;
+  text-align: center;
+  margin: 16px 0 12px;
+  color: #94a3b8;
+  font-size: 0.78rem;
+}
+.guest-divider::before,
+.guest-divider::after {
+  content: '';
+  flex: 1;
+  border-bottom: 1px solid var(--line);
+}
+.guest-divider span {
+  padding: 0 10px;
+  text-transform: uppercase;
+  font-weight: 700;
+  letter-spacing: 0.05em;
+}
+.guest-mode-btn {
+  background: #f0fdfa !important;
+  color: var(--primary-dark) !important;
+  border: 1.5px solid rgba(13, 148, 136, 0.4) !important;
+  font-weight: 700 !important;
+  border-radius: var(--radius);
+  padding: 11px 16px;
+  font-size: 0.94rem;
+  box-shadow: 0 2px 6px rgba(13, 148, 136, 0.08);
+  cursor: pointer;
+}
+.guest-mode-btn:hover {
+  background: #ccfbf1 !important;
+  border-color: var(--primary) !important;
+  transform: translateY(-1px);
+}
+.guest-mode-note {
+  text-align: center;
+  font-size: 0.75rem;
+  color: #64748b;
+  margin: 8px 0 0;
+  line-height: 1.35;
+}
+.guest-chat-banner {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  background: linear-gradient(135deg, #f0fdfa 0%, #e6fffa 100%);
+  border: 1px solid rgba(13, 148, 136, 0.3);
+  border-radius: 10px;
+  padding: 7px 12px;
+  margin-top: 6px;
+  gap: 8px;
+  font-size: 0.8rem;
+  animation: fadeIn 0.3s ease;
+}
+.guest-badge {
+  display: inline-block;
+  background: var(--primary);
+  color: #ffffff;
+  font-size: 0.68rem;
+  font-weight: 800;
+  padding: 2px 7px;
+  border-radius: 10px;
+  margin-right: 6px;
+  text-transform: uppercase;
+  letter-spacing: 0.03em;
+}
+.guest-remaining-text {
+  font-weight: 700;
+  color: var(--primary-dark);
+}
+.guest-signin-btn {
+  padding: 5px 12px !important;
+  font-size: 0.76rem !important;
+  white-space: nowrap !important;
+  flex-shrink: 0 !important;
+  border-radius: 16px !important;
+}
+.guest-pdf-notice {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  font-size: 0.76rem;
+  font-weight: 600;
+  color: #64748b;
+  background: #f8fafc;
+  border: 1px solid #cbd5e1;
+  border-radius: 20px;
+  padding: 5px 12px;
+}
+.nav-signin-btn {
+  background: var(--primary) !important;
+  color: #ffffff !important;
+  font-weight: 700 !important;
+  border-radius: var(--radius-full) !important;
+  padding: 4px 12px !important;
+  font-size: 0.76rem !important;
+}
 .tabs {
   display: flex;
   gap: 6px;

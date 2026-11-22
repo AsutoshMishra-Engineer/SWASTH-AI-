@@ -141,9 +141,9 @@ export async function onRequestPost({ request, env }) {
   let user = null;
   const token = m[1].trim();
 
-  // Allow app anon key as safe fallback
-  if (token === env.SUPABASE_ANON_KEY) {
-    user = { id: 'anon_tts_user', role: 'anon' };
+  // Allow app anon key or guest session as safe fallback
+  if (token === env.SUPABASE_ANON_KEY || /^guest[_\:]/i.test(token)) {
+    user = { id: token.slice(0, 64), role: 'guest' };
   } else {
     try {
       user = await getUser(env, token, L);

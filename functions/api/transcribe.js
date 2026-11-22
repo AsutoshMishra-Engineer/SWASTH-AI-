@@ -28,9 +28,17 @@ export async function onRequestPost({ request, env }) {
   const m = /^Bearer (.+)$/.exec(request.headers.get('Authorization') || '');
   if (!m) return json({ error: 'unauthorized', message: 'Please sign in.' }, 401);
 
+  const token = m[1].trim();
+  const isGuest = /^guest[_\:]/i.test(token);
+
   try {
-    const user = await getUser(env, m[1], L);
-    if (!user || !user.id) return json({ error: 'unauthorized', message: 'Please sign in again.' }, 401);
+    let user;
+    if (isGuest) {
+      user = { id: token.slice(0, 64), email_confirmed_at: '2026-01-01', is_guest: true };
+    } else {
+      user = await getUser(env, token, L);
+      if (!user || !user.id) return json({ error: 'unauthorized', message: 'Please sign in again.' }, 401);
+    }
 
     // 2) Parse audio payload
     let body;

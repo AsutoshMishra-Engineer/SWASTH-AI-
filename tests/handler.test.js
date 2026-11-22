@@ -73,3 +73,18 @@ test('new-style secret key is not sent as Bearer', async () => {
   await ask('How to prevent dengue?', { ...ENV, SUPABASE_SERVICE_ROLE_KEY: 'sb_secret_abc' });
   assert.ok(seen.length && seen.every((h) => h.apikey === 'sb_secret_abc' && !h.Authorization));
 });
+
+test('guest mode: happy path with guest token allows asking questions without Supabase user', async () => {
+  const { status, body } = await ask('How to prevent dengue?', ENV, { Authorization: 'Bearer guest_test_123' });
+  assert.equal(status, 200);
+  assert.equal(body.kind, 'answer');
+  assert.equal(body.remaining, 4);
+});
+
+test('guest mode: over 5 questions -> 429 guest_limit', async () => {
+  state.userCount = -1;
+  const { status, body } = await ask('How to prevent dengue?', ENV, { Authorization: 'Bearer guest_test_123' });
+  assert.equal(status, 429);
+  assert.equal(body.error, 'guest_limit');
+  assert.match(body.message, /limit of 5 guest questions/);
+});

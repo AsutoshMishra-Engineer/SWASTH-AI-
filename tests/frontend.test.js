@@ -53,6 +53,16 @@ test('verified session -> chat view with welcome + 5 example chips', async () =>
   assert.equal(d.getElementById('chatView').hidden, false); assert.equal(d.querySelectorAll('.chip').length, 5);
   assert.equal(d.querySelectorAll('.bubble').length, 1);
 });
+test('guest mode button opens chat view with guest banner, chips, and limits', async () => {
+  const { d } = boot(); await tick();
+  assert.equal(d.getElementById('chatView').hidden, true);
+  d.getElementById('guestModeBtn').click(); await tick();
+  assert.equal(d.getElementById('chatView').hidden, false);
+  assert.equal(d.getElementById('authView').hidden, true);
+  assert.equal(d.getElementById('guestChatBanner').hidden, false);
+  assert.match(d.getElementById('guestRemainingText').textContent, /questions left today/);
+  assert.equal(d.querySelectorAll('.chip').length, 5);
+});
 test('sign-up validates email and password, then calls Supabase with redirect', async () => {
   const { d, w, calls } = boot(); await tick();
   d.getElementById('tabSignUp').click();
