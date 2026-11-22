@@ -40,10 +40,7 @@
 dialog:not([open]) { display: none !important; }
 html {
   -webkit-text-size-adjust: 100%;
-  scroll-behavior: smooth;
   overflow-x: hidden;
-  overflow-y: auto;
-  -webkit-overflow-scrolling: touch;
   overflow-y: auto;
   -webkit-overflow-scrolling: touch;
 }
@@ -760,7 +757,8 @@ body:not(.chat-active) #navHomeBtn {
   max-height: none !important;
   overflow-y: auto !important;
   -webkit-overflow-scrolling: touch;
-  overscroll-behavior-y: contain;
+  overscroll-behavior-y: auto;
+  touch-action: pan-y;
 }
 body.chat-active .messages {
   flex: 1 1 auto !important;
@@ -768,7 +766,8 @@ body.chat-active .messages {
   max-height: none !important;
   overflow-y: auto !important;
   -webkit-overflow-scrolling: touch;
-  overscroll-behavior-y: contain;
+  overscroll-behavior-y: auto;
+  touch-action: pan-y;
 }
 .bubble {
   max-width: 86%;
@@ -2070,19 +2069,21 @@ body.chat-active .messages {
     max-height: none !important;
     overflow-y: auto !important;
     -webkit-overflow-scrolling: touch;
-    overscroll-behavior-y: contain;
+    overscroll-behavior-y: auto !important;
+    touch-action: pan-y !important;
     padding: 8px 6px;
     display: flex;
     flex-direction: column;
-    gap: 8px;
+    gap: 10px;
   }
   body.chat-active .bubble {
-    padding: 8px 12px;
-    font-size: 0.86rem;
-    line-height: 1.45;
+    padding: 10px 14px;
+    font-size: 0.95rem;
+    line-height: 1.55;
     border-radius: 14px;
-    max-width: 94%;
+    max-width: 95%;
     word-break: break-word;
+    touch-action: pan-y;
   }
   body.chat-active .chips {
     flex-shrink: 0;
@@ -2315,13 +2316,26 @@ body.chat-active .messages {
     margin-top: 8px;
     padding-top: 6px;
   }
-  .speak-btn {
-    min-height: 38px;
-    padding: 7px 13px;
-    font-size: 0.82rem;
-    border-radius: 20px;
+  .speak-btn,
+  .btn-triage-pdf {
+    min-height: 44px;
+    padding: 9px 16px;
+    font-size: 0.88rem;
+    font-weight: 700;
+    border-radius: 24px;
     touch-action: manipulation;
     -webkit-tap-highlight-color: transparent;
+    cursor: pointer;
+    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.06);
+    transition: transform 0.15s ease, background 0.15s ease;
+  }
+  .speak-btn:active,
+  .btn-triage-pdf:active,
+  .action-box:active,
+  .lang-pill:active,
+  .emergency-map-pill:active,
+  .whatsapp-send-btn:active {
+    transform: scale(0.96) !important;
   }
   .nav-del-btn {
     white-space: nowrap;

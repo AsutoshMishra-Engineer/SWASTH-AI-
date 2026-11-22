@@ -445,6 +445,33 @@
   // ---------- Chat Handling ----------
   let started = false;
   let lastUserQuery = '';
+  function scrollChatToLatest(element, smooth = true) {
+    const mb = $('messages');
+    if (!mb) return;
+    if (typeof window !== 'undefined' && window.scrollY > 0) {
+      window.scrollTo(0, 0);
+    }
+    try {
+      if (element && typeof mb.scrollTo === 'function') {
+        const offset = element.offsetTop - mb.offsetTop;
+        const targetTop = Math.max(0, offset - 12);
+        if (smooth) {
+          mb.scrollTo({ top: targetTop, behavior: 'smooth' });
+        } else {
+          mb.scrollTop = targetTop;
+        }
+      } else {
+        if (smooth && typeof mb.scrollTo === 'function') {
+          mb.scrollTo({ top: mb.scrollHeight, behavior: 'smooth' });
+        } else {
+          mb.scrollTop = mb.scrollHeight;
+        }
+      }
+    } catch (e) {
+      mb.scrollTop = mb.scrollHeight;
+    }
+  }
+
   function addBubble(kind, text) {
     const d = document.createElement('div');
     d.className = 'bubble ' + kind;
@@ -463,11 +490,7 @@
       d.textContent = text;
     }
     $('messages').appendChild(d);
-    d.scrollIntoView({ block: 'end' });
-    setTimeout(() => {
-      const mb = $('messages');
-      if (mb) mb.scrollTop = mb.scrollHeight;
-    }, 60);
+    scrollChatToLatest(d, false);
     return d;
   }
   function clearChat() {
@@ -1190,11 +1213,7 @@
     for (let i = 0; i < 3; i++) t.appendChild(document.createElement('i'));
     d.appendChild(t);
     $('messages').appendChild(d);
-    d.scrollIntoView({ block: 'end' });
-    setTimeout(() => {
-      const mb = $('messages');
-      if (mb) mb.scrollTop = mb.scrollHeight;
-    }, 60);
+    scrollChatToLatest(d, false);
     return d;
   }
 
@@ -1234,11 +1253,7 @@
     d.appendChild(box);
     d.appendChild(txtGroup);
     $('messages').appendChild(d);
-    d.scrollIntoView({ block: 'end' });
-    setTimeout(() => {
-      const mb = $('messages');
-      if (mb) mb.scrollTop = mb.scrollHeight;
-    }, 60);
+    scrollChatToLatest(d, false);
     return d;
   }
 
@@ -1398,7 +1413,7 @@
     p.className = 'disc';
     p.textContent = discText;
     d.appendChild(p);
-    d.scrollIntoView({ block: 'end' });
+    scrollChatToLatest(d, true);
   }
 
   function setRemaining(n) {
