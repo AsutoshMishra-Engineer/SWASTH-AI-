@@ -1,13 +1,14 @@
 // Swasth AI - Ultra-Lightweight Service Worker (PWA Cache & Offline Shell)
-const CACHE_NAME = 'swasth-ai-v20261121_10';
+const CACHE_NAME = 'swasth-ai-v20261122_02';
 const ASSETS_TO_CACHE = [
   '/',
   '/index.html',
-  '/style.css?v=20261121_07',
-  '/app.js?v=20261121_07',
-  '/config.js?v=20261121_07',
+  '/style.css?v=20261122_02',
+  '/app.js?v=20261122_02',
+  '/config.js?v=20261122_02',
   '/vendor/leaflet.css',
   '/vendor/leaflet.js',
+  '/vendor/supabase.js',
   '/manifest.json',
   '/icons/icon-192.png',
   '/icons/icon-512.png',

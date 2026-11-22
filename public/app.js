@@ -288,14 +288,17 @@
           const { data, error } = await sb.auth.signInWithPassword({ email, password });
           if (error) {
             setMsg(friendlyAuthError(error), 'error');
-            if (/not confirmed/i.test(error.message || '')) startResendCooldown(0);
+            if (/not confirmed/i.test(error.message || '') || error.error_code === 'email_not_confirmed') startResendCooldown(0);
           } else if (data && data.session && !isVerified(data.session)) {
             setMsg('Please verify your email first. Check your inbox for the link.', 'error');
             startResendCooldown(0);
             await sb.auth.signOut();
+          } else if (data && data.session) {
+            showChatPage();
           }
         }
       } catch (e) {
+        console.error('Auth submit exception:', e);
         setMsg('Could not reach server. Check internet connection.', 'error');
       } finally {
         busy = false;
@@ -325,12 +328,36 @@
   }
 
   function friendlyAuthError(error) {
-    const m = (error && error.message) || '';
-    if (/invalid login/i.test(m)) return 'Incorrect email or password.';
-    if (/not confirmed/i.test(m)) return 'Email not verified yet. Open the link sent to your inbox.';
-    if (/rate limit|too many|seconds/i.test(m)) return 'Too many attempts. Please wait a moment.';
-    if (/password/i.test(m)) return m;
-    return 'Something went wrong. Please try again.';
+    if (!error) return 'Unable to sign in. Please try again.';
+    console.warn('Supabase auth notice/error:', error);
+    const m = (error.message || error.msg || error.error_description || (typeof error === 'string' ? error : '')) || '';
+    const code = error.error_code || error.code || '';
+
+    if (/invalid login|invalid[_\s]credentials/i.test(m) || code === 'invalid_credentials') {
+      return 'Incorrect email or password.';
+    }
+    if (/user not found/i.test(m) || code === 'user_not_found') {
+      return 'Account not found. Please tap Create Account to register.';
+    }
+    if (/not confirmed|unconfirmed/i.test(m) || code === 'email_not_confirmed') {
+      return 'Email not verified yet. Open the link sent to your inbox, or tap Resend Verification below.';
+    }
+    if (/rate limit|too many|seconds/i.test(m) || code === 'over_email_send_rate_limit') {
+      return 'Too many attempts. Please wait a moment before trying again.';
+    }
+    if (/network|fetch|failed to fetch|abort/i.test(m)) {
+      return 'Connection error. Please check your internet connection and try again.';
+    }
+    if (/already registered|already in use|user already exists/i.test(m) || code === 'user_already_exists') {
+      return 'An account with this email already exists. Try signing in.';
+    }
+    if (/password/i.test(m)) {
+      return m;
+    }
+    if (m && m.length < 120) {
+      return m;
+    }
+    return 'Unable to sign in. Please verify your details or tap Create Account.';
   }
 
   if ($('signOut')) {
