@@ -412,6 +412,13 @@ main {
   font-size: 0.8rem;
 }
 
+.auth-card-col {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+  width: 100%;
+}
+
 .auth-card {
   background: var(--surface);
   border: 1px solid var(--line);
