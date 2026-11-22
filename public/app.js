@@ -73,11 +73,14 @@
     if ($('authView')) $('authView').hidden = false;
     if ($('chatView')) $('chatView').hidden = true;
     const ok = isVerified(currentSession);
-    if ($('navChatBtn')) $('navChatBtn').hidden = !ok;
+    if ($('navChatBtn')) $('navChatBtn').hidden = true;
     if ($('navHomeBtn')) $('navHomeBtn').hidden = true;
-    if ($('heroLoggedInBanner')) $('heroLoggedInBanner').hidden = !ok;
+    if ($('heroLoggedInBanner')) $('heroLoggedInBanner').hidden = true;
     if ($('loggedInCardContent')) $('loggedInCardContent').hidden = !ok;
     if ($('loggedOutAuthContent')) $('loggedOutAuthContent').hidden = ok;
+    if ($('signOut')) $('signOut').hidden = !ok;
+    if ($('userEmail')) $('userEmail').hidden = !ok;
+    if ($('navDeleteAccountBtn')) $('navDeleteAccountBtn').hidden = !ok;
     if (ok && currentSession && $('loggedInCardEmail')) {
       $('loggedInCardEmail').textContent = currentSession.user?.email || '';
     }
@@ -117,7 +120,10 @@
       if ($('authView')) $('authView').hidden = true;
       if ($('chatView')) $('chatView').hidden = false;
       if ($('navChatBtn')) $('navChatBtn').hidden = true;
-      if ($('navHomeBtn')) $('navHomeBtn').hidden = false;
+      if ($('navHomeBtn')) $('navHomeBtn').hidden = true;
+      if ($('signOut')) $('signOut').hidden = true;
+      if ($('userEmail')) $('userEmail').hidden = true;
+      if ($('navDeleteAccountBtn')) $('navDeleteAccountBtn').hidden = false;
       if ($('heroLoggedInBanner')) $('heroLoggedInBanner').hidden = true;
       startChat();
       applyLanguage(currentLang);

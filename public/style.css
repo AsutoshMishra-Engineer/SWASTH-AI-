@@ -75,25 +75,24 @@ body {
   position: absolute; width: 1px; height: 1px; padding: 0; margin: -1px; overflow: hidden; clip: rect(0, 0, 0, 0); white-space: nowrap; border: 0;
 }
 
-/* --- EMERGENCY BANNER (SINGLE COLUMN-WIDE BAR) --- */
+/* --- EMERGENCY BANNER (COMPACT, UNIFORM FIT FOR ANDROID & DESKTOP) --- */
 .emergency {
   background: linear-gradient(90deg, #b91c1c 0%, #dc2626 100%);
   color: #fff;
-  padding: 9px 16px;
-  font-size: 0.88rem;
+  padding: 6px 16px;
+  font-size: 0.85rem;
   box-shadow: 0 2px 4px rgba(185, 28, 28, 0.15);
   width: 100%;
   box-sizing: border-box;
 }
 .emergency-inner {
-  max-width: 900px;
+  max-width: 1080px;
   margin: 0 auto;
   display: flex;
   align-items: center;
-  justify-content: center;
-  gap: 8px;
-  text-align: center;
-  line-height: 1.4;
+  justify-content: space-between;
+  gap: 12px;
+  line-height: 1.35;
 }
 .emergency-icon {
   font-size: 1.05rem;
@@ -737,6 +736,17 @@ body:not(.chat-active) .lang-switch-box {
 }
 body.chat-active .lang-switch-box {
   display: flex !important;
+}
+
+/* Navigation Button Visibility (Home vs Chat Pages) */
+body.chat-active #navHomeBtn,
+body.chat-active #signOut,
+body.chat-active .user-email {
+  display: none !important;
+}
+body:not(.chat-active) #navChatBtn,
+body:not(.chat-active) #navHomeBtn {
+  display: none !important;
 }
 
 .messages {
@@ -1854,7 +1864,7 @@ body.chat-active .messages {
     padding: 6px 7px;
   }
   .user-email {
-    display: none;
+    display: none !important;
   }
   #signOut {
     padding: 5px 8px;
@@ -1865,10 +1875,56 @@ body.chat-active .messages {
     font-size: 0.75rem;
   }
 
+  /* Compact Android / Mobile Emergency Fit */
   .emergency {
-    padding: 7px 10px;
-    font-size: 0.8rem;
-    line-height: 1.35;
+    padding: 6px 8px;
+    font-size: 0.78rem;
+    line-height: 1.25;
+  }
+  .emergency-inner {
+    flex-direction: column;
+    align-items: stretch;
+    gap: 4px;
+    max-width: 100%;
+  }
+  .emergency-text-wrap {
+    justify-content: center;
+    text-align: center;
+    font-size: 0.74rem;
+    min-width: 0;
+    line-height: 1.25;
+  }
+  .emergency-actions-wrap {
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr;
+    gap: 4px;
+    width: 100%;
+    margin-top: 2px;
+  }
+  .quick-district-pill,
+  .offline-care-pill,
+  .emergency-map-pill {
+    padding: 4px 2px;
+    font-size: 0.70rem;
+    font-weight: 700;
+    justify-content: center;
+    text-align: center;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    min-width: 0;
+    gap: 3px;
+  }
+
+  /* Clean Mobile Header: in Chat view, hide Home and Sign Out so header fits Android screen */
+  body.chat-active #navHomeBtn,
+  body.chat-active #signOut,
+  body.chat-active .user-email {
+    display: none !important;
+  }
+  body:not(.chat-active) #navChatBtn,
+  body:not(.chat-active) #navHomeBtn {
+    display: none !important;
   }
 
   main {

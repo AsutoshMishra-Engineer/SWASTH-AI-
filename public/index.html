@@ -31,17 +31,17 @@
       </div>
       <div class="emergency-actions-wrap">
         <button id="quickDistrictPillBtn" class="quick-district-pill" type="button" aria-label="Select Current District or Location" title="Click to change your location or district for precise hospital triage">
-          <span id="quickDistrictPillLabel">Location: Auto GPS</span>
+          <span id="quickDistrictPillLabel">Auto GPS</span>
         </button>
         <button id="offlineCareBtn" class="offline-care-pill" type="button" aria-label="Offline Emergency Protocols">
-          <span id="offlineCareLabel">Offline Emergency Care</span>
+          <span id="offlineCareLabel">Offline Protocols</span>
         </button>
         <button id="emergencyMapPillBtn" class="emergency-map-pill" type="button" aria-label="Locate Nearest Emergency Hospital on Map">
-          <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
             <path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/>
             <circle cx="12" cy="10" r="3"/>
           </svg>
-          <span id="emergencyMapPillLabel">Nearest Hospital</span>
+          <span id="emergencyMapPillLabel">Hospital Map</span>
         </button>
       </div>
     </div>
@@ -106,56 +106,9 @@
           <div class="hero-brand-title-row">
             <span class="hero-brand-name">Swasth AI</span>
           </div>
-        </div>
-        <div id="heroLoggedInBanner" class="logged-in-hero-banner" hidden>
-          <div class="logged-in-badge-row">
-            <span class="pulse-dot" aria-hidden="true"></span>
-            <strong>Active Session</strong>
-          </div>
-          <p>You are signed in! You can view all project details here or resume your consultation.</p>
-          <button id="heroChatBtn" class="btn primary small" type="button">💬 Open Health Chat Assistant →</button>
-        </div>
-        <div>
-          <span class="hero-pill">Verified Health Guidance & Prevention</span>
-        </div>
-        <h1 id="authTitle">Instant, Trusted Health Answers</h1>
-        <p>Ask about everyday symptoms, disease prevention, child vaccines, pregnancy care, and emergency first aid. Clear facts from official public health authorities.</p>
-        
-        <div class="features-grid">
-          <div class="feat-item feat-item-highlight">
-            <span class="feat-icon" aria-hidden="true">📸</span>
-            <div>
-              <strong>6-Department Visual AI Scanner (ଫଟୋ ଡାକ୍ତରୀ ପରୀକ୍ଷା)</strong>
-              <small>Upload clinical photos for instant triage across 6 conditions: Rash & Allergy, Eye (Conjunctivitis/Cataract), Oral Pre-Cancer, Pediatric Jaundice, Wounds & Burns, and Nails (Anemia).</small>
-            </div>
-          </div>
-          <div class="feat-item">
-            <span class="feat-icon" aria-hidden="true" style="font-weight:700;font-size:0.9rem;color:var(--primary);">VOICE</span>
-            <div>
-              <strong>Odia & Hindi Voice Consultation (ଓଡ଼ିଆ ଭଏସ୍)</strong>
-              <small>Speak your symptoms naturally to receive instant spoken voice guidance in native Odia, Hindi, or English.</small>
-            </div>
-          </div>
-          <div class="feat-item">
-            <span class="feat-icon" aria-hidden="true" style="font-weight:700;font-size:0.9rem;color:#b91c1c;">TRIAGE</span>
-            <div>
-              <strong>When to See a Doctor & Emergency Care</strong>
-              <small>Learn mild home care vs. danger signs that need hospital visits. Emergency chest pain triggers immediate 108 ambulance referral.</small>
-            </div>
-          </div>
-          <div class="feat-item">
-            <span class="feat-icon" aria-hidden="true" style="font-weight:700;font-size:0.9rem;color:var(--primary);">CLINICAL</span>
-            <div>
-              <strong>Evidence-Based Clinical Guidelines</strong>
-              <small>Guidance strictly backed by official WHO and Ministry of Health validated clinical protocols.</small>
-            </div>
-          </div>
-        </div>
-
-        <div class="pdf-compendium-banner">
-          <a href="/docs/Swasth_AI_Medical_Cases_and_Dermatology_Compendium.pdf" target="_blank" rel="noopener noreferrer" class="btn text small pdf-download-btn">
-            📄 <strong>Download Clinical Cases & Testing Compendium (PDF)</strong> →
-          </a>
+          <p class="hero-subhead" style="margin: 8px 0 0; color: var(--ink-secondary); font-size: 1.05rem; line-height: 1.45;">
+            Public Health Digital Triage & Clinical Guidance Companion • Odisha
+          </p>
         </div>
       </div>
 
@@ -580,13 +533,7 @@
     </div>
   </dialog>
 
-  <!-- UNIVERSAL FOOTER (SINGLE CLEAN BOTTOM COPYRIGHT AS REQUESTED) -->
-  <footer id="mainFooter" class="foot">
-    <div class="foot-inner">
-      <p id="footDisclaimer">Swasth AI provides public health guidance from verified WHO & Ministry of Health sources. It is <strong>not</strong> a medical doctor and cannot issue prescriptions. In an emergency, call <strong>108</strong> or <strong>112</strong>.</p>
-      <small id="footCopyrightCombined">&copy; 2026 Swasth AI &bull; All Rights Reserved &bull; Odisha Public Health Assistant &bull; <a href="https://swasth-ai.pages.dev" target="_blank" rel="noopener noreferrer" style="color:var(--primary);font-weight:700;text-decoration:underline;">swasth-ai.pages.dev</a></small>
-    </div>
-  </footer>
+
 
   <script src="/vendor/leaflet.js"></script>
   <script src="/vendor/supabase.js"></script>
