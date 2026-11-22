@@ -153,10 +153,7 @@
     if ($('navChatBtn')) $('navChatBtn').hidden = true;
     if ($('navHomeBtn')) $('navHomeBtn').hidden = true;
     if ($('navSignInBtn')) $('navSignInBtn').hidden = true;
-    if ($('navGuestBtn')) $('navGuestBtn').hidden = ok;
-    if ($('heroGuestBtn')) $('heroGuestBtn').hidden = ok;
-    const heroGuestBox = document.querySelector('.hero-guest-box');
-    if (heroGuestBox) heroGuestBox.hidden = ok;
+    if ($('guestCard')) $('guestCard').hidden = ok;
     if ($('guestChatBanner')) $('guestChatBanner').hidden = true;
     if ($('heroLoggedInBanner')) $('heroLoggedInBanner').hidden = true;
     if ($('loggedInCardContent')) $('loggedInCardContent').hidden = !ok;
@@ -211,7 +208,7 @@
       if ($('navChatBtn')) $('navChatBtn').hidden = true;
       if ($('navHomeBtn')) $('navHomeBtn').hidden = !isGuestMode;
       if ($('navSignInBtn')) $('navSignInBtn').hidden = !isGuestMode;
-      if ($('navGuestBtn')) $('navGuestBtn').hidden = true;
+      if ($('guestCard')) $('guestCard').hidden = true;
       if ($('guestChatBanner')) $('guestChatBanner').hidden = !isGuestMode;
       if ($('signOut')) $('signOut').hidden = true;
       if ($('userEmail')) $('userEmail').hidden = true;
@@ -245,10 +242,7 @@
       if ($('navChatBtn')) $('navChatBtn').hidden = true;
       if ($('navHomeBtn')) $('navHomeBtn').hidden = true;
       if ($('navSignInBtn')) $('navSignInBtn').hidden = true;
-      if ($('navGuestBtn')) $('navGuestBtn').hidden = false;
-      if ($('heroGuestBtn')) $('heroGuestBtn').hidden = false;
-      const heroGuestBox = document.querySelector('.hero-guest-box');
-      if (heroGuestBox) heroGuestBox.hidden = false;
+      if ($('guestCard')) $('guestCard').hidden = false;
       if ($('heroLoggedInBanner')) $('heroLoggedInBanner').hidden = true;
       if ($('loggedInCardContent')) $('loggedInCardContent').hidden = true;
       if ($('loggedOutAuthContent')) $('loggedOutAuthContent').hidden = false;
@@ -289,12 +283,6 @@
   });
   const navSignInBtn = $('navSignInBtn');
   if (navSignInBtn) navSignInBtn.addEventListener('click', exitGuestMode);
-  const navGuestBtn = $('navGuestBtn');
-  if (navGuestBtn) navGuestBtn.addEventListener('click', enterGuestMode);
-  const heroGuestBtn = $('heroGuestBtn');
-  if (heroGuestBtn) heroGuestBtn.addEventListener('click', enterGuestMode);
-  const tabGuest = $('tabGuest');
-  if (tabGuest) tabGuest.addEventListener('click', enterGuestMode);
   const guestModeBtn = $('guestModeBtn');
   if (guestModeBtn) guestModeBtn.addEventListener('click', enterGuestMode);
   const guestSignInBtn = $('guestSignInBtn');
@@ -317,10 +305,6 @@
     if ($('tabSignUp')) {
       $('tabSignUp').classList.toggle('active', up);
       $('tabSignUp').setAttribute('aria-pressed', String(up));
-    }
-    if ($('tabGuest')) {
-      $('tabGuest').classList.remove('active');
-      $('tabGuest').setAttribute('aria-pressed', 'false');
     }
     if ($('authSubmit')) $('authSubmit').textContent = up ? 'Create Account' : 'Sign In';
     if ($('password')) $('password').setAttribute('autocomplete', up ? 'new-password' : 'current-password');

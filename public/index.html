@@ -84,9 +84,6 @@
         <button id="navSignInBtn" class="btn primary small nav-signin-btn" type="button" hidden title="Sign in or create account">
           Sign In
         </button>
-        <button id="navGuestBtn" class="btn ghost small nav-guest-pill" type="button" title="Try Guest Mode">
-          ⚡ Guest Mode
-        </button>
         <button id="navChatBtn" class="btn primary small" type="button" hidden title="Open Health Chat Assistant">
           💬 Chat
         </button>
@@ -115,12 +112,6 @@
           <p class="hero-subhead" style="margin: 8px 0 0; color: var(--ink-secondary); font-size: 1.05rem; line-height: 1.45;">
             Public Health Digital Triage & Clinical Guidance Companion • Odisha
           </p>
-          <div class="hero-guest-box">
-            <button id="heroGuestBtn" class="btn hero-guest-btn" type="button">
-              ⚡ Try Guest Mode (5 Questions/Day) →
-            </button>
-            <span class="hero-guest-tag">Instant Access &bull; No Sign Up or Email Required</span>
-          </div>
         </div>
       </div>
 
@@ -136,10 +127,9 @@
           <button id="cardDeleteAccountBtn" class="btn danger-outline full-width" type="button" style="margin-top: 12px;">Delete Your Account</button>
         </div>
         <div id="loggedOutAuthContent">
-          <div class="tabs" role="group" aria-label="Choose sign in, sign up, or guest mode">
+          <div class="tabs" role="group" aria-label="Choose sign in or sign up">
             <button id="tabSignIn" class="tab active" type="button" aria-pressed="true">Sign In</button>
             <button id="tabSignUp" class="tab" type="button" aria-pressed="false">Create Account</button>
-            <button id="tabGuest" class="tab tab-guest-btn" type="button" aria-pressed="false">⚡ Guest Mode</button>
           </div>
           <form id="authForm" novalidate>
             <div class="field">
@@ -166,14 +156,23 @@
           <p id="authMsg" class="msg" role="status" aria-live="polite"></p>
           <button id="resendBtn" class="btn ghost full-width" type="button" hidden>Resend verification email</button>
           <p class="fine">We only use your email to authenticate verified access. Your questions remain strictly private.</p>
-          <div class="guest-divider">
-            <span>or</span>
-          </div>
-          <button id="guestModeBtn" class="btn guest-mode-btn full-width" type="button">
-            Try Guest Mode (5 Questions/Day) →
-          </button>
-          <p class="guest-mode-note">Instant health consultation without signing up &bull; 5 chats/day limit</p>
         </div>
+      </div>
+
+      <!-- SMALL DEDICATED GUEST MODE BOX (JUST BELOW SIGN IN / CREATE ACCOUNT BOX) -->
+      <div class="card guest-card" id="guestCard">
+        <div class="guest-card-header">
+          <div class="guest-card-badge-wrap">
+            <span class="guest-card-badge">⚡ GUEST MODE</span>
+            <span class="guest-card-limit">5 Free Questions / Day</span>
+          </div>
+        </div>
+        <p class="guest-card-text">
+          Instant health consultation without signing up. Full trilingual Odia/Hindi voice &amp; symptoms scanner included.
+        </p>
+        <button id="guestModeBtn" class="btn guest-card-btn" type="button">
+          Start Guest Consultation →
+        </button>
       </div>
     </section>
 
