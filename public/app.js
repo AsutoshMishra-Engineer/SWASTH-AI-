@@ -630,31 +630,31 @@
     if (featItems.length >= 4) {
       const f1 = featItems[0].querySelector('div');
       if (f1) f1.innerHTML = isHi
-        ? '<strong>हिन्दी और क्षेत्रीय वॉयस परामर्श</strong><small>अपने लक्षण सीधे बोलकर बताएं और तुरंत प्रमाणित स्वास्थ्य सलाह पाएं।</small>'
+        ? '<strong>6-विभाग विज़ुअल एआई स्कैनर (फ़ोटो जांच)</strong><small>त्वचा, आंख, मुंह, शिशु पीलिया, घाव व नाखून की क्लिनिकल फोटो से तुरंत प्राथमिक परामर्श।</small>'
         : (isOr
-          ? '<strong>ଓଡ଼ିଆ ଭଏସ୍ ପରାମର୍ଶ</strong><small>ନିଜ ଲକ୍ଷଣ ସିଧାସଳଖ ଓଡ଼ିଆରେ କହି ତୁରନ୍ତ ଘରୋଇ ଓ ଡାକ୍ତରୀ ପରାମର୍ଶ ପାଆନ୍ତୁ ।</small>'
-          : '<strong>Regional Voice Consultation</strong><small>Speak your symptoms directly in your language to receive instant regional care guidance.</small>');
+          ? '<strong>୬-ବିଭାଗ ଭିଜୁଆଲ୍ AI ସ୍କାନର୍ (ଫଟୋ ଡାକ୍ତରୀ ପରୀକ୍ଷା)</strong><small>ଚର୍ମ, ଆଖି, ମୁଖ, ଶିଶୁ, କ୍ଷତ ଓ ନଖର ଡାକ୍ତରୀ ଫଟୋ ପରୀକ୍ଷା କରି ତୁରନ୍ତ ପରାମର୍ଶ ପାଆନ୍ତୁ ।</small>'
+          : '<strong>6-Department Visual AI Scanner (ଫଟୋ ଡାକ୍ତରୀ ପରୀକ୍ଷା)</strong><small>Upload clinical photos for instant triage across 6 conditions: Rash, Eye, Oral Pre-Cancer, Pediatric, Wounds, and Nails.</small>');
 
       const f2 = featItems[1].querySelector('div');
       if (f2) f2.innerHTML = isHi
-        ? '<strong>डॉक्टर को कब दिखाएं</strong><small>सामान्य घरेलू देखभाल बनाम खतरे के लक्षण समझें जिनके लिए अस्पताल जाना जरूरी है।</small>'
+        ? '<strong>हिन्दी और क्षेत्रीय वॉयस परामर्श</strong><small>अपने लक्षण सीधे बोलकर बताएं और तुरंत प्रमाणित स्वास्थ्य सलाह पाएं।</small>'
         : (isOr
-          ? '<strong>ଡାକ୍ତର କେବେ ଦେଖାଇବେ</strong><small>ଘରୋଇ ଯତ୍ନ ବନାମ ବିପଦ ଲକ୍ଷଣ ଜାଣନ୍ତୁ ଯାହା ପାଇଁ ଡାକ୍ତରଖାନା ଯିବା ଆବଶ୍ୟକ ।</small>'
-          : '<strong>When to See a Doctor</strong><small>Learn mild home care vs. danger signs that need hospital visits.</small>');
+          ? '<strong>ଓଡ଼ିଆ ଭଏସ୍ ପରାମର୍ଶ</strong><small>ନିଜ ଲକ୍ଷଣ ସିଧାସଳଖ ଓଡ଼ିଆରେ କହି ତୁରନ୍ତ ଘରୋଇ ଓ ଡାକ୍ତରୀ ପରାମର୍ଶ ପାଆନ୍ତୁ ।</small>'
+          : '<strong>Odia & Hindi Voice Consultation (ଓଡ଼ିଆ ଭଏସ୍)</strong><small>Speak your symptoms naturally to receive instant spoken voice guidance in native Odia, Hindi, or English.</small>');
 
       const f3 = featItems[2].querySelector('div');
       if (f3) f3.innerHTML = isHi
-        ? '<strong>सत्यापित चिकित्सा स्रोत</strong><small>WHO और भारत सरकार के स्वास्थ्य मंत्रालय के प्रमाणित तथ्यों पर आधारित।</small>'
+        ? '<strong>डॉक्टर को कब दिखाएं और आपातकालीन सेवा</strong><small>सामान्य घरेलू देखभाल बनाम खतरे के लक्षण समझें। सीने में दर्द पर तुरंत 108 एम्बुलेंस सलाह।</small>'
         : (isOr
-          ? '<strong>ଯାଞ୍ଚ ହୋଇଥିବା ଡାକ୍ତରୀ ତଥ୍ୟ</strong><small>WHO ଏବଂ ଭାରତ ସରକାରଙ୍କ ସ୍ୱାସ୍ଥ୍ୟ ମନ୍ତ୍ରଣାଳୟର ସଠିକ୍ ତଥ୍ୟ ଉପରେ ଆଧାରିତ ।</small>'
-          : '<strong>Verified Medical Sources</strong><small>Guidance backed by official WHO and Ministry of Health data.</small>');
+          ? '<strong>ଡାକ୍ତର କେବେ ଦେଖାଇବେ ଓ ଜରୁରୀକାଳୀନ ଯତ୍ନ</strong><small>ଘରୋଇ ଯତ୍ନ ବନାମ ବିପଦ ଲକ୍ଷଣ ଜାଣନ୍ତୁ । ଛାତି ଯନ୍ତ୍ରଣା ହେଲେ ତୁରନ୍ତ ୧୦୮ ଆମ୍ବୁଲାନ୍ସ ରେଫରାଲ୍ ।</small>'
+          : '<strong>When to See a Doctor & Emergency Care</strong><small>Learn mild home care vs. danger signs that need hospital visits. Emergency chest pain triggers immediate 108 referral.</small>');
 
       const f4 = featItems[3].querySelector('div');
       if (f4) f4.innerHTML = isHi
-        ? '<strong>पूर्णतः गोपनीय और सुरक्षित</strong><small>आपके स्वास्थ्य संबंधी सवाल कभी भी आपके नाम के साथ सुरक्षित नहीं किए जाते।</small>'
+        ? '<strong>प्रमाणित क्लिनिकल गाइडलाइन्स</strong><small>WHO और भारत सरकार के स्वास्थ्य मंत्रालय के प्रमाणित तथ्यों पर आधारित।</small>'
         : (isOr
-          ? '<strong>ସମ୍ପୂର୍ଣ୍ଣ ଗୋପନୀୟ ଓ ସୁରକ୍ଷିତ</strong><small>ଆପଣଙ୍କ ସ୍ୱାସ୍ଥ୍ୟ ପ୍ରଶ୍ନ କେବେହେଲେ ଆପଣଙ୍କ ନାମ ସହିତ ସଂରକ୍ଷିତ ହୁଏନାହିଁ ।</small>'
-          : '<strong>Confidential & Private</strong><small>Your health questions are never saved with your name.</small>');
+          ? '<strong>ପ୍ରମାଣିତ ଡାକ୍ତରୀ ନିର୍ଦ୍ଦେଶାବଳୀ</strong><small>WHO ଏବଂ ଭାରତ ସରକାରଙ୍କ ସ୍ୱାସ୍ଥ୍ୟ ମନ୍ତ୍ରଣାଳୟର ସଠିକ୍ ତଥ୍ୟ ଉପରେ ଆଧାରିତ ।</small>'
+          : '<strong>Evidence-Based Clinical Guidelines</strong><small>Guidance strictly backed by official WHO and Ministry of Health validated clinical protocols.</small>');
     }
 
     // Update static UI strings in DOM for Consultation / Chat view
@@ -6191,7 +6191,7 @@
         if (savedDistrict && $('districtSelect')) {
           $('districtSelect').value = savedDistrict;
         }
-        updateQuickDistrictPill(savedDistrict || (userLocationCoords && userLocationCoords.districtName) || 'Ganjam / Berhampur');
+        updateQuickDistrictPill(savedDistrict || (userLocationCoords && userLocationCoords.districtName) || 'auto');
         return;
       }
     } catch (e) {
