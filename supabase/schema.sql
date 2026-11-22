@@ -83,3 +83,22 @@ create table if not exists public.triage_records (
 create index if not exists triage_records_ref_idx on public.triage_records (reference_id);
 create index if not exists triage_records_user_idx on public.triage_records (user_id);
 alter table public.triage_records enable row level security;
+
+-- 8) Patient Profiles table (Mandatory Patient Full Name and Age for medical slips)
+create table if not exists public.profiles (
+  id         uuid primary key references auth.users (id) on delete cascade,
+  full_name  text not null,
+  age        int  not null check (age >= 1 and age <= 120),
+  created_at timestamptz not null default now(),
+  updated_at timestamptz not null default now()
+);
+alter table public.profiles enable row level security;
+
+create policy "Users can view own profile" on public.profiles
+  for select using (auth.uid() = id);
+
+create policy "Users can insert own profile" on public.profiles
+  for insert with check (auth.uid() = id);
+
+create policy "Users can update own profile" on public.profiles
+  for update using (auth.uid() = id);

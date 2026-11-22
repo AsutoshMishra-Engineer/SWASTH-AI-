@@ -20,16 +20,28 @@ function boot({ session = null, config = { SUPABASE_URL: 'https://a.supabase.co'
   windows.push(w);
   const origSetInterval = w.setInterval.bind(w);
   w.setInterval = (...args) => { const id = origSetInterval(...args); if (id && typeof id.unref === 'function') id.unref(); return id; };
-  const calls = { signUp: [], signIn: [], signOut: 0, resend: [] };
+  const calls = { signUp: [], signIn: [], signOut: 0, resend: [], updateUser: [] };
   let listener;
   w.SWASTH_CONFIG = config;
-  w.supabase = { createClient: () => ({ auth: {
-    getSession: async () => ({ data: { session } }),
-    onAuthStateChange: (cb) => { listener = cb; return { data: { subscription: {} } }; },
-    signUp: async (a) => { calls.signUp.push(a); return { data: {}, error: null }; },
-    signInWithPassword: async (a) => { calls.signIn.push(a); return { data: { session: null }, error: { message: 'Invalid login credentials' } }; },
-    signOut: async () => { calls.signOut++; }, resend: async (a) => { calls.resend.push(a); return { error: null }; },
-  } }) };
+  w.supabase = { createClient: () => ({
+    auth: {
+      getSession: async () => ({ data: { session } }),
+      onAuthStateChange: (cb) => { listener = cb; return { data: { subscription: {} } }; },
+      signUp: async (a) => { calls.signUp.push(a); return { data: {}, error: null }; },
+      signInWithPassword: async (a) => { calls.signIn.push(a); return { data: { session: null }, error: { message: 'Invalid login credentials' } }; },
+      signOut: async () => { calls.signOut++; },
+      resend: async (a) => { calls.resend.push(a); return { error: null }; },
+      updateUser: async (a) => { calls.updateUser.push(a); return { data: {}, error: null }; }
+    },
+    from: () => ({
+      select: () => ({
+        eq: () => ({
+          maybeSingle: async () => ({ data: session?.user?.user_metadata?.full_name ? { full_name: session.user.user_metadata.full_name, age: session.user.user_metadata.age } : null, error: null })
+        })
+      }),
+      upsert: async () => ({ error: null })
+    })
+  }) };
   w.fetch = fetchImpl || (async () => new Response('{}', { status: 200 }));
   w.eval(appjs);
   return { w, d: w.document, calls, fire: (s) => listener('EVENT', s) };
@@ -64,18 +76,45 @@ test('guest mode card below auth box opens chat view with guest banner, chips, a
   assert.match(d.getElementById('guestRemainingText').textContent, /questions left today/);
   assert.equal(d.querySelectorAll('.chip').length, 5);
 });
-test('sign-up validates email and password, then calls Supabase with redirect', async () => {
+test('sign-up validates name, age, email and password, then calls Supabase with user metadata', async () => {
   const { d, w, calls } = boot(); await tick();
   d.getElementById('tabSignUp').click();
+  // Missing full name
+  d.getElementById('fullName').value = '';
+  d.getElementById('authForm').dispatchEvent(new w.Event('submit', { cancelable: true })); await tick();
+  assert.match(d.getElementById('authMsg').textContent, /full legal name/);
+  // Missing / invalid age
+  d.getElementById('fullName').value = 'Ramesh Chandra Sahoo';
+  d.getElementById('age').value = '0';
+  d.getElementById('authForm').dispatchEvent(new w.Event('submit', { cancelable: true })); await tick();
+  assert.match(d.getElementById('authMsg').textContent, /valid age/);
+  // Invalid email
+  d.getElementById('age').value = '42';
   d.getElementById('email').value = 'bad'; d.getElementById('authForm').dispatchEvent(new w.Event('submit', { cancelable: true })); await tick();
   assert.match(d.getElementById('authMsg').textContent, /valid email/); assert.equal(calls.signUp.length, 0);
+  // Short password
   d.getElementById('email').value = 'x@y.co'; d.getElementById('password').value = 'short';
   d.getElementById('authForm').dispatchEvent(new w.Event('submit', { cancelable: true })); await tick();
   assert.match(d.getElementById('authMsg').textContent, /8 characters/);
+  // Valid submission
   d.getElementById('password').value = 'longenough1'; d.getElementById('authForm').dispatchEvent(new w.Event('submit', { cancelable: true })); await tick();
-  assert.equal(calls.signUp.length, 1); assert.equal(calls.signUp[0].options.emailRedirectTo, 'https://site.test');
+  assert.equal(calls.signUp.length, 1);
+  assert.equal(calls.signUp[0].options.emailRedirectTo, 'https://site.test');
+  assert.equal(calls.signUp[0].options.data.full_name, 'Ramesh Chandra Sahoo');
+  assert.equal(calls.signUp[0].options.data.age, 42);
   assert.match(d.getElementById('authMsg').textContent, /verification link/);
   assert.equal(d.getElementById('resendBtn').hidden, false);
+});
+test('existing verified session without name/age prompts mandatory profile modal', async () => {
+  // session without user_metadata
+  const sessionWithoutProfile = {
+    access_token: 'tok-no-prof',
+    user: { id: 'u-123', email: 'existing@odisha.in', email_confirmed_at: '2026-01-01', user_metadata: {} }
+  };
+  const { d } = boot({ session: sessionWithoutProfile }); await tick();
+  const modal = d.getElementById('profileCompletionModal');
+  assert.notEqual(modal, null);
+  assert.equal(modal.open, true);
 });
 test('wrong password shows friendly message', async () => {
   const { d, w } = boot(); await tick();

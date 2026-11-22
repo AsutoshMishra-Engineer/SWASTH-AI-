@@ -161,8 +161,10 @@
     if ($('signOut')) $('signOut').hidden = !ok;
     if ($('userEmail')) $('userEmail').hidden = !ok;
     if ($('navDeleteAccountBtn')) $('navDeleteAccountBtn').hidden = !ok;
-    if (ok && currentSession && $('loggedInCardEmail')) {
-      $('loggedInCardEmail').textContent = currentSession.user?.email || '';
+    if (ok && currentSession) {
+      if ($('loggedInCardEmail')) $('loggedInCardEmail').textContent = currentSession.user?.email || '';
+      updateProfileUI(currentSession.user?.user_metadata?.full_name, currentSession.user?.user_metadata?.age);
+      checkMandatoryPatientProfile(currentSession);
     }
 
     // Landing page is strictly English (Emergency notice remain 1 for landing page)
@@ -228,6 +230,8 @@
     if ($('userbar')) $('userbar').hidden = !ok;
     if (ok) {
       if ($('userEmail')) $('userEmail').textContent = session.user.email || '';
+      updateProfileUI(session.user?.user_metadata?.full_name, session.user?.user_metadata?.age);
+      checkMandatoryPatientProfile(session);
       if (viewingLanding) {
         showLandingPage();
       } else {
@@ -306,6 +310,10 @@
       $('tabSignUp').classList.toggle('active', up);
       $('tabSignUp').setAttribute('aria-pressed', String(up));
     }
+    if ($('nameField')) $('nameField').hidden = !up;
+    if ($('ageField')) $('ageField').hidden = !up;
+    if ($('fullName')) $('fullName').required = up;
+    if ($('age')) $('age').required = up;
     if ($('authSubmit')) $('authSubmit').textContent = up ? 'Create Account' : 'Sign In';
     if ($('password')) $('password').setAttribute('autocomplete', up ? 'new-password' : 'current-password');
     if ($('pwHint')) $('pwHint').hidden = !up;
@@ -375,36 +383,65 @@
       if (busy) return;
       const email = $('email').value.trim();
       const password = $('password').value;
-      if (!validEmail(email)) return setMsg('Please enter a valid email address.', 'error');
-      if (mode === 'signup' && password.length < 8) return setMsg('Please use a password with at least 8 characters.', 'error');
-      if (!password) return setMsg('Please enter your password.', 'error');
-      busy = true;
-      $('authSubmit').disabled = true;
-      setMsg('Please wait...');
-      try {
-        if (mode === 'signup') {
+      if (mode === 'signup') {
+        const fullName = ($('fullName')?.value || '').trim();
+        const ageVal = ($('age')?.value || '').trim();
+        const ageNum = parseInt(ageVal, 10);
+        if (!fullName || fullName.length < 2) {
+          return setMsg('Please enter your full legal name (at least 2 characters).', 'error');
+        }
+        if (!ageVal || isNaN(ageNum) || ageNum < 1 || ageNum > 120) {
+          return setMsg('Please enter a valid age between 1 and 120.', 'error');
+        }
+        if (!validEmail(email)) return setMsg('Please enter a valid email address.', 'error');
+        if (password.length < 8) return setMsg('Please use a password with at least 8 characters.', 'error');
+        busy = true;
+        $('authSubmit').disabled = true;
+        setMsg('Please wait...');
+        try {
           const { error } = await sb.auth.signUp({
             email,
             password,
-            options: { emailRedirectTo: window.location.origin }
+            options: {
+              data: {
+                full_name: fullName,
+                age: ageNum
+              },
+              emailRedirectTo: window.location.origin
+            }
           });
           if (error) setMsg(friendlyAuthError(error), 'error');
           else {
             setMsg('Almost done! We have sent a verification link to your email. Please check your inbox & spam folder.', 'ok');
             startResendCooldown();
           }
-        } else {
-          const { data, error } = await sb.auth.signInWithPassword({ email, password });
-          if (error) {
-            setMsg(friendlyAuthError(error), 'error');
-            if (/not confirmed/i.test(error.message || '') || error.error_code === 'email_not_confirmed') startResendCooldown(0);
-          } else if (data && data.session && !isVerified(data.session)) {
-            setMsg('Please verify your email first. Check your inbox for the link.', 'error');
-            startResendCooldown(0);
-            await sb.auth.signOut();
-          } else if (data && data.session) {
-            showChatPage();
-          }
+        } catch (e) {
+          console.error('Auth submit exception:', e);
+          setMsg('Could not reach server. Check internet connection.', 'error');
+        } finally {
+          busy = false;
+          $('authSubmit').disabled = false;
+        }
+        return;
+      }
+
+      if (!password) return setMsg('Please enter your password.', 'error');
+      busy = true;
+      $('authSubmit').disabled = true;
+      setMsg('Please wait...');
+      try {
+        const { data, error } = await sb.auth.signInWithPassword({ email, password });
+        if (error) {
+          setMsg(friendlyAuthError(error), 'error');
+          if (/not confirmed/i.test(error.message || '') || error.error_code === 'email_not_confirmed') startResendCooldown(0);
+        } else if (data && data.session && !isVerified(data.session)) {
+          setMsg('Please verify your email first. Check your inbox for the link.', 'error');
+          startResendCooldown(0);
+          await sb.auth.signOut();
+        } else if (data && data.session) {
+          currentSession = data.session;
+          checkMandatoryPatientProfile(data.session);
+          showChatPage();
         }
       } catch (e) {
         console.error('Auth submit exception:', e);
@@ -467,6 +504,137 @@
       return m;
     }
     return 'Unable to sign in. Please verify your details or tap Create Account.';
+  }
+
+  // ---------- Patient Profile Management (Mandatory Name & Age) ----------
+  function updateProfileUI(name, age) {
+    const nameEl = $('loggedInPatientName');
+    const ageEl = $('loggedInPatientAge');
+    const sep = $('loggedInPatientAgeSep');
+    if (nameEl) nameEl.textContent = name ? ('Patient: ' + name) : '';
+    if (ageEl) ageEl.textContent = (age !== undefined && age !== null && age !== '') ? ('Age: ' + age + ' Yrs') : '';
+    if (sep) sep.hidden = !name || !age;
+  }
+
+  async function checkMandatoryPatientProfile(session) {
+    if (!session || !session.user) return;
+    let meta = session.user.user_metadata || {};
+    let name = meta.full_name;
+    let age = meta.age;
+    if ((!name || !age) && sb && typeof sb.from === 'function') {
+      try {
+        const { data } = await sb.from('profiles').select('full_name, age').eq('id', session.user.id).maybeSingle();
+        if (data && data.full_name && data.age) {
+          name = data.full_name;
+          age = data.age;
+          if (!session.user.user_metadata) session.user.user_metadata = {};
+          session.user.user_metadata.full_name = name;
+          session.user.user_metadata.age = age;
+        }
+      } catch (err) {
+        console.warn('Profile fetch note:', err);
+      }
+    }
+    const valid = name && typeof name === 'string' && name.trim().length >= 2 && age && !isNaN(parseInt(age, 10)) && parseInt(age, 10) >= 1 && parseInt(age, 10) <= 120;
+    if (!valid) {
+      openProfileCompletionModal(true);
+    } else {
+      updateProfileUI(name, age);
+    }
+  }
+
+  function openProfileCompletionModal(isMandatory = false) {
+    const modal = $('profileCompletionModal');
+    if (!modal) return;
+    const meta = currentSession?.user?.user_metadata || {};
+    if ($('modalFullName')) $('modalFullName').value = meta.full_name || '';
+    if ($('modalAge')) $('modalAge').value = meta.age || '';
+    if ($('profileModalMsg')) {
+      $('profileModalMsg').textContent = '';
+      $('profileModalMsg').className = 'msg';
+    }
+    const closeBtn = $('closeProfileModalBtn');
+    if (closeBtn) closeBtn.hidden = isMandatory;
+    if (typeof modal.showModal === 'function') {
+      try {
+        modal.showModal();
+      } catch {
+        modal.setAttribute('open', '');
+      }
+    } else {
+      modal.setAttribute('open', '');
+    }
+  }
+
+  const editProfileBtn = $('editProfileBtn');
+  if (editProfileBtn) {
+    editProfileBtn.addEventListener('click', () => openProfileCompletionModal(false));
+  }
+  const closeProfileModalBtn = $('closeProfileModalBtn');
+  if (closeProfileModalBtn) {
+    closeProfileModalBtn.addEventListener('click', () => {
+      const modal = $('profileCompletionModal');
+      if (modal) {
+        if (typeof modal.close === 'function') {
+          try { modal.close(); } catch { modal.removeAttribute('open'); }
+        } else {
+          modal.removeAttribute('open');
+        }
+      }
+    });
+  }
+
+  const profileForm = $('profileCompletionForm');
+  if (profileForm) {
+    profileForm.addEventListener('submit', async (e) => {
+      e.preventDefault();
+      const name = ($('modalFullName')?.value || '').trim();
+      const ageVal = ($('modalAge')?.value || '').trim();
+      const ageNum = parseInt(ageVal, 10);
+      const msg = $('profileModalMsg');
+      if (!name || name.length < 2) {
+        if (msg) { msg.textContent = 'Please enter your full legal name.'; msg.className = 'msg error'; }
+        return;
+      }
+      if (!ageVal || isNaN(ageNum) || ageNum < 1 || ageNum > 120) {
+        if (msg) { msg.textContent = 'Please enter a valid age (1 - 120).'; msg.className = 'msg error'; }
+        return;
+      }
+      const saveBtn = $('saveProfileBtn');
+      if (saveBtn) saveBtn.disabled = true;
+      if (msg) { msg.textContent = 'Saving patient profile...'; msg.className = 'msg'; }
+      try {
+        const { data, error } = await sb.auth.updateUser({
+          data: { full_name: name, age: ageNum }
+        });
+        if (error) {
+          if (msg) { msg.textContent = error.message || 'Failed to update profile.'; msg.className = 'msg error'; }
+          if (saveBtn) saveBtn.disabled = false;
+          return;
+        }
+        if (data && data.user && currentSession) {
+          currentSession.user = data.user;
+        }
+        try {
+          if (currentSession?.user?.id && sb.from) {
+            await sb.from('profiles').upsert({
+              id: currentSession.user.id,
+              full_name: name,
+              age: ageNum,
+              updated_at: new Date().toISOString()
+            });
+          }
+        } catch {}
+
+        updateProfileUI(name, ageNum);
+        const modal = $('profileCompletionModal');
+        if (modal && typeof modal.close === 'function') modal.close();
+      } catch (err) {
+        if (msg) { msg.textContent = 'Network error. Please try again.'; msg.className = 'msg error'; }
+      } finally {
+        if (saveBtn) saveBtn.disabled = false;
+      }
+    });
   }
 
   if ($('signOut')) {
@@ -7186,36 +7354,50 @@
       ctx.fillText('DIGITAL TRIAGE SLIP', 1047, 60);
       ctx.textAlign = 'left';
 
-      // 3. Metadata Info Bar (Compact Y: 110 to 168)
+      // 3. Metadata Info Bar (Compact Y: 110 to 174)
       ctx.fillStyle = '#f1f5f9';
-      ctx.fillRect(0, 110, 1200, 58);
+      ctx.fillRect(0, 110, 1200, 64);
       ctx.strokeStyle = '#cbd5e1';
       ctx.lineWidth = 1.5;
       ctx.beginPath();
-      ctx.moveTo(0, 168);
-      ctx.lineTo(1200, 168);
+      ctx.moveTo(0, 174);
+      ctx.lineTo(1200, 174);
       ctx.stroke();
 
       const triageId = 'OD-TRG-' + Math.floor(100000 + Math.random() * 900000);
       const dateStr = new Date().toLocaleDateString('en-IN', { day: '2-digit', month: 'short', year: 'numeric' });
       const timeStr = new Date().toLocaleTimeString('en-IN', { hour: '2-digit', minute: '2-digit' });
 
+      // Patient Name and Age for Doctor's Record (Mandatory clinical identification)
+      const userMeta = currentSession?.user?.user_metadata || {};
+      const rawName = userMeta.full_name || meta.patientName || 'PATIENT';
+      const patientName = String(rawName).trim().toUpperCase();
+      const rawAge = userMeta.age || meta.patientAge;
+      const patientAgeStr = (rawAge !== undefined && rawAge !== null && rawAge !== '') ? (rawAge + ' YRS') : 'N/A';
+
+      ctx.fillStyle = '#0f766e';
+      ctx.font = 'bold 15px "Plus Jakarta Sans", "Noto Sans Oriya", "Noto Sans Devanagari", sans-serif';
+      ctx.fillText('PATIENT: ' + patientName, 45, 137);
+
       ctx.fillStyle = '#1e293b';
-      ctx.font = 'bold 14.5px "Plus Jakarta Sans", sans-serif';
-      ctx.fillText('SLIP REF: ' + triageId, 45, 145);
+      ctx.font = 'bold 14px "Plus Jakarta Sans", sans-serif';
+      ctx.fillText('AGE: ' + patientAgeStr, 45, 160);
+
       ctx.fillStyle = '#475569';
-      ctx.fillText('DATE: ' + dateStr + ', ' + timeStr, 340, 145);
+      ctx.font = '13px "Plus Jakarta Sans", sans-serif';
+      ctx.fillText('SLIP REF: ' + triageId, 450, 137);
+      ctx.fillText('DATE: ' + dateStr + ', ' + timeStr, 450, 160);
 
       // FACILITY: [ AI DIAGNOSED ] (Compact box)
       ctx.fillStyle = '#f0fdf4';
-      ctx.fillRect(830, 121, 325, 36);
+      ctx.fillRect(830, 121, 325, 42);
       ctx.strokeStyle = '#86efac';
       ctx.lineWidth = 1.5;
-      ctx.strokeRect(830, 121, 325, 36);
+      ctx.strokeRect(830, 121, 325, 42);
       ctx.fillStyle = '#166534';
       ctx.font = 'bold 14px "Plus Jakarta Sans", sans-serif';
       ctx.textAlign = 'center';
-      ctx.fillText('FACILITY: [ AI DIAGNOSED ]', 992, 144);
+      ctx.fillText('FACILITY: [ AI DIAGNOSED ]', 992, 147);
       ctx.textAlign = 'left';
 
       function drawBox(x, y, w, h, bgColor, borderColor, borderLeftColor) {

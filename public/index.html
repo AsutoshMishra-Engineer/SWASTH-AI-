@@ -17,7 +17,7 @@
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+Devanagari:wght@400;500;600;700&family=Noto+Sans+Oriya:wght@400;500;600;700&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="/vendor/leaflet.css">
-  <link rel="stylesheet" href="/style.css?v=20261122_07">
+  <link rel="stylesheet" href="/style.css?v=20261122_08">
 </head>
 <body>
   <a class="skip" href="#main">Skip to content</a>
@@ -123,6 +123,10 @@
             </div>
             <h3>Signed In</h3>
             <p id="loggedInCardEmail" class="logged-in-card-email"></p>
+            <div id="loggedInProfileSummary" class="logged-in-profile-summary" style="margin: 6px 0 10px; font-size: 0.95rem; font-weight: 700; color: var(--primary-dark);">
+              <span id="loggedInPatientName"></span> <span id="loggedInPatientAgeSep" hidden>&bull;</span> <span id="loggedInPatientAge"></span>
+            </div>
+            <button id="editProfileBtn" class="btn ghost small" type="button" style="margin: 0 auto 12px; display: inline-flex; align-items: center; gap: 4px; font-size: 0.78rem;">✏️ Edit Patient Name &amp; Age</button>
             <p class="fine">You are actively signed in. Click below to chat with the public health assistant.</p>
             <button id="cardChatBtn" class="btn primary full-width" type="button">💬 Open Health Chat →</button>
             <button id="cardDeleteAccountBtn" class="btn danger-outline full-width" type="button" style="margin-top: 12px;">Delete Your Account</button>
@@ -133,6 +137,14 @@
               <button id="tabSignUp" class="tab" type="button" aria-pressed="false">Create Account</button>
             </div>
             <form id="authForm" novalidate>
+              <div class="field" id="nameField" hidden>
+                <label for="fullName">Patient Full Name (ନାମ / पूरा नाम)</label>
+                <input id="fullName" name="fullName" type="text" autocomplete="name" placeholder="e.g. Ramesh Chandra Sahoo">
+              </div>
+              <div class="field" id="ageField" hidden>
+                <label for="age">Patient Age (ବୟସ / उम्र - Years)</label>
+                <input id="age" name="age" type="number" min="1" max="120" placeholder="e.g. 45">
+              </div>
               <div class="field">
                 <label for="email">Email Address</label>
                 <input id="email" name="email" type="email" autocomplete="email" inputmode="email" placeholder="name@example.com" required>
@@ -570,9 +582,42 @@
 
 
 
+  <!-- MANDATORY PATIENT PROFILE COMPLETION / EDIT MODAL -->
+  <dialog id="profileCompletionModal" class="district-modal" aria-labelledby="profileModalTitle">
+    <div class="district-modal-card" style="max-width:440px;">
+      <div class="district-modal-header">
+        <h3 id="profileModalTitle" style="color:var(--primary-dark); font-size:1.15rem; margin:0; font-weight:800;">
+          Patient Profile (ରୋଗୀଙ୍କ ପରିଚୟ)
+        </h3>
+        <button id="closeProfileModalBtn" class="district-modal-close" type="button" aria-label="Close" hidden>&times;</button>
+      </div>
+      <p style="font-size:0.86rem; color:var(--ink-secondary); margin:10px 0 16px; line-height:1.45;">
+        Medical safety requires your legal Name and Age. This ensures clinical triage and official Doctor Triage Slips (PDF) display your verified patient identification.
+      </p>
+      <form id="profileCompletionForm" novalidate>
+        <div class="field" style="margin-bottom:12px;">
+          <label for="modalFullName" style="display:block; font-weight:700; font-size:0.85rem; margin-bottom:5px;">
+            Patient Full Legal Name (ସମ୍ପୂର୍ଣ୍ଣ ନାମ)
+          </label>
+          <input id="modalFullName" name="modalFullName" type="text" autocomplete="name" placeholder="e.g. Ramesh Chandra Sahoo" required style="width:100%; padding:10px 12px; border:1px solid var(--line); border-radius:var(--radius); font-size:0.95rem;">
+        </div>
+        <div class="field" style="margin-bottom:16px;">
+          <label for="modalAge" style="display:block; font-weight:700; font-size:0.85rem; margin-bottom:5px;">
+            Age in Years (ବୟସ / उम्र)
+          </label>
+          <input id="modalAge" name="modalAge" type="number" min="1" max="120" placeholder="e.g. 45" required style="width:100%; padding:10px 12px; border:1px solid var(--line); border-radius:var(--radius); font-size:0.95rem;">
+        </div>
+        <p id="profileModalMsg" class="msg" role="status" aria-live="polite" style="margin-bottom:12px;"></p>
+        <button id="saveProfileBtn" class="btn primary full-width" type="submit" style="padding:12px; font-weight:700; font-size:0.96rem;">
+          Save Patient Profile →
+        </button>
+      </form>
+    </div>
+  </dialog>
+
   <script src="/vendor/leaflet.js"></script>
   <script src="/vendor/supabase.js"></script>
-  <script src="/config.js?v=20261122_07"></script>
-  <script src="/app.js?v=20261122_07"></script>
+  <script src="/config.js?v=20261122_08"></script>
+  <script src="/app.js?v=20261122_08"></script>
 </body>
 </html>
