@@ -118,3 +118,35 @@ test('401 from server signs the user out', async () => {
   d.getElementById('question').value = 'hello there'; d.getElementById('chatForm').dispatchEvent(new w.Event('submit', { cancelable: true })); await tick(50);
   assert.equal(calls.signOut, 1);
 });
+test('accessibility: font scaler toggles body font size class', async () => {
+  const { d } = boot({ session: verified }); await tick();
+  const incBtn = d.getElementById('fontIncBtn');
+  const decBtn = d.getElementById('fontDecBtn');
+  const resetBtn = d.getElementById('fontResetBtn');
+  incBtn.click();
+  assert.equal(d.body.classList.contains('font-scale-lg'), true);
+  decBtn.click();
+  assert.equal(d.body.classList.contains('font-scale-sm'), true);
+  resetBtn.click();
+  assert.equal(d.body.classList.contains('font-scale-lg'), false);
+  assert.equal(d.body.classList.contains('font-scale-sm'), false);
+});
+test('chat: network error renders retry bar and allows 1-tap re-send', async () => {
+  let calls = 0;
+  const { d, w } = boot({ session: verified, fetchImpl: async () => {
+    calls++;
+    if (calls === 1) throw new Error('network down');
+    return new Response(JSON.stringify({ kind: 'answer', answer: 'Recovered answer', sources: [] }), { status: 200 });
+  } });
+  await tick();
+  d.getElementById('question').value = 'headache';
+  d.getElementById('chatForm').dispatchEvent(new w.Event('submit', { cancelable: true }));
+  await tick(50);
+  const retryBtn = d.querySelector('.retry-action-bar button');
+  assert.notEqual(retryBtn, null);
+  retryBtn.click();
+  await tick(50);
+  assert.equal(calls, 2);
+  const botAnswer = [...d.querySelectorAll('.bubble.bot')].pop();
+  assert.match(botAnswer.textContent, /Recovered answer/);
+});

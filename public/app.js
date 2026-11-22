@@ -1594,12 +1594,14 @@
 
   function compressAndSetImage(file) {
     if (!file || !file.type.startsWith('image/')) return;
-    const reader = new FileReader();
-    reader.onload = (e) => {
+    const processImage = (src, isBlobUrl) => {
       const img = new Image();
       img.onload = () => {
+        if (isBlobUrl) {
+          try { URL.revokeObjectURL(src); } catch {}
+        }
         const canvas = document.createElement('canvas');
-        const MAX_DIM = 800;
+        const MAX_DIM = 1024;
         let width = img.width;
         let height = img.height;
         if (width > height) {
@@ -1629,7 +1631,7 @@
           thumb = document.createElement('img');
           thumb.id = 'imagePreviewThumb';
           thumb.className = 'image-preview-thumb';
-          thumb.alt = 'Skin symptom preview';
+          thumb.alt = 'Clinical symptom photo preview';
           $('imagePreviewThumbBox')?.appendChild(thumb);
         }
         thumb.src = compressedDataUrl;
@@ -1637,8 +1639,23 @@
         if (tray) tray.hidden = false;
         $('question')?.focus();
       };
-      img.src = e.target.result;
+      img.onerror = () => {
+        if (isBlobUrl) {
+          try { URL.revokeObjectURL(src); } catch {}
+        }
+      };
+      img.src = src;
     };
+
+    if (typeof URL !== 'undefined' && typeof URL.createObjectURL === 'function') {
+      try {
+        const objUrl = URL.createObjectURL(file);
+        processImage(objUrl, true);
+        return;
+      } catch {}
+    }
+    const reader = new FileReader();
+    reader.onload = (e) => processImage(e.target.result, false);
     reader.readAsDataURL(file);
   }
 
@@ -1857,11 +1874,40 @@
       }
     } catch (e) {
       wait.remove();
-      addBubble('error', currentLang === 'hi'
-        ? 'सर्वर से संपर्क नहीं हो सका। कृपया अपना इंटरनेट जांचें और पुनः प्रयास करें।'
-        : (currentLang === 'or'
-          ? 'ସର୍ଭର ସହ ସଂଯୋଗ ହୋଇପାରିଲା ନାହିଁ । ଇଣ୍ଟରନେଟ୍ ଯାଞ୍ଚ କରି ପୁଣି ଚେଷ୍ଟା କରନ୍ତୁ ।'
-          : 'Could not reach the server. Check your internet and try again.'));
+      const matched = matchOfflineEmergency(text);
+      if (matched) {
+        renderAnswer({
+          kind: 'emergency',
+          answer: formatOfflineProtocolAnswer(matched, currentLang),
+          sources: [{ name: 'WHO & MoHFW Verified Offline Protocols', url: 'https://swasth-ai.pages.dev' }]
+        });
+      } else {
+        const errBubble = addBubble('error', currentLang === 'hi'
+          ? 'सर्वर से संपर्क नहीं हो सका। कृपया अपना इंटरनेट जांचें और पुनः प्रयास करें।'
+          : (currentLang === 'or'
+            ? 'ସର୍ଭର ସହ ସଂଯୋଗ ହୋଇପାରିଲା ନାହିଁ । ଇଣ୍ଟରନେଟ୍ ଯାଞ୍ଚ କରି ପୁଣି ଚେଷ୍ଟା କରନ୍ତୁ ।'
+            : 'Could not reach the server. Check your internet and try again.'));
+        if (text && $('messages')) {
+          const retryBar = document.createElement('div');
+          retryBar.className = 'retry-action-bar';
+          retryBar.style.cssText = 'margin: 4px 0 10px; display: flex;';
+          const isHi = currentLang === 'hi';
+          const isOr = currentLang === 'or';
+          retryBar.innerHTML = `<button type="button" class="btn primary small warm-retry-btn" style="border-radius:20px; padding:6px 14px; font-weight:700; display:inline-flex; align-items:center; gap:6px;">
+            <span>🔄</span> <span>${isHi ? 'पुनः प्रयास करें (Retry)' : (isOr ? 'ପୁନର୍ବାର ଚେଷ୍ଟା କରନ୍ତୁ' : 'Retry Question')}</span>
+          </button>`;
+          const btn = retryBar.querySelector('button');
+          if (btn) {
+            btn.addEventListener('click', () => {
+              errBubble.remove();
+              retryBar.remove();
+              send(text);
+            });
+          }
+          $('messages').appendChild(retryBar);
+          scrollChatToLatest(retryBar, false);
+        }
+      }
     } finally {
       busy = false;
       $('sendBtn').disabled = false;
@@ -1967,9 +2013,10 @@
           const voiceBoxTitle = $('voiceBoxTitle');
           const voiceBoxSub = $('voiceBoxSub');
           if (voiceBoxTitle) {
-            voiceBoxTitle.textContent = isHi
-              ? 'सुन रहा हूँ... (रोकने के लिए टैप करें)'
-              : (isOr ? 'ଶୁଣୁଛି... (ରୋକିବାକୁ ଟ୍ୟାପ୍ କରନ୍ତୁ)' : 'Listening... (Tap mic to stop)');
+            const waveHtml = '<span class="sound-wave-bars"><span class="sound-wave-bar"></span><span class="sound-wave-bar"></span><span class="sound-wave-bar"></span><span class="sound-wave-bar"></span><span class="sound-wave-bar"></span></span>';
+            voiceBoxTitle.innerHTML = (isHi
+              ? 'सुन रहा हूँ... '
+              : (isOr ? 'ଶୁଣୁଛି... ' : 'Listening... ')) + waveHtml;
           }
           if (voiceBoxSub) {
             voiceBoxSub.textContent = isHi
@@ -2062,12 +2109,12 @@
         };
 
         odiaMediaRecorder.start(250);
-        // Automatically stop recording after 3.8 seconds if not clicked manually (minimizes wait lag)
+        // Automatically stop recording after 8 seconds if not clicked manually (elderly friendly speech duration)
         odiaTimer = setTimeout(() => {
           if (odiaMediaRecorder && odiaMediaRecorder.state === 'recording') {
             odiaMediaRecorder.stop();
           }
-        }, 3800);
+        }, 8000);
 
       } catch (err) {
         console.error('Mic permission error:', err);
@@ -2163,9 +2210,64 @@
   if (langOrBtn) langOrBtn.addEventListener('click', () => applyLanguage('or'));
   if (langHiBtn) langHiBtn.addEventListener('click', () => applyLanguage('hi'));
 
+  function initFontScaler() {
+    const decBtn = $('fontDecBtn');
+    const resetBtn = $('fontResetBtn');
+    const incBtn = $('fontIncBtn');
+    if (!decBtn || !resetBtn || !incBtn) return;
+
+    function applyScale(scale) {
+      if (typeof document === 'undefined' || !document.body) return;
+      document.body.classList.remove('font-scale-sm', 'font-scale-lg');
+      decBtn.classList.remove('active');
+      resetBtn.classList.remove('active');
+      incBtn.classList.remove('active');
+
+      if (scale === 'sm') {
+        document.body.classList.add('font-scale-sm');
+        decBtn.classList.add('active');
+      } else if (scale === 'lg') {
+        document.body.classList.add('font-scale-lg');
+        incBtn.classList.add('active');
+      } else {
+        resetBtn.classList.add('active');
+      }
+      try { localStorage.setItem('swasth_font_size', scale); } catch {}
+    }
+
+    decBtn.addEventListener('click', () => applyScale('sm'));
+    resetBtn.addEventListener('click', () => applyScale('md'));
+    incBtn.addEventListener('click', () => applyScale('lg'));
+
+    try {
+      const saved = localStorage.getItem('swasth_font_size');
+      if (saved) applyScale(saved);
+    } catch {}
+  }
+
+  function initViewportStability() {
+    if (typeof window === 'undefined' || !window.visualViewport) return;
+    const onViewport = () => {
+      const vh = window.visualViewport.height;
+      if (typeof document !== 'undefined' && document.documentElement) {
+        document.documentElement.style.setProperty('--visual-viewport-height', `${vh}px`);
+        if (document.body && document.body.classList.contains('chat-active')) {
+          const messages = $('messages');
+          if (messages && document.activeElement === $('question')) {
+            messages.scrollTop = messages.scrollHeight;
+          }
+        }
+      }
+    };
+    window.visualViewport.addEventListener('resize', onViewport);
+    window.visualViewport.addEventListener('scroll', onViewport);
+  }
+
   initOdiaVoiceControl();
   initCameraControl();
   initDeptPills();
+  initFontScaler();
+  initViewportStability();
 
   // ---------- PWA & Service Worker Registration & Auto-Refresh ----------
   if (typeof window !== 'undefined' && 'serviceWorker' in navigator) {

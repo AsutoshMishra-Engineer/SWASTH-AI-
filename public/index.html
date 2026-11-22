@@ -17,7 +17,7 @@
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+Devanagari:wght@400;500;600;700&family=Noto+Sans+Oriya:wght@400;500;600;700&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="/vendor/leaflet.css">
-  <link rel="stylesheet" href="/style.css?v=20261122_06">
+  <link rel="stylesheet" href="/style.css?v=20261122_07">
 </head>
 <body>
   <a class="skip" href="#main">Skip to content</a>
@@ -181,9 +181,16 @@
     <!-- CHAT VIEW -->
     <section id="chatView" class="chat" aria-label="Health Consultation Chat" hidden>
       <div class="chat-header-info">
-        <div class="status-indicator">
-          <span class="pulse-dot" aria-hidden="true"></span>
-          <span>Verified Health Guidance Active &bull; Emergency Referral Protocol</span>
+        <div class="header-action-row">
+          <div class="status-indicator">
+            <span class="pulse-dot" aria-hidden="true"></span>
+            <span>Verified Health Guidance Active &bull; Emergency Referral Protocol</span>
+          </div>
+          <div class="font-scaler-group" role="group" aria-label="Adjust font size">
+            <button id="fontDecBtn" class="font-scale-btn" type="button" aria-label="Smaller text" title="Smaller font size">A-</button>
+            <button id="fontResetBtn" class="font-scale-btn active" type="button" aria-label="Default text" title="Default font size">A</button>
+            <button id="fontIncBtn" class="font-scale-btn" type="button" aria-label="Larger text" title="Larger font size for readability">A+</button>
+          </div>
         </div>
         <div id="guestChatBanner" class="guest-chat-banner" hidden>
           <div class="guest-banner-info">
@@ -565,7 +572,7 @@
 
   <script src="/vendor/leaflet.js"></script>
   <script src="/vendor/supabase.js"></script>
-  <script src="/config.js?v=20261122_06"></script>
-  <script src="/app.js?v=20261122_06"></script>
+  <script src="/config.js?v=20261122_07"></script>
+  <script src="/app.js?v=20261122_07"></script>
 </body>
 </html>
