@@ -123,7 +123,7 @@ Conclude with the certified health disclaimer.`;
             }],
             generationConfig: {
               temperature: 0.15,
-              maxOutputTokens: 1000
+              maxOutputTokens: 1600
             }
           })
         }, L.UPSTREAM_TIMEOUT_MS, 'vision-report');

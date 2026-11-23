@@ -908,9 +908,9 @@
     const analyzePhotoBtnText = $('analyzePhotoBtnText');
     if (analyzePhotoBtnText) {
       if (selectedDepartment === 'report' || pendingSkinImage?.isReport) {
-        analyzePhotoBtnText.textContent = isHi ? 'रिपोर्ट का अर्थ समझें' : (isOr ? 'ରିପୋର୍ଟ ବିଶ୍ଳେଷଣ କରନ୍ତୁ' : 'Scan & Explain Report');
+        analyzePhotoBtnText.textContent = isHi ? '🚀 रिपोर्ट की AI जाँच शुरू करें →' : (isOr ? '🚀 ରିପୋର୍ଟର AI ବିଶ୍ଳେଷଣ ଆରମ୍ଭ କରନ୍ତୁ →' : '🚀 Start AI Report Scan Now →');
       } else {
-        analyzePhotoBtnText.textContent = isHi ? 'फोटो की जाँच करें (AI Analysis)' : (isOr ? 'ଫଟୋ ପରୀକ୍ଷା କରନ୍ତୁ' : 'Scan & Analyze Photo');
+        analyzePhotoBtnText.textContent = isHi ? '🚀 फोटो की AI जाँच शुरू करें →' : (isOr ? '🚀 ଫଟୋର AI ପରୀକ୍ଷା ଆରମ୍ଭ କରନ୍ତୁ →' : '🚀 Start AI Photo Scan Now →');
       }
     }
 
@@ -1348,14 +1348,17 @@
     return bytes.buffer;
   }
 
+  // Standardized concise spoken summary length for rapid sub-2s generation (ideal for elderly listeners)
+  const SPOKEN_SUMMARY_MAX_CHARS = 180;
+
   // Cache pre-generated audio for zero-lag instant playback (stores { blobUrl, arrayBuffer })
   const audioCache = new Map();
 
-  function prepareSpokenText(rawText, maxLen = 400) {
+  function prepareSpokenText(rawText, maxLen = SPOKEN_SUMMARY_MAX_CHARS) {
     if (!rawText) return '';
     let clean = String(rawText)
       .replace(/[\u{1F300}-\u{1F9FF}\u{2600}-\u{26FF}\u{2700}-\u{27BF}]/gu, '')
-      .replace(/[📘🏠⚠️🏥🚨✨💡🗑️🦟🐕💧🤰☀️🔍📷]/g, '')
+      .replace(/[📘🏠⚠️🏥🚨✨💡🗑️🦟🐕💧🤰☀️🔍📷📄]/g, '')
       .replace(/[*_#`~[\]()]/g, ' ')
       .replace(/^[ \t]*[-•]\s*/gm, '')
       .replace(/\s+/g, ' ')
@@ -1441,12 +1444,13 @@
 
   async function preloadAudioForAnswer(rawText) {
     if (!rawText) return;
-    const isRegional = /[\u0B00-\u0B7F\u0900-\u097F]/.test(rawText);
+    const isRegional = currentLang === 'or' || currentLang === 'hi' || /[\u0B00-\u0B7F\u0900-\u097F]/.test(rawText);
     if (!isRegional) return;
 
-    const clean = prepareSpokenText(rawText, 380);
+    const clean = prepareSpokenText(rawText, SPOKEN_SUMMARY_MAX_CHARS);
+    if (!clean) return;
     const cacheKey = currentLang + ':' + clean;
-    if (!clean || audioCache.has(cacheKey)) return;
+    if (audioCache.has(cacheKey)) return;
     try {
       await fetchServerAudio(clean, currentLang);
     } catch {}
@@ -1494,7 +1498,7 @@
     // Unlock Web Audio Context immediately in the click gesture so laptop browsers never block playback
     getAudioContext();
 
-    const clean = prepareSpokenText(rawText, 400);
+    const clean = prepareSpokenText(rawText, SPOKEN_SUMMARY_MAX_CHARS);
     if (!clean) return;
 
     btn.classList.add('speaking');
@@ -1519,12 +1523,13 @@
     if (handsFreeCallActive) {
       setHandsFreeStatus('speaking');
     }
-    if (label) {
+    const cachedAudio = audioCache.get(langCode + ':' + clean) || audioCache.get(currentLang + ':' + clean);
+    if (!cachedAudio && label) {
       label.textContent = isOdia ? '⏳ ଅଡିଓ ପ୍ରସ୍ତୁତ...' : (isHindi ? '⏳ ऑडियो तैयार...' : '⏳ Loading...');
     }
 
     try {
-      const audioData = await fetchServerAudio(clean, langCode);
+      const audioData = cachedAudio || await fetchServerAudio(clean, langCode);
       if (audioData) {
         let played = false;
         try {
@@ -1575,15 +1580,15 @@
     return d;
   }
 
-  function scanningIndicator() {
+  function scanningIndicator(isReport = false) {
     const d = document.createElement('div');
     d.className = 'bubble bot scanning-bubble';
-    d.setAttribute('aria-label', 'Swasth AI is analyzing photo');
+    d.setAttribute('aria-label', isReport ? 'Swasth AI is analyzing prescription or lab report' : 'Swasth AI is analyzing photo');
 
     const box = document.createElement('div');
     box.className = 'scan-laser-box';
     const icon = document.createElement('span');
-    icon.textContent = '📸';
+    icon.textContent = isReport ? '📄' : '📸';
     icon.style.fontSize = '18px';
     const beam = document.createElement('div');
     beam.className = 'scan-laser-beam';
@@ -1599,12 +1604,21 @@
 
     const isOr = currentLang === 'or';
     const isHi = currentLang === 'hi';
-    title.textContent = isHi
-      ? '📸 क्लिनिकल फोटो विश्लेषण जारी है...'
-      : (isOr ? '📸 ଡାକ୍ତରୀ ଫଟୋ ପରୀକ୍ଷା ଚାଲିଛି...' : '📸 AI Clinical Photo Analyzing...');
-    sub.textContent = isHi
-      ? 'लक्षण, सुरक्षा प्रोटोकॉल व प्राथमिक उपचार जाँचे जा रहे हैं'
-      : (isOr ? 'ଲକ୍ଷଣ, ସୁରକ୍ଷା ପ୍ରୋଟୋକଲ୍ ଓ ଚିକିତ୍ସା ଯାଞ୍ଚ ହେଉଛି' : 'Analyzing clinical features & triage safety protocol');
+    if (isReport) {
+      title.textContent = isHi
+        ? '📄 पर्ची / लैब रिपोर्ट का OCR विश्लेषण जारी है...'
+        : (isOr ? '📄 ଡାକ୍ତରୀ ପ୍ରେସକ୍ରିପସନ୍ ଓ ଲ୍ୟାବ୍ ରିପୋର୍ଟ ସ୍କାନ୍ ଚାଲିଛି...' : '📄 Prescription & Lab Report OCR Scanning...');
+      sub.textContent = isHi
+        ? 'दवाइयों के नाम, परीक्षण परिणाम व आवश्यक सावधानियां जाँची जा रही हैं'
+        : (isOr ? 'ଔଷଧ ନାମ, ଟେଷ୍ଟ୍ ଫଳାଫଳ ଓ ଜରୁରୀ ସାବଧାନତା ଯାଞ୍ଚ ହେଉଛି' : 'Transcribing test values, medicines & doctor consultation advice');
+    } else {
+      title.textContent = isHi
+        ? '📸 क्लिनिकल फोटो विश्लेषण जारी है...'
+        : (isOr ? '📸 ଡାକ୍ତରୀ ଫଟୋ ପରୀକ୍ଷା ଚାଲିଛି...' : '📸 AI Clinical Photo Analyzing...');
+      sub.textContent = isHi
+        ? 'लक्षण, सुरक्षा प्रोटोकॉल व प्राथमिक उपचार जाँचे जा रहे हैं'
+        : (isOr ? 'ଲକ୍ଷଣ, ସୁରକ୍ଷା ପ୍ରୋଟୋକଲ୍ ଓ ଚିକିତ୍ସା ଯାଞ୍ଚ ହେଉଛି' : 'Analyzing clinical features & triage safety protocol');
+    }
 
     txtGroup.appendChild(title);
     txtGroup.appendChild(sub);
@@ -1870,6 +1884,12 @@
     if (input) input.value = '';
     const repInput = $('reportInput');
     if (repInput) repInput.value = '';
+    const qInput = $('question');
+    if (qInput) {
+      qInput.placeholder = currentLang === 'hi'
+        ? 'यहाँ अपना लक्षण या स्वास्थ्य संबंधी प्रश्न लिखें...'
+        : (currentLang === 'or' ? 'ଏଠାରେ ଆପଣଙ୍କ ଲକ୍ଷଣ ବା ସ୍ୱାସ୍ଥ୍ୟ ପ୍ରଶ୍ନ ଲେଖନ୍ତୁ...' : 'Type your symptom or health query here...');
+    }
     const imagePreviewLabel = $('imagePreviewLabel');
     if (imagePreviewLabel) {
       const isOr = currentLang === 'or';
@@ -1880,12 +1900,16 @@
     if (analyzePhotoBtnText) {
       const isOr = currentLang === 'or';
       const isHi = currentLang === 'hi';
-      analyzePhotoBtnText.textContent = isHi ? 'फोटो की जाँच करें (AI Analysis)' : (isOr ? 'ଫଟୋ ପରୀକ୍ଷା କରନ୍ତୁ' : 'Scan & Analyze Photo');
+      analyzePhotoBtnText.textContent = isHi ? '🚀 फोटो की AI जाँच शुरू करें →' : (isOr ? '🚀 ଫଟୋର AI ପରୀକ୍ଷା ଆରମ୍ଭ କରନ୍ତୁ →' : '🚀 Start AI Photo Scan Now →');
     }
   }
 
   function compressAndSetImage(file, isReport = false) {
-    if (!file || !file.type.startsWith('image/')) return;
+    const isImg = file && (
+      (typeof file.type === 'string' && file.type.toLowerCase().startsWith('image/')) ||
+      /\.(jpe?g|png|webp|bmp|gif|heic|tiff?)$/i.test(file.name || '')
+    );
+    if (!file || !isImg) return;
     const processImage = (src, isBlobUrl) => {
       const img = new Image();
       img.onload = () => {
@@ -1919,21 +1943,28 @@
           previewUrl: compressedDataUrl,
           isReport: !!isReport
         };
+        const isOr = currentLang === 'or';
+        const isHi = currentLang === 'hi';
         if (isReport) {
           selectedDepartment = 'report';
           const pills = document.querySelectorAll('.dept-pill');
           pills.forEach((x) => x.classList.toggle('active', x.getAttribute('data-dept') === 'report'));
           const imagePreviewLabel = $('imagePreviewLabel');
           if (imagePreviewLabel) {
-            const isOr = currentLang === 'or';
-            const isHi = currentLang === 'hi';
             imagePreviewLabel.textContent = isHi ? '📄 पर्ची / रिपोर्ट संलग्न है' : (isOr ? '📄 ପ୍ରେସକ୍ରିପସନ୍ / ରିପୋର୍ଟ ସଂଲଗ୍ନ ଅଛି' : '📄 Prescription / Report Attached');
           }
           const analyzePhotoBtnText = $('analyzePhotoBtnText');
           if (analyzePhotoBtnText) {
-            const isOr = currentLang === 'or';
-            const isHi = currentLang === 'hi';
-            analyzePhotoBtnText.textContent = isHi ? 'रिपोर्ट का अर्थ समझें' : (isOr ? 'ରିପୋର୍ଟ ବିଶ୍ଳେଷଣ କରନ୍ତୁ' : 'Scan & Explain Report');
+            analyzePhotoBtnText.textContent = isHi ? '🚀 रिपोर्ट की AI जाँच शुरू करें →' : (isOr ? '🚀 ରିପୋର୍ଟର AI ବିଶ୍ଳେଷଣ ଆରମ୍ଭ କରନ୍ତୁ →' : '🚀 Start AI Report Scan Now →');
+          }
+        } else {
+          const imagePreviewLabel = $('imagePreviewLabel');
+          if (imagePreviewLabel) {
+            imagePreviewLabel.textContent = isHi ? '📷 फोटो संलग्न है' : (isOr ? '📷 ଫଟୋ ସଂଲଗ୍ନ ହୋଇଛି' : '📷 Clinical Photo Attached');
+          }
+          const analyzePhotoBtnText = $('analyzePhotoBtnText');
+          if (analyzePhotoBtnText) {
+            analyzePhotoBtnText.textContent = isHi ? '🚀 फोटो की AI जाँच शुरू करें →' : (isOr ? '🚀 ଫଟୋର AI ପରୀକ୍ଷା ଆରମ୍ଭ କରନ୍ତୁ →' : '🚀 Start AI Photo Scan Now →');
           }
         }
         let thumb = $('imagePreviewThumb');
@@ -1946,8 +1977,19 @@
         }
         thumb.src = compressedDataUrl;
         const tray = $('imagePreviewTray');
-        if (tray) tray.hidden = false;
-        $('question')?.focus();
+        if (tray) {
+          tray.hidden = false;
+          try {
+            tray.scrollIntoView({ behavior: 'smooth', block: 'center' });
+          } catch {}
+        }
+        // Update input placeholder to guide older users on how to proceed without popping virtual keyboard
+        const qInput = $('question');
+        if (qInput) {
+          qInput.placeholder = isReport
+            ? (isHi ? '(वैकल्पिक) कोई सवाल लिखें या ऊपर "रिपोर्ट की AI जाँच शुरू करें" दबाएं ↑' : (isOr ? '(ଆବଶ୍ୟକ ହେଲେ) ପ୍ରଶ୍ନ ଲେଖନ୍ତୁ ବା ଉପରେ "AI ବିଶ୍ଳେଷଣ ଆରମ୍ଭ କରନ୍ତୁ" ଦବାନ୍ତୁ ↑' : '(Optional) Add note, or tap "Start AI Report Scan Now" above ↑'))
+            : (isHi ? '(वैकल्पिक) कोई सवाल लिखें या ऊपर "फोटो की AI जाँच शुरू करें" दबाएं ↑' : (isOr ? '(ଆବଶ୍ୟକ ହେଲେ) ପ୍ରଶ୍ନ ଲେଖନ୍ତୁ ବା ଉପରେ "AI ପରୀକ୍ଷା ଆରମ୍ଭ କରନ୍ତୁ" ଦବାନ୍ତୁ ↑' : '(Optional) Add note, or tap "Start AI Photo Scan Now" above ↑'));
+        }
       };
       img.onerror = () => {
         if (isBlobUrl) {
@@ -1980,14 +2022,21 @@
     const analyzeBtn = $('analyzePhotoBtn');
 
     if (cameraBtn && cameraInput) {
-      cameraBtn.addEventListener('click', () => cameraInput.click());
+      cameraBtn.addEventListener('click', () => {
+        cameraInput.value = '';
+        cameraInput.click();
+      });
     }
     if (photoBox && cameraInput) {
-      photoBox.addEventListener('click', () => cameraInput.click());
+      photoBox.addEventListener('click', () => {
+        cameraInput.value = '';
+        cameraInput.click();
+      });
     }
     if (reportBox && reportInput) {
       reportBox.addEventListener('click', () => {
         selectedDepartment = 'report';
+        reportInput.value = '';
         reportInput.click();
       });
     }
@@ -1998,7 +2047,10 @@
       });
     }
     if (regionalCameraBtn && cameraInput) {
-      regionalCameraBtn.addEventListener('click', () => cameraInput.click());
+      regionalCameraBtn.addEventListener('click', () => {
+        cameraInput.value = '';
+        cameraInput.click();
+      });
     }
     if (removeBtn) {
       removeBtn.addEventListener('click', () => clearPendingImage());
@@ -2062,11 +2114,16 @@
 
     const activeImage = pendingSkinImage;
     const activeDept = selectedDepartment;
+    const isReport = activeDept === 'report' || activeImage?.isReport;
     clearPendingImage();
 
-    const userBubbleText = text || (currentLang === 'hi'
-      ? '📷 क्लिनिकल फोटो मूल्यांकन के लिए भेजी गई'
-      : (currentLang === 'or' ? '📷 ଡାକ୍ତରୀ ପରୀକ୍ଷା ପାଇଁ ଫଟୋ ପଠାଗଲା' : '📷 Clinical photo sent for assessment'));
+    const userBubbleText = text || (isReport
+      ? (currentLang === 'hi'
+        ? '📄 डॉक्टर पर्ची / लैब टेस्ट रिपोर्ट विश्लेषण के लिए भेजी गई'
+        : (currentLang === 'or' ? '📄 ଡାକ୍ତରୀ ପ୍ରେସକ୍ରିପସନ୍ / ଲ୍ୟାବ୍ ରିପୋର୍ଟ ବିଶ୍ଳେଷଣ ପାଇଁ ପଠାଗଲା' : '📄 Doctor Prescription / Lab Report sent for clinical analysis'))
+      : (currentLang === 'hi'
+        ? '📷 क्लिनिकल फोटो मूल्यांकन के लिए भेजी गई'
+        : (currentLang === 'or' ? '📷 ଡାକ୍ତରୀ ପରୀକ୍ଷା ପାଇଁ ଫଟୋ ପଠାଗଲା' : '📷 Clinical photo sent for assessment')));
     const userBubble = addBubble('user', userBubbleText);
     if (activeImage && activeImage.previewUrl) {
       const card = document.createElement('div');
@@ -2074,22 +2131,22 @@
       const imgEl = document.createElement('img');
       imgEl.src = activeImage.previewUrl;
       imgEl.className = 'user-sent-image';
-      imgEl.alt = 'Uploaded clinical photo';
+      imgEl.alt = isReport ? 'Uploaded prescription or report' : 'Uploaded clinical photo';
       const badge = document.createElement('span');
       badge.className = 'user-image-badge';
-      badge.textContent = currentLang === 'hi'
-        ? '📷 फोटो (Photo)'
-        : (currentLang === 'or' ? '📷 ଫଟୋ (Photo)' : '📷 Photo');
+      badge.textContent = isReport
+        ? (currentLang === 'hi' ? '📄 पर्ची / रिपोर्ट' : (currentLang === 'or' ? '📄 ପ୍ରେସକ୍ରିପସନ୍ / ରିପୋର୍ଟ' : '📄 Prescription/Report'))
+        : (currentLang === 'hi' ? '📷 फोटो (Photo)' : (currentLang === 'or' ? '📷 ଫଟୋ (Photo)' : '📷 Photo'));
       card.appendChild(imgEl);
       card.appendChild(badge);
       userBubble.prepend(card);
     }
 
-    lastUserQuery = text || (activeImage ? 'Clinical photo examination' : '');
+    lastUserQuery = text || (activeImage ? (isReport ? 'Prescription and lab report examination' : 'Clinical photo examination') : '');
     $('question').value = '';
     resizeInput();
     updateCounter();
-    const wait = activeImage ? scanningIndicator() : typing();
+    const wait = activeImage ? scanningIndicator(isReport) : typing();
 
     // Rural Offline Emergency Intercept (0ms Response when data drops)
     if (typeof navigator !== 'undefined' && navigator.onLine === false) {

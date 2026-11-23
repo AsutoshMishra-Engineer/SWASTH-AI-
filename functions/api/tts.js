@@ -180,10 +180,19 @@ export async function onRequestPost({ request, env }) {
       .replace(/^[ \t]*[-•]\s*/gm, '')
       .trim();
 
-    if (cleanText.length > 450) {
-      const lastSpace = cleanText.lastIndexOf(' ', 450);
-      cleanText = (lastSpace > 150 ? cleanText.slice(0, lastSpace) : cleanText.slice(0, 450))
-        .replace(/[\u0B01-\u0B03\u0B3C-\u0B4D\u0B56\u0B57]+$/, '')
+    // Limit speech synthesis to first 220 chars for rapid sub-2s generation (ideal for elderly & rural listeners)
+    if (cleanText.length > 220) {
+      let cutIdx = -1;
+      const candidates = ['. ', '। ', '? ', '! ', '\n', ' '];
+      for (const sep of candidates) {
+        const last = cleanText.lastIndexOf(sep, 220);
+        if (last > cutIdx && last > 100) {
+          cutIdx = last;
+          break;
+        }
+      }
+      cleanText = (cutIdx > 0 ? cleanText.slice(0, cutIdx) : cleanText.slice(0, 220))
+        .replace(/[\u0B01-\u0B03\u0B3C-\u0B4D\u0B56\u0B57\u0901-\u0903\u093C-\u094D\u0951-\u0957]+$/, '')
         .trim();
     }
 
