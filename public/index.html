@@ -17,7 +17,7 @@
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+Devanagari:wght@400;500;600;700&family=Noto+Sans+Oriya:wght@400;500;600;700&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="/vendor/leaflet.css">
-  <link rel="stylesheet" href="/style.css?v=20261123_04">
+  <link rel="stylesheet" href="/style.css?v=20261123_05">
 </head>
 <body>
   <a class="skip" href="#main">Skip to content</a>
@@ -282,10 +282,10 @@
 
       <!-- WHATSAPP-STYLE CHAT COMPOSER (CLEAN & SMART) -->
       <form id="chatForm" class="composer whatsapp-composer" novalidate>
-        <!-- HIDDEN CAMERA & GALLERY INPUT (SUPPORTS BOTH LIVE CAMERA AND GALLERY SELECTION) -->
-        <input id="cameraInput" type="file" accept="image/*" hidden>
-        <!-- HIDDEN PRESCRIPTION & LAB REPORT INPUT -->
-        <input id="reportInput" type="file" accept="image/*" hidden>
+        <!-- CAMERA & GALLERY INPUT (OFF-SCREEN SO MOBILE CHANGE EVENTS NEVER DROP) -->
+        <input id="cameraInput" type="file" accept="image/*,image/jpeg,image/png,image/webp,image/heic,image/heif" style="position:fixed; top:-9999px; left:-9999px; opacity:0; width:1px; height:1px; pointer-events:none;">
+        <!-- PRESCRIPTION & LAB REPORT INPUT -->
+        <input id="reportInput" type="file" accept="image/*,image/jpeg,image/png,image/webp,image/heic,image/heif" style="position:fixed; top:-9999px; left:-9999px; opacity:0; width:1px; height:1px; pointer-events:none;">
 
         <div class="composer-box whatsapp-box">
           <!-- ATTACH PHOTO / GALLERY BUTTON -->
@@ -717,7 +717,7 @@
 
   <script src="/vendor/leaflet.js"></script>
   <script src="/vendor/supabase.js"></script>
-  <script src="/config.js?v=20261123_04"></script>
-  <script src="/app.js?v=20261123_04"></script>
+  <script src="/config.js?v=20261123_05"></script>
+  <script src="/app.js?v=20261123_05"></script>
 </body>
 </html>

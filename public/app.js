@@ -1905,11 +1905,8 @@
   }
 
   function compressAndSetImage(file, isReport = false) {
-    const isImg = file && (
-      (typeof file.type === 'string' && file.type.toLowerCase().startsWith('image/')) ||
-      /\.(jpe?g|png|webp|bmp|gif|heic|tiff?)$/i.test(file.name || '')
-    );
-    if (!file || !isImg) return;
+    if (!file) return;
+
     const processImage = (src, isBlobUrl) => {
       const img = new Image();
       img.onload = () => {
@@ -1918,8 +1915,8 @@
         }
         const canvas = document.createElement('canvas');
         const MAX_DIM = 1200;
-        let width = img.width;
-        let height = img.height;
+        let width = img.width || 800;
+        let height = img.height || 600;
         if (width > height) {
           if (width > MAX_DIM) {
             height = Math.round((height * MAX_DIM) / width);
@@ -1994,21 +1991,61 @@
       img.onerror = () => {
         if (isBlobUrl) {
           try { URL.revokeObjectURL(src); } catch {}
+          // Fallback from blob URL directly to FileReader
+          try {
+            const fr = new FileReader();
+            fr.onload = (e) => {
+              if (e.target?.result) processImage(e.target.result, false);
+            };
+            fr.onerror = () => showImageError();
+            fr.readAsDataURL(file);
+            return;
+          } catch {}
         }
+        showImageError();
       };
       img.src = src;
     };
 
-    if (typeof URL !== 'undefined' && typeof URL.createObjectURL === 'function') {
-      try {
-        const objUrl = URL.createObjectURL(file);
-        processImage(objUrl, true);
-        return;
-      } catch {}
+    function showImageError() {
+      const isOr = currentLang === 'or';
+      const isHi = currentLang === 'hi';
+      alert(isHi
+        ? 'फ़ोटो लोड नहीं हो सकी। कृपया JPG या PNG फ़ॉर्मेट की फ़ोटो चुनें।'
+        : (isOr
+          ? 'ଫଟୋ ଲୋଡ୍ ହୋଇପାରିଲା ନାହିଁ । ଦୟାକରି JPG ବା PNG ଫର୍ମାଟ୍ ଫଟୋ ବାଛନ୍ତୁ ।'
+          : 'Could not load photo. Please choose a JPG or PNG photo.'));
     }
-    const reader = new FileReader();
-    reader.onload = (e) => processImage(e.target.result, false);
-    reader.readAsDataURL(file);
+
+    // Always prefer FileReader for mobile content URIs as it avoids cross-origin blob restrictions
+    try {
+      const reader = new FileReader();
+      reader.onload = (e) => {
+        if (e.target?.result) {
+          processImage(e.target.result, false);
+        } else if (typeof URL !== 'undefined' && typeof URL.createObjectURL === 'function') {
+          processImage(URL.createObjectURL(file), true);
+        }
+      };
+      reader.onerror = () => {
+        if (typeof URL !== 'undefined' && typeof URL.createObjectURL === 'function') {
+          try {
+            processImage(URL.createObjectURL(file), true);
+            return;
+          } catch {}
+        }
+        showImageError();
+      };
+      reader.readAsDataURL(file);
+    } catch {
+      if (typeof URL !== 'undefined' && typeof URL.createObjectURL === 'function') {
+        try {
+          processImage(URL.createObjectURL(file), true);
+        } catch {
+          showImageError();
+        }
+      }
+    }
   }
 
   function initCameraControl() {
@@ -2023,20 +2060,17 @@
 
     if (cameraBtn && cameraInput) {
       cameraBtn.addEventListener('click', () => {
-        cameraInput.value = '';
         cameraInput.click();
       });
     }
     if (photoBox && cameraInput) {
       photoBox.addEventListener('click', () => {
-        cameraInput.value = '';
         cameraInput.click();
       });
     }
     if (reportBox && reportInput) {
       reportBox.addEventListener('click', () => {
         selectedDepartment = 'report';
-        reportInput.value = '';
         reportInput.click();
       });
     }
@@ -2044,11 +2078,11 @@
       reportInput.addEventListener('change', (e) => {
         const file = e.target.files?.[0];
         if (file) compressAndSetImage(file, true);
+        try { reportInput.value = ''; } catch {}
       });
     }
     if (regionalCameraBtn && cameraInput) {
       regionalCameraBtn.addEventListener('click', () => {
-        cameraInput.value = '';
         cameraInput.click();
       });
     }
@@ -2066,6 +2100,7 @@
       cameraInput.addEventListener('change', (e) => {
         const file = e.target.files?.[0];
         if (file) compressAndSetImage(file, false);
+        try { cameraInput.value = ''; } catch {}
       });
     }
   }
@@ -2336,6 +2371,7 @@
   let odiaMediaRecorder = null;
   let odiaAudioChunks = [];
   let odiaTimer = null;
+  let triggerVoiceRecording = null;
 
   function resetOdiaVoiceBtn() {
     odiaRecording = false;
@@ -2343,6 +2379,8 @@
     if (voiceBox) voiceBox.classList.remove('recording');
     const mainBtn = $('odiaVoiceMainBtn');
     if (mainBtn) mainBtn.classList.remove('recording');
+    const inlineMic = $('micBtn');
+    if (inlineMic) inlineMic.classList.remove('recording');
     const isOr = currentLang === 'or';
     const isHi = currentLang === 'hi';
     const voiceBoxTitle = $('voiceBoxTitle');
@@ -2394,6 +2432,8 @@
           odiaRecording = true;
           if (mainBtn) mainBtn.classList.add('recording');
           if (voiceBox) voiceBox.classList.add('recording');
+          const inlineMic = $('micBtn');
+          if (inlineMic) inlineMic.classList.add('recording');
           const isOr = currentLang === 'or';
           const isHi = currentLang === 'hi';
           const voiceBoxTitle = $('voiceBoxTitle');
@@ -2416,6 +2456,8 @@
           odiaRecording = false;
           if (mainBtn) mainBtn.classList.remove('recording');
           if (voiceBox) voiceBox.classList.remove('recording');
+          const inlineMic = $('micBtn');
+          if (inlineMic) inlineMic.classList.remove('recording');
           const isOr = currentLang === 'or';
           const isHi = currentLang === 'hi';
           const voiceBoxTitle = $('voiceBoxTitle');
@@ -2511,6 +2553,7 @@
       }
     };
 
+    triggerVoiceRecording = startStopVoice;
     if (mainBtn) mainBtn.addEventListener('click', startStopVoice);
     if (voiceBox) voiceBox.addEventListener('click', startStopVoice);
   }
@@ -2527,7 +2570,7 @@
         recognition = new SpeechRecognition();
         recognition.continuous = false;
         recognition.interimResults = false;
-        recognition.lang = currentLang === 'hi' ? 'hi-IN' : (currentLang === 'or' ? 'or-IN' : 'en-IN');
+        recognition.lang = currentLang === 'hi' ? 'hi-IN' : 'en-IN';
 
         recognition.onresult = (event) => {
           const transcript = event.results?.[0]?.[0]?.transcript;
@@ -2548,9 +2591,13 @@
           recording = false;
           micBtn.classList.remove('recording');
         };
-        recognition.onerror = () => {
+        recognition.onerror = (event) => {
           recording = false;
           micBtn.classList.remove('recording');
+          // If error is not simply silence, fallback to high-accuracy server speech recognition
+          if (event && event.error !== 'no-speech' && typeof triggerVoiceRecording === 'function') {
+            triggerVoiceRecording();
+          }
         };
       } catch (e) {
         recognition = null;
@@ -2558,17 +2605,13 @@
     }
 
     micBtn.addEventListener('click', () => {
-      if (!recognition) {
-        // Smooth fallback to MediaRecorder voice input if Web Speech Recognition is not supported in mobile browser
-        const regionalVoice = $('odiaVoiceMainBtn');
-        if (regionalVoice) {
-          regionalVoice.click();
+      // If currently in Odia mode, Chrome Web Speech Recognition has NO Odia support ('or-IN').
+      // Always use the server-side Gemini high-accuracy transcription pipeline!
+      if (currentLang === 'or' || !recognition) {
+        if (typeof triggerVoiceRecording === 'function') {
+          triggerVoiceRecording();
           return;
         }
-        alert(currentLang === 'hi'
-          ? 'इस ब्राउज़र में स्पीच रिकग्निशन समर्थित नहीं है। कृपया अपना प्रश्न टाइप करें।'
-          : (currentLang === 'or' ? 'ଏହି ବ୍ରାଉଜରରେ ସ୍ୱର ଚିହ୍ନଟ ସମର୍ଥିତ ନୁହେଁ ।' : 'Speech recognition is not supported in this browser. Please type your question.'));
-        return;
       }
       if (recording) {
         try { recognition.stop(); } catch {}
@@ -2577,13 +2620,16 @@
         return;
       }
       try {
-        recognition.lang = currentLang === 'hi' ? 'hi-IN' : (currentLang === 'or' ? 'or-IN' : 'en-IN');
+        recognition.lang = currentLang === 'hi' ? 'hi-IN' : 'en-IN';
         recognition.start();
         recording = true;
         micBtn.classList.add('recording');
       } catch {
         recording = false;
         micBtn.classList.remove('recording');
+        if (typeof triggerVoiceRecording === 'function') {
+          triggerVoiceRecording();
+        }
       }
     });
   }
