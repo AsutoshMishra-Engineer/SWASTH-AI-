@@ -29,6 +29,7 @@ export async function onRequestPost({ request, env }) {
 
   const token = m[1].trim();
   const isGuest = /^guest[_\:]/i.test(token);
+  let reqLang = 'en';
 
   try {
     let user;
@@ -46,7 +47,7 @@ export async function onRequestPost({ request, env }) {
     const rawImage = typeof body?.image === 'string' ? body.image.trim() : '';
     const mimeType = typeof body?.mimeType === 'string' ? body.mimeType : 'image/jpeg';
     const notes = typeof body?.notes === 'string' ? body.notes.trim().slice(0, 300) : '';
-    const reqLang = typeof body?.lang === 'string' ? body.lang.toLowerCase() : 'en';
+    reqLang = typeof body?.lang === 'string' ? body.lang.toLowerCase() : 'en';
     const reportType = typeof body?.reportType === 'string' ? body.reportType.toLowerCase() : 'auto';
 
     if (!rawImage) {
@@ -153,8 +154,15 @@ Conclude with the certified health disclaimer.`;
 
   } catch (err) {
     if (err instanceof UpstreamError) {
-      console.error('Vision report upstream error:', err.where, err.kind, err.detail);
-      return json({ error: 'upstream_error', message: 'Medical vision service is momentarily busy. Please try again in a few seconds.' }, 503);
+      console.error('Vision report upstream error:', err.where, err.status, err.detail);
+      const isOr = reqLang === 'or';
+      const isHi = reqLang === 'hi';
+      const busyMsg = isHi
+        ? 'मेडिकल रिपोर्ट विश्लेषण सेवा इस समय व्यस्त है। कृपया कुछ क्षण बाद पुनः प्रयास करें।'
+        : (isOr
+          ? 'ଡାକ୍ତରୀ ରିପୋର୍ଟ ବିଶ୍ଳେଷଣ ସେବା ଏହି ମୁହୂର୍ତ୍ତରେ ବ୍ୟସ୍ତ ଅଛି । ଦୟାକରି କିଛି ସମୟ ପରେ ପୁନର୍ବାର ଚେଷ୍ଟା କରନ୍ତୁ ।'
+          : 'Medical vision service is momentarily busy. Please try again in a few seconds.');
+      return json({ error: 'upstream_error', message: busyMsg }, 503);
     }
     console.error('Vision report unhandled exception:', err);
     return json({ error: 'internal_error', message: 'An unexpected error occurred. Please try again.' }, 500);

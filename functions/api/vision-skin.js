@@ -29,6 +29,7 @@ export async function onRequestPost({ request, env }) {
 
   const token = m[1].trim();
   const isGuest = /^guest[_\:]/i.test(token);
+  let reqLang = 'en';
 
   try {
     let user;
@@ -46,7 +47,7 @@ export async function onRequestPost({ request, env }) {
     const rawImage = typeof body?.image === 'string' ? body.image.trim() : '';
     const mimeType = typeof body?.mimeType === 'string' ? body.mimeType : 'image/jpeg';
     const symptoms = typeof body?.symptoms === 'string' ? body.symptoms.trim().slice(0, 300) : '';
-    const reqLang = typeof body?.lang === 'string' ? body.lang.toLowerCase() : 'en';
+    reqLang = typeof body?.lang === 'string' ? body.lang.toLowerCase() : 'en';
     const reqDept = typeof body?.department === 'string' ? body.department.toLowerCase() : 'auto';
 
     if (!rawImage) {

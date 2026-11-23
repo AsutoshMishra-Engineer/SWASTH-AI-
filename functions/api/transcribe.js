@@ -30,6 +30,7 @@ export async function onRequestPost({ request, env }) {
 
   const token = m[1].trim();
   const isGuest = /^guest[_\:]/i.test(token);
+  let reqLang = 'or';
 
   try {
     let user;
@@ -59,7 +60,7 @@ export async function onRequestPost({ request, env }) {
       'gemini-3-flash-preview',
       'gemini-flash-latest'
     ].filter(Boolean);
-    const reqLang = typeof body?.lang === 'string' ? body.lang.toLowerCase() : 'or';
+    reqLang = typeof body?.lang === 'string' ? body.lang.toLowerCase() : 'or';
     const isHi = reqLang === 'hi';
     const isEn = reqLang === 'en';
     const prompt = isHi
