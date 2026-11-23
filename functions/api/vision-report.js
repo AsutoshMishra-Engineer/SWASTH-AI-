@@ -99,8 +99,13 @@ ${langHeading}
 
 Conclude with the certified health disclaimer.`;
 
-    const primaryModel = env.GEMINI_VISION_MODEL || 'gemini-flash-latest';
-    const modelsToTry = [primaryModel, 'gemini-flash-lite-latest'];
+    const modelsToTry = [
+      env.GEMINI_VISION_MODEL,
+      'gemini-flash-lite-latest',
+      'gemini-3.5-flash',
+      'gemini-3.5-flash-lite',
+      'gemini-flash-latest'
+    ].filter(Boolean);
 
     let adviceText = '';
     for (const model of modelsToTry) {

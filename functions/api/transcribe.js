@@ -52,8 +52,13 @@ export async function onRequestPost({ request, env }) {
       return json({ error: 'too_large', message: 'Audio recording too long.' }, 413);
     }
 
-    const primaryModel = env.GEMINI_AUDIO_MODEL || 'gemini-flash-latest';
-    const modelsToTry = [primaryModel, 'gemini-flash-lite-latest'];
+    const modelsToTry = [
+      env.GEMINI_AUDIO_MODEL,
+      'gemini-flash-lite-latest',
+      'gemini-3.5-flash',
+      'gemini-3.5-flash-lite',
+      'gemini-flash-latest'
+    ].filter(Boolean);
     const reqLang = typeof body?.lang === 'string' ? body.lang.toLowerCase() : 'or';
     const isHi = reqLang === 'hi';
     const isEn = reqLang === 'en';

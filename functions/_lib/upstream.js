@@ -65,27 +65,45 @@ export async function embedQuery(env, text, L) {
 }
 
 export async function generateAnswer(env, system, userText, L) {
-  const model = MODELS(env).generate;
-  const generationConfig = { temperature: 0.2, maxOutputTokens: L.MAX_OUTPUT_TOKENS };
-  if (model.startsWith('gemini-2.5-flash')) generationConfig.thinkingConfig = { thinkingBudget: 0 };
+  const modelsToTry = [
+    env.GEMINI_MODEL,
+    'gemini-flash-lite-latest',
+    'gemini-3.5-flash',
+    'gemini-3.5-flash-lite',
+    'gemini-flash-latest'
+  ].filter(Boolean);
 
-  try {
-    const res = await timedFetch(`${gbase(env)}/v1beta/models/${model}:generateContent`, {
-      method: 'POST', headers: { 'x-goog-api-key': env.GEMINI_API_KEY, 'Content-Type': 'application/json' },
-      body: JSON.stringify({
-        systemInstruction: { parts: [{ text: system }] },
-        contents: [{ role: 'user', parts: [{ text: userText }] }],
-        generationConfig,
-      }),
-    }, L.UPSTREAM_TIMEOUT_MS, 'generate');
-    if (!res.ok) throw new UpstreamError('generate', res.status);
-    const data = await res.json();
-    const parts = data?.candidates?.[0]?.content?.parts;
-    return Array.isArray(parts) ? parts.map((p) => p.text || '').join('') : '';
-  } catch (err) {
-    // If Gemini hits a rate-limit (429), temporary issue (503), timeout, or failure:
-    if (env.GROQ_API_KEY) {
-      console.warn('Primary LLM (Gemini) failed. Executing automatic failover to Groq (openai/gpt-oss-120b)...', err.message);
+  let lastErr = null;
+  for (const model of modelsToTry) {
+    const generationConfig = { temperature: 0.2, maxOutputTokens: L.MAX_OUTPUT_TOKENS };
+    if (model.startsWith('gemini-2.5-flash')) generationConfig.thinkingConfig = { thinkingBudget: 0 };
+
+    try {
+      const res = await timedFetch(`${gbase(env)}/v1beta/models/${model}:generateContent`, {
+        method: 'POST', headers: { 'x-goog-api-key': env.GEMINI_API_KEY, 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          systemInstruction: { parts: [{ text: system }] },
+          contents: [{ role: 'user', parts: [{ text: userText }] }],
+          generationConfig,
+        }),
+      }, L.UPSTREAM_TIMEOUT_MS, 'generate');
+      if (res.ok) {
+        const data = await res.json();
+        const parts = data?.candidates?.[0]?.content?.parts;
+        const answer = Array.isArray(parts) ? parts.map((p) => p.text || '').join('') : '';
+        if (answer) return answer;
+      } else {
+        lastErr = new UpstreamError('generate', res.status);
+      }
+    } catch (err) {
+      lastErr = err;
+    }
+  }
+
+  // If all Gemini models hit a rate-limit (429), temporary issue (503), timeout, or failure:
+  if (env.GROQ_API_KEY) {
+    console.warn('Gemini models exhausted. Executing automatic failover to Groq (openai/gpt-oss-120b)...', lastErr?.message);
+    try {
       const groqRes = await timedFetch('https://api.groq.com/openai/v1/chat/completions', {
         method: 'POST',
         headers: {
@@ -108,8 +126,10 @@ export async function generateAnswer(env, system, userText, L) {
         const text = groqData.choices?.[0]?.message?.content || '';
         if (text) return text;
       }
+    } catch (groqErr) {
+      console.warn('Groq failover error:', groqErr?.message);
     }
-    throw err;
   }
+  throw lastErr || new UpstreamError('generate', 503);
 }
 
