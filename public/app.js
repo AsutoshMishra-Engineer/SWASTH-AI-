@@ -846,6 +846,8 @@
     const voiceBoxSub = $('voiceBoxSub');
     const photoBoxTitle = $('photoBoxTitle');
     const photoBoxSub = $('photoBoxSub');
+    const reportBoxTitle = $('reportBoxTitle');
+    const reportBoxSub = $('reportBoxSub');
 
     if (voiceBoxTitle) {
       voiceBoxTitle.textContent = isHi ? 'बोलकर परामर्श' : (isOr ? 'ଭଏସ୍ ପରାମର୍ଶ' : 'Voice Consultation');
@@ -859,14 +861,42 @@
     if (photoBoxSub) {
       photoBoxSub.textContent = isHi ? 'कैमरा या गैलरी' : (isOr ? 'କ୍ୟାମେରା ବା ଗ୍ୟାଲେରୀ' : 'Camera or Gallery');
     }
+    if (reportBoxTitle) {
+      reportBoxTitle.textContent = isHi ? '📄 लैब व पर्ची' : (isOr ? '📄 ଲ୍ୟାବ୍ ଓ ପ୍ରେସକ୍ରିପସନ୍' : '📄 Lab / Prescription');
+    }
+    if (reportBoxSub) {
+      reportBoxSub.textContent = isHi ? 'स्कैन व सरल अर्थ' : (isOr ? 'ସ୍କାନ୍ ଓ ସରଳ ବ୍ୟାଖ୍ୟା' : 'Scan & explain');
+    }
+
+    const handsFreeBtnLabel = $('handsFreeCallBtnLabel');
+    if (handsFreeBtnLabel) {
+      handsFreeBtnLabel.textContent = handsFreeCallActive
+        ? (isHi ? '⏹️ कॉल समाप्त' : (isOr ? '⏹️ କଲ୍ ବନ୍ଦ' : '⏹️ End Call'))
+        : (isHi ? '🎙️ वॉइस कॉल' : (isOr ? '🎙️ ଭଏସ୍ କଲ୍' : '🎙️ Hands-Free Call'));
+    }
+
+    const sosPillLabel = $('sosEmergencyPillLabel');
+    if (sosPillLabel) {
+      sosPillLabel.textContent = isHi ? '🚨 1-टैप SOS' : (isOr ? '🚨 ତୁରନ୍ତ SOS' : '🚨 1-Tap SOS');
+    }
 
     const imagePreviewLabel = $('imagePreviewLabel');
-    if (imagePreviewLabel) imagePreviewLabel.textContent = isHi ? '📷 फोटो संलग्न है' : (isOr ? '📷 ଫଟୋ ସଂଲଗ୍ନ ହୋଇଛି' : '📷 Clinical Photo Attached');
+    if (imagePreviewLabel) {
+      if (selectedDepartment === 'report' || pendingSkinImage?.isReport) {
+        imagePreviewLabel.textContent = isHi ? '📄 पर्ची / रिपोर्ट संलग्न है' : (isOr ? '📄 ପ୍ରେସକ୍ରିପସନ୍ / ରିପୋର୍ଟ ସଂଲଗ୍ନ ଅଛି' : '📄 Prescription / Report Attached');
+      } else {
+        imagePreviewLabel.textContent = isHi ? '📷 फोटो संलग्न है' : (isOr ? '📷 ଫଟୋ ସଂଲଗ୍ନ ହୋଇଛି' : '📷 Clinical Photo Attached');
+      }
+    }
     const imagePreviewHint = $('imagePreviewHint');
     if (imagePreviewHint) imagePreviewHint.textContent = isHi ? 'विभाग चुनें या सीधे जाँचें' : (isOr ? 'ବିଭାଗ ଚୟନ କରନ୍ତୁ ବା ସିଧାସଳଖ ପରୀକ୍ଷା କରନ୍ତୁ' : 'Tap below to analyze with AI');
     const analyzePhotoBtnText = $('analyzePhotoBtnText');
     if (analyzePhotoBtnText) {
-      analyzePhotoBtnText.textContent = isHi ? 'फोटो की जाँच करें (AI Analysis)' : (isOr ? 'ଫଟୋ ପରୀକ୍ଷା କରନ୍ତୁ' : 'Scan & Analyze Photo');
+      if (selectedDepartment === 'report' || pendingSkinImage?.isReport) {
+        analyzePhotoBtnText.textContent = isHi ? 'रिपोर्ट का अर्थ समझें' : (isOr ? 'ରିପୋର୍ଟ ବିଶ୍ଳେଷଣ କରନ୍ତୁ' : 'Scan & Explain Report');
+      } else {
+        analyzePhotoBtnText.textContent = isHi ? 'फोटो की जाँच करें (AI Analysis)' : (isOr ? 'ଫଟୋ ପରୀକ୍ଷା କରନ୍ତୁ' : 'Scan & Analyze Photo');
+      }
     }
 
     // Localize Department Selector Pills
@@ -877,7 +907,8 @@
       oral: { en: 'Oral', or: 'ମୁଖ ସ୍ୱାସ୍ଥ୍ୟ', hi: 'मुख स्वास्थ्य' },
       pediatric: { en: 'Baby', or: 'ଶିଶୁ ସ୍ୱାସ୍ଥ୍ୟ', hi: 'शिशु स्वास्थ्य' },
       wound: { en: 'Wound', or: 'କ୍ଷତ ଓ ପୋଡ଼ାଜଳା', hi: 'घाव व जलन' },
-      nail: { en: 'Nails', or: 'ନଖ ପରୀକ୍ଷା', hi: 'नाखून व एनीमिया' }
+      nail: { en: 'Nails', or: 'ନଖ ପରୀକ୍ଷା', hi: 'नाखून व एनीमिया' },
+      report: { en: 'Report/Rx', or: 'ରିପୋର୍ଟ/ପର୍ଚି', hi: 'रिपोर्ट/पर्ची' }
     };
     document.querySelectorAll('.dept-pill').forEach((pill) => {
       const code = pill.getAttribute('data-dept');
@@ -1164,6 +1195,13 @@
       activeSpeakBtn = null;
     }
     if (typeof window !== 'undefined') window._activeSpeechUtterance = null;
+
+    if (handsFreeCallActive) {
+      setHandsFreeStatus('listening');
+      setTimeout(() => {
+        if (handsFreeCallActive) recordNextHandsFreeTurn();
+      }, 700);
+    }
   }
 
   function findVoiceByLang(voices, langCode) {
@@ -1450,6 +1488,9 @@
     const isHindi = /[\u0900-\u097F]/.test(clean);
     const langCode = isHindi ? 'hi' : (isOdia ? 'or' : 'en');
     activeSpeakBtn = btn;
+    if (handsFreeCallActive) {
+      setHandsFreeStatus('speaking');
+    }
     if (label) {
       label.textContent = isHindi ? '⏳ ऑडियो तैयार...' : (isOdia ? '⏳ ଅଡିଓ ପ୍ରସ୍ତୁତ...' : '⏳ Loading...');
     }
@@ -1598,6 +1639,21 @@
       d.prepend(dermaHeader);
     }
 
+    if (data.kind === 'report_explanation') {
+      const repHeader = document.createElement('div');
+      repHeader.className = 'derma-card-header';
+      const isOr = currentLang === 'or';
+      const isHi = currentLang === 'hi';
+      repHeader.innerHTML = `
+        <div class="derma-head-icon">📄</div>
+        <div class="derma-head-content">
+          <div class="derma-head-title">${isHi ? '📄 प्रिस्क्रिप्शन व लैब टेस्ट रिपोर्ट विश्लेषण' : (isOr ? '📄 ଡାକ୍ତରୀ ପ୍ରେସକ୍ରିପସନ୍ ଓ ଲ୍ୟାବ୍ ରିପୋର୍ଟ ବିଶ୍ଳେଷଣ' : '📄 Diagnostic Lab Report & Prescription Explainer')}</div>
+          <div class="derma-head-sub">${isHi ? 'सरल भाषा में अर्थ, पोषण संबंधी सलाह व डॉक्टर से पूछने योग्य प्रश्न' : (isOr ? 'ସରଳ ଭାଷାରେ ଅର୍ଥ, ପଥ୍ୟ-ପୋଷଣ ଓ ଡାକ୍ତରଙ୍କୁ ପଚାରିବାକୁ ଥିବା ପ୍ରଶ୍ନ' : 'Plain language explanations, nutrition guidance & key doctor questions')}</div>
+        </div>
+      `;
+      d.prepend(repHeader);
+    }
+
     // Preload audio in background for instant 0ms playback when user clicks Listen
     if (data.answer) preloadAudioForAnswer(data.answer);
 
@@ -1679,6 +1735,32 @@
       const locBtn = emCard.querySelector('.emergency-locate-btn');
       if (locBtn) locBtn.addEventListener('click', () => openHospitalMap());
       d.appendChild(emCard);
+
+      // 1-Tap SOS Emergency Dispatch Card (WhatsApp & SMS with Live GPS)
+      const sosCard = document.createElement('div');
+      sosCard.className = 'emergency-dispatch-card';
+      sosCard.innerHTML = `
+        <h4><span class="sos-flash-dot" aria-hidden="true"></span> ${isHi ? '🚨 1-टैप आपातकालीन SOS संदेश (GPS सहित)' : (isOr ? '🚨 ତୁରନ୍ତ ଏମରଜେନ୍ସି SOS ସହାୟତା (GPS ସହିତ)' : '🚨 1-Tap Emergency SOS Dispatch (with GPS)')}</h4>
+        <p style="margin: 0 0 10px; font-size: 0.84rem; color: #7f1d1d; line-height: 1.4;">
+          ${isHi ? 'रोगी का नाम, आयु व लाइव GPS लोकेशन तुरंत 108 एम्बुलेंस और परिवार को भेजें:' : (isOr ? 'ରୋଗୀଙ୍କ ନାମ, ବୟସ ଓ ଲାଇଭ୍ GPS ଲୋକେସନ୍ ତୁରନ୍ତ ୧୦୮ ଆମ୍ବୁଲାନ୍ସ ବା ପରିବାରକୁ ପଠାନ୍ତୁ:' : 'Dispatch verified patient details and live GPS map coordinates immediately:')}
+        </p>
+        <div class="emergency-dispatch-actions">
+          <button class="btn-dispatch-sos btn-dispatch-wa" type="button">
+            💬 ${isHi ? 'व्हाट्सएप SOS (नक्शे सहित)' : (isOr ? 'ହ୍ୱାଟ୍ସଆପ୍ SOS (ମ୍ୟାପ୍ ସହ)' : 'WhatsApp SOS (GPS Map)')}
+          </button>
+          <button class="btn-dispatch-sos btn-dispatch-sms" type="button">
+            📱 ${isHi ? 'एसएमएस SOS (बिना इंटरनेट)' : (isOr ? 'SMS SOS (ବିନା ନେଟ୍)' : 'Cellular SMS SOS (Offline)')}
+          </button>
+          <a href="tel:108" class="btn-dispatch-sos btn-dispatch-call">
+            📞 ${isHi ? '108 कॉल करें' : (isOr ? '୧୦୮ କଲ୍ କରନ୍ତୁ' : 'Call 108 Ambulance')}
+          </a>
+        </div>
+      `;
+      const waBtn = sosCard.querySelector('.btn-dispatch-wa');
+      if (waBtn) waBtn.addEventListener('click', () => triggerEmergencyDispatch('wa', lastUserQuery));
+      const smsBtn = sosCard.querySelector('.btn-dispatch-sms');
+      if (smsBtn) smsBtn.addEventListener('click', () => triggerEmergencyDispatch('sms', lastUserQuery));
+      d.appendChild(sosCard);
     }
 
     if (Array.isArray(data.sources) && data.sources.length) {
@@ -1758,9 +1840,23 @@
     if (thumb) thumb.remove();
     const input = $('cameraInput');
     if (input) input.value = '';
+    const repInput = $('reportInput');
+    if (repInput) repInput.value = '';
+    const imagePreviewLabel = $('imagePreviewLabel');
+    if (imagePreviewLabel) {
+      const isOr = currentLang === 'or';
+      const isHi = currentLang === 'hi';
+      imagePreviewLabel.textContent = isHi ? '📷 फोटो संलग्न है' : (isOr ? '📷 ଫଟୋ ସଂଲଗ୍ନ ହୋଇଛି' : '📷 Clinical Photo Attached');
+    }
+    const analyzePhotoBtnText = $('analyzePhotoBtnText');
+    if (analyzePhotoBtnText) {
+      const isOr = currentLang === 'or';
+      const isHi = currentLang === 'hi';
+      analyzePhotoBtnText.textContent = isHi ? 'फोटो की जाँच करें (AI Analysis)' : (isOr ? 'ଫଟୋ ପରୀକ୍ଷା କରନ୍ତୁ' : 'Scan & Analyze Photo');
+    }
   }
 
-  function compressAndSetImage(file) {
+  function compressAndSetImage(file, isReport = false) {
     if (!file || !file.type.startsWith('image/')) return;
     const processImage = (src, isBlobUrl) => {
       const img = new Image();
@@ -1769,7 +1865,7 @@
           try { URL.revokeObjectURL(src); } catch {}
         }
         const canvas = document.createElement('canvas');
-        const MAX_DIM = 1024;
+        const MAX_DIM = 1200;
         let width = img.width;
         let height = img.height;
         if (width > height) {
@@ -1787,19 +1883,37 @@
         canvas.height = height;
         const ctx = canvas.getContext('2d');
         ctx.drawImage(img, 0, 0, width, height);
-        const compressedDataUrl = canvas.toDataURL('image/jpeg', 0.82);
+        const compressedDataUrl = canvas.toDataURL('image/jpeg', 0.85);
         const base64Data = compressedDataUrl.split(',')[1];
         pendingSkinImage = {
           data: base64Data,
           mimeType: 'image/jpeg',
-          previewUrl: compressedDataUrl
+          previewUrl: compressedDataUrl,
+          isReport: !!isReport
         };
+        if (isReport) {
+          selectedDepartment = 'report';
+          const pills = document.querySelectorAll('.dept-pill');
+          pills.forEach((x) => x.classList.toggle('active', x.getAttribute('data-dept') === 'report'));
+          const imagePreviewLabel = $('imagePreviewLabel');
+          if (imagePreviewLabel) {
+            const isOr = currentLang === 'or';
+            const isHi = currentLang === 'hi';
+            imagePreviewLabel.textContent = isHi ? '📄 पर्ची / रिपोर्ट संलग्न है' : (isOr ? '📄 ପ୍ରେସକ୍ରିପସନ୍ / ରିପୋର୍ଟ ସଂଲଗ୍ନ ଅଛି' : '📄 Prescription / Report Attached');
+          }
+          const analyzePhotoBtnText = $('analyzePhotoBtnText');
+          if (analyzePhotoBtnText) {
+            const isOr = currentLang === 'or';
+            const isHi = currentLang === 'hi';
+            analyzePhotoBtnText.textContent = isHi ? 'रिपोर्ट का अर्थ समझें' : (isOr ? 'ରିପୋର୍ଟ ବିଶ୍ଳେଷଣ କରନ୍ତୁ' : 'Scan & Explain Report');
+          }
+        }
         let thumb = $('imagePreviewThumb');
         if (!thumb) {
           thumb = document.createElement('img');
           thumb.id = 'imagePreviewThumb';
           thumb.className = 'image-preview-thumb';
-          thumb.alt = 'Clinical symptom photo preview';
+          thumb.alt = isReport ? 'Prescription or lab report preview' : 'Clinical symptom photo preview';
           $('imagePreviewThumbBox')?.appendChild(thumb);
         }
         thumb.src = compressedDataUrl;
@@ -1831,6 +1945,8 @@
     const cameraInput = $('cameraInput');
     const cameraBtn = $('cameraBtn');
     const photoBox = $('photoActionBox');
+    const reportBox = $('reportActionBox');
+    const reportInput = $('reportInput');
     const regionalCameraBtn = $('regionalCameraBtn');
     const removeBtn = $('removeImageBtn');
     const analyzeBtn = $('analyzePhotoBtn');
@@ -1840,6 +1956,18 @@
     }
     if (photoBox && cameraInput) {
       photoBox.addEventListener('click', () => cameraInput.click());
+    }
+    if (reportBox && reportInput) {
+      reportBox.addEventListener('click', () => {
+        selectedDepartment = 'report';
+        reportInput.click();
+      });
+    }
+    if (reportInput) {
+      reportInput.addEventListener('change', (e) => {
+        const file = e.target.files?.[0];
+        if (file) compressAndSetImage(file, true);
+      });
     }
     if (regionalCameraBtn && cameraInput) {
       regionalCameraBtn.addEventListener('click', () => cameraInput.click());
@@ -1857,7 +1985,7 @@
     if (cameraInput) {
       cameraInput.addEventListener('change', (e) => {
         const file = e.target.files?.[0];
-        if (file) compressAndSetImage(file);
+        if (file) compressAndSetImage(file, false);
       });
     }
   }
@@ -1994,9 +2122,14 @@
         token = session.access_token;
       }
 
-      const endpoint = activeImage ? '/api/vision-skin' : '/api/chat';
+      const isReport = activeDept === 'report' || activeImage?.isReport;
+      const endpoint = activeImage
+        ? (isReport ? '/api/vision-report' : '/api/vision-skin')
+        : '/api/chat';
       const payload = activeImage
-        ? { image: activeImage.data, mimeType: activeImage.mimeType, symptoms: text, lang: currentLang, department: activeDept }
+        ? (isReport
+            ? { image: activeImage.data, mimeType: activeImage.mimeType, notes: text, lang: currentLang, reportType: 'auto' }
+            : { image: activeImage.data, mimeType: activeImage.mimeType, symptoms: text, lang: currentLang, department: activeDept })
         : { message: text, lang: currentLang };
 
       const res = await fetch(endpoint, {
@@ -8568,6 +8701,275 @@
     }
   }
   initOfflineEmergency();
+
+  // ---------- 1-Tap SOS Emergency Ambulance Dispatch (SMS & WhatsApp with GPS) ----------
+  function getNearestGovtHospital(lat, lng) {
+    if (typeof GOVT_HOSPITALS === 'undefined' || !Array.isArray(GOVT_HOSPITALS) || !GOVT_HOSPITALS.length) return null;
+    let minDist = Infinity;
+    let nearest = null;
+    for (const h of GOVT_HOSPITALS) {
+      const d = haversineKm(lat, lng, h.lat, h.lng);
+      if (d < minDist) {
+        minDist = d;
+        nearest = { ...h, distanceKm: d };
+      }
+    }
+    return nearest;
+  }
+
+  function getEmergencyDispatchDetails(symptomQuery) {
+    const meta = currentSession?.user?.user_metadata || {};
+    const patientName = meta.full_name || 'Verified Patient';
+    const patientAge = meta.age ? `${meta.age} Yrs` : 'Not specified';
+    const symptom = symptomQuery || lastUserQuery || 'Critical Emergency / Golden Hour Triage';
+
+    const lat = userLocationCoords?.lat || 20.2961;
+    const lng = userLocationCoords?.lng || 85.8245;
+    const mapsLink = `https://maps.google.com/?q=${lat.toFixed(5)},${lng.toFixed(5)}`;
+
+    const nearest = getNearestGovtHospital(lat, lng);
+    const hospitalInfo = nearest ? `${nearest.name} (~${nearest.distanceKm.toFixed(1)} km)` : 'Nearest Government Hospital / CHC (108)';
+
+    const textPayload = `🚨 SWASTH AI EMERGENCY SOS - ODISHA 🚨\n` +
+      `PATIENT: ${patientName} (Age: ${patientAge})\n` +
+      `EMERGENCY: ${symptom}\n` +
+      `LIVE GPS LOCATION: ${mapsLink}\n` +
+      `NEAREST FACILITY: ${hospitalInfo}\n` +
+      `AMBULANCE REQUIRED IMMEDIATELY. CALL 108 / 112.`;
+
+    return { patientName, patientAge, symptom, lat, lng, mapsLink, hospitalInfo, textPayload };
+  }
+
+  function triggerEmergencyDispatch(channel = 'wa', symptomQuery = '') {
+    const details = getEmergencyDispatchDetails(symptomQuery);
+    if (channel === 'wa') {
+      const waUrl = 'https://wa.me/?text=' + encodeURIComponent(details.textPayload);
+      if (typeof window !== 'undefined') window.open(waUrl, '_blank', 'noopener,noreferrer');
+    } else if (channel === 'sms') {
+      const smsUrl = 'sms:?body=' + encodeURIComponent(details.textPayload);
+      if (typeof window !== 'undefined') window.location.href = smsUrl;
+    }
+  }
+
+  function openSosModal(symptomQuery = '') {
+    const details = getEmergencyDispatchDetails(symptomQuery);
+    if ($('sosPatientName')) $('sosPatientName').textContent = details.patientName;
+    if ($('sosPatientAge')) $('sosPatientAge').textContent = details.patientAge;
+    if ($('sosSymptomText')) $('sosSymptomText').textContent = details.symptom;
+    if ($('sosGpsText')) $('sosGpsText').textContent = `${details.lat.toFixed(4)}° N, ${details.lng.toFixed(4)}° E`;
+    if ($('sosNearestHospital')) $('sosNearestHospital').textContent = details.hospitalInfo;
+
+    if ($('sosWhatsAppBtn')) {
+      $('sosWhatsAppBtn').href = 'https://wa.me/?text=' + encodeURIComponent(details.textPayload);
+    }
+    if ($('sosSmsBtn')) {
+      $('sosSmsBtn').href = 'sms:?body=' + encodeURIComponent(details.textPayload);
+    }
+
+    const modal = $('sosEmergencyModal');
+    if (!modal) return;
+    if (typeof modal.showModal === 'function') {
+      try { modal.showModal(); } catch { modal.setAttribute('open', ''); }
+    } else {
+      modal.setAttribute('open', '');
+    }
+  }
+
+  function closeSosModal() {
+    const modal = $('sosEmergencyModal');
+    if (!modal) return;
+    if (typeof modal.close === 'function') {
+      try { modal.close(); } catch { modal.removeAttribute('open'); }
+    } else {
+      modal.removeAttribute('open');
+    }
+  }
+
+  function initSosEmergencyControl() {
+    const pillBtn = $('sosEmergencyPillBtn');
+    if (pillBtn) pillBtn.addEventListener('click', () => openSosModal(lastUserQuery));
+
+    const closeBtn = $('closeSosModalBtn');
+    if (closeBtn) closeBtn.addEventListener('click', closeSosModal);
+
+    const waBtn = $('sosWhatsAppBtn');
+    if (waBtn) {
+      waBtn.addEventListener('click', (e) => {
+        e.preventDefault();
+        triggerEmergencyDispatch('wa', lastUserQuery);
+      });
+    }
+
+    const smsBtn = $('sosSmsBtn');
+    if (smsBtn) {
+      smsBtn.addEventListener('click', (e) => {
+        e.preventDefault();
+        triggerEmergencyDispatch('sms', lastUserQuery);
+      });
+    }
+  }
+  initSosEmergencyControl();
+
+  // ---------- 100% Hands-Free Voice-to-Voice Mode ----------
+  let handsFreeCallActive = false;
+  let handsFreeRecorder = null;
+  let handsFreeChunks = [];
+  let handsFreeTimer = null;
+
+  function setHandsFreeStatus(state) {
+    const title = $('handsFreeStatusTitle');
+    const sub = $('handsFreeStatusSub');
+    const isOr = currentLang === 'or';
+    const isHi = currentLang === 'hi';
+
+    if (state === 'listening') {
+      if (title) title.textContent = isHi ? '🎙️ सुन रहा हूँ... (बोलिए)' : (isOr ? '🎙️ ଶୁଣୁଛି... (ଆପଣ କୁହନ୍ତୁ)' : '🎙️ Listening... (Speak now)');
+      if (sub) sub.textContent = isHi ? 'आपकी बात पूरी होने पर स्वतः उत्तर मिलेगा' : (isOr ? 'ଆପଣ କହି ସାରିଲେ ଆପେ ଆପେ ଉତ୍ତର ଆସିବ' : 'Pause speaking to receive response automatically');
+    } else if (state === 'processing') {
+      if (title) title.textContent = isHi ? '⏳ विचार कर रहा हूँ...' : (isOr ? '⏳ ବିଚାର ଚାଲିଛି...' : '⏳ Thinking & Diagnosing...');
+      if (sub) sub.textContent = isHi ? 'चिकित्सीय मार्गदर्शन तैयार हो रहा है' : (isOr ? 'ଡାକ୍ତରୀ ପରାମର୍ଶ ପ୍ରସ୍ତୁତ ହେଉଛି' : 'Synthesizing verified medical triage');
+    } else if (state === 'speaking') {
+      if (title) title.textContent = isHi ? '🔊 बोल रहा हूँ... (सुनिए)' : (isOr ? '🔊 କହୁଛି... (ଶୁଣନ୍ତୁ)' : '🔊 Speaking response...');
+      if (sub) sub.textContent = isHi ? 'उत्तर समाप्त होने पर माइक फिर खुलेगा' : (isOr ? 'ଉତ୍ତର ସରିବା ପରେ ମାଇକ୍ ଆପେ ଖୋଲିବ' : 'Microphone will reopen automatically when finished');
+    }
+  }
+
+  async function startHandsFreeCall() {
+    if (handsFreeCallActive) {
+      endHandsFreeCall();
+      return;
+    }
+
+    if (typeof navigator === 'undefined' || !navigator.mediaDevices || !navigator.mediaDevices.getUserMedia) {
+      alert(currentLang === 'hi' ? 'माइक्रोफ़ोन समर्थित नहीं है।' : (currentLang === 'or' ? 'ମାଇକ୍ରୋଫୋନ୍ ସମର୍ଥନ ଉପଲବ୍ଧ ନାହିଁ ।' : 'Microphone not supported'));
+      return;
+    }
+
+    getAudioContext();
+
+    handsFreeCallActive = true;
+    const banner = $('handsFreeCallBanner');
+    if (banner) banner.hidden = false;
+    const btn = $('handsFreeCallBtn');
+    if (btn) btn.classList.add('active');
+    const btnLabel = $('handsFreeCallBtnLabel');
+    if (btnLabel) btnLabel.textContent = currentLang === 'hi' ? '⏹️ कॉल समाप्त' : (currentLang === 'or' ? '⏹️ କଲ୍ ବନ୍ଦ' : '⏹️ End Call');
+
+    setHandsFreeStatus('listening');
+    recordNextHandsFreeTurn();
+  }
+
+  function endHandsFreeCall() {
+    handsFreeCallActive = false;
+    if (handsFreeTimer) {
+      clearTimeout(handsFreeTimer);
+      handsFreeTimer = null;
+    }
+    if (handsFreeRecorder && handsFreeRecorder.state === 'recording') {
+      try { handsFreeRecorder.stop(); } catch {}
+    }
+    stopSpeaking();
+
+    const banner = $('handsFreeCallBanner');
+    if (banner) banner.hidden = true;
+    const btn = $('handsFreeCallBtn');
+    if (btn) btn.classList.remove('active');
+    const btnLabel = $('handsFreeCallBtnLabel');
+    if (btnLabel) btnLabel.textContent = currentLang === 'hi' ? '🎙️ वॉइस कॉल' : (currentLang === 'or' ? '🎙️ ଭଏସ୍ କଲ୍' : '🎙️ Hands-Free Call');
+  }
+
+  async function recordNextHandsFreeTurn() {
+    if (!handsFreeCallActive) return;
+    try {
+      const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
+      const mimeType = (typeof MediaRecorder !== 'undefined' && MediaRecorder.isTypeSupported && MediaRecorder.isTypeSupported('audio/webm'))
+        ? 'audio/webm'
+        : 'audio/mp4';
+
+      handsFreeRecorder = new MediaRecorder(stream);
+      handsFreeChunks = [];
+
+      handsFreeRecorder.ondataavailable = (e) => {
+        if (e.data && e.data.size > 0) handsFreeChunks.push(e.data);
+      };
+
+      handsFreeRecorder.onstart = () => {
+        setHandsFreeStatus('listening');
+      };
+
+      handsFreeRecorder.onstop = async () => {
+        stream.getTracks().forEach((t) => t.stop());
+        if (!handsFreeCallActive) return;
+
+        if (!handsFreeChunks.length) {
+          if (handsFreeCallActive) setTimeout(recordNextHandsFreeTurn, 800);
+          return;
+        }
+
+        setHandsFreeStatus('processing');
+        const audioBlob = new Blob(handsFreeChunks, { type: mimeType });
+        const reader = new FileReader();
+        reader.readAsDataURL(audioBlob);
+        reader.onloadend = async () => {
+          const base64Audio = (reader.result || '').split(',')[1];
+          if (!base64Audio || !handsFreeCallActive) return;
+
+          let token = isGuestMode ? getGuestId() : null;
+          if (!token) {
+            const { data } = await sb.auth.getSession();
+            token = data?.session?.access_token;
+          }
+
+          try {
+            const res = await fetch('/api/transcribe', {
+              method: 'POST',
+              headers: { 'Content-Type': 'application/json', Authorization: 'Bearer ' + token },
+              body: JSON.stringify({ audio: base64Audio, mimeType, lang: currentLang })
+            });
+            if (res.ok) {
+              const out = await res.json();
+              if (out.text && out.text.trim()) {
+                lastQueryWasVoice = true;
+                await send(out.text.trim());
+              } else {
+                if (handsFreeCallActive) {
+                  setHandsFreeStatus('listening');
+                  setTimeout(recordNextHandsFreeTurn, 1000);
+                }
+              }
+            } else {
+              if (handsFreeCallActive) {
+                setTimeout(recordNextHandsFreeTurn, 1500);
+              }
+            }
+          } catch (transErr) {
+            console.warn('Hands-free transcribe error:', transErr);
+            if (handsFreeCallActive) setTimeout(recordNextHandsFreeTurn, 1500);
+          }
+        };
+      };
+
+      handsFreeRecorder.start(250);
+      handsFreeTimer = setTimeout(() => {
+        if (handsFreeRecorder && handsFreeRecorder.state === 'recording') {
+          handsFreeRecorder.stop();
+        }
+      }, 6500);
+
+    } catch (micErr) {
+      console.warn('Hands-free mic error:', micErr);
+      endHandsFreeCall();
+    }
+  }
+
+  function initHandsFreeCallControl() {
+    const callBtn = $('handsFreeCallBtn');
+    if (callBtn) callBtn.addEventListener('click', startHandsFreeCall);
+
+    const endBtn = $('endHandsFreeCallBtn');
+    if (endBtn) endBtn.addEventListener('click', endHandsFreeCall);
+  }
+  initHandsFreeCallControl();
 
   function updateOnlineStatus() {
     const isOff = typeof navigator !== 'undefined' && navigator.onLine === false;

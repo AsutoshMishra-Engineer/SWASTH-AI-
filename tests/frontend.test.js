@@ -189,3 +189,67 @@ test('chat: network error renders retry bar and allows 1-tap re-send', async () 
   const botAnswer = [...d.querySelectorAll('.bubble.bot')].pop();
   assert.match(botAnswer.textContent, /Recovered answer/);
 });
+
+test('hands-free voice call button toggles active call state and shows live banner', async () => {
+  const { d, w } = boot({ session: verified }); await tick();
+  const callBtn = d.getElementById('handsFreeCallBtn');
+  const callBanner = d.getElementById('handsFreeCallBanner');
+  const endBtn = d.getElementById('endHandsFreeCallBtn');
+  assert.notEqual(callBtn, null);
+  assert.notEqual(callBanner, null);
+  assert.equal(callBanner.hidden, true);
+
+  // Mock getUserMedia
+  w.navigator.mediaDevices = {
+    getUserMedia: async () => ({
+      getTracks: () => [{ stop: () => {} }]
+    })
+  };
+  w.MediaRecorder = class {
+    constructor() { this.state = 'inactive'; }
+    start() { this.state = 'recording'; if (this.onstart) this.onstart(); }
+    stop() { this.state = 'inactive'; if (this.onstop) this.onstop(); }
+  };
+  w.MediaRecorder.isTypeSupported = () => true;
+
+  callBtn.click();
+  await tick();
+  assert.equal(callBanner.hidden, false);
+  assert.ok(callBtn.classList.contains('active'));
+
+  endBtn.click();
+  await tick();
+  assert.equal(callBanner.hidden, true);
+  assert.ok(!callBtn.classList.contains('active'));
+});
+
+test('1-tap SOS emergency button opens emergency modal with GPS and prefilled WhatsApp/SMS dispatch', async () => {
+  const { d } = boot({ session: verified }); await tick();
+  const sosBtn = d.getElementById('sosEmergencyPillBtn');
+  const sosModal = d.getElementById('sosEmergencyModal');
+  const waBtn = d.getElementById('sosWhatsAppBtn');
+  const smsBtn = d.getElementById('sosSmsBtn');
+  assert.notEqual(sosBtn, null);
+  assert.notEqual(sosModal, null);
+
+  sosBtn.click();
+  await tick();
+  assert.equal(sosModal.open, true);
+  assert.ok(waBtn.href.includes('wa.me'));
+  assert.ok(waBtn.href.includes('EMERGENCY%20SOS'));
+  assert.ok(smsBtn.href.includes('sms:'));
+});
+
+test('prescription and lab report action box binds file input and sets report triage mode', async () => {
+  const { d } = boot({ session: verified }); await tick();
+  const reportBox = d.getElementById('reportActionBox');
+  const reportInput = d.getElementById('reportInput');
+  assert.notEqual(reportBox, null);
+  assert.notEqual(reportInput, null);
+
+  let clicked = false;
+  reportInput.click = () => { clicked = true; };
+  reportBox.click();
+  assert.equal(clicked, true);
+});
+

@@ -56,9 +56,12 @@ export async function onRequestPost({ request, env }) {
     const modelsToTry = [primaryModel, 'gemini-flash-lite-latest'];
     const reqLang = typeof body?.lang === 'string' ? body.lang.toLowerCase() : 'or';
     const isHi = reqLang === 'hi';
+    const isEn = reqLang === 'en';
     const prompt = isHi
       ? 'The user is a rural or general citizen speaking in Hindi (हिन्दी) describing health symptoms or asking medical questions. Transcribe the spoken audio with high phonetic accuracy into clear Hindi Devanagari script. Understand regional rural accents, colloquial idioms, and phonetically transliterated terms. Output ONLY the exact transcribed text in Hindi, nothing else.'
-      : 'The user is a rural citizen or resident of Odisha, India speaking in Odia (ଓଡ଼ିଆ) describing health symptoms or asking medical questions. Transcribe the spoken audio with high phonetic accuracy into natural Odia script (ଓଡ଼ିଆ). Understand regional colloquial Odia dialects (Sambalpuri, Cuttacki, Baleswari, Ganjami), village symptom idioms, and mixed medical loan words. Output ONLY the exact transcribed text in pure Odia script, nothing else.';
+      : (isEn
+        ? 'The user is speaking in English describing health symptoms or asking medical questions. Transcribe the spoken audio with high phonetic accuracy into clear English text. Understand diverse Indian English accents and medical terms. Output ONLY the exact transcribed text in English, nothing else.'
+        : 'The user is a rural citizen or resident of Odisha, India speaking in Odia (ଓଡ଼ିଆ) describing health symptoms or asking medical questions. Transcribe the spoken audio with high phonetic accuracy into natural Odia script (ଓଡ଼ିଆ). Understand regional colloquial Odia dialects (Sambalpuri, Cuttacki, Baleswari, Ganjami), village symptom idioms, and mixed medical loan words. Output ONLY the exact transcribed text in pure Odia script, nothing else.');
 
     let transcribed = '';
     for (const model of modelsToTry) {
