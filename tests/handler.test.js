@@ -88,3 +88,27 @@ test('guest mode: over 5 questions -> 429 guest_limit', async () => {
   assert.equal(body.error, 'guest_limit');
   assert.match(body.message, /limit of 5 guest questions/);
 });
+
+test('chat: lang=or strictly routes to Odia prompt and Odia disclaimer even with mixed script', async () => {
+  let promptSent = null;
+  const originalFetch = globalThis.fetch;
+  globalThis.fetch = async (url, init = {}) => {
+    const u = String(url);
+    if (u.includes(':generateContent')) {
+      promptSent = JSON.parse(init.body);
+      return reply({ candidates: [{ content: { parts: [{ text: 'ମଶା କାମୁଡ଼ାରୁ ରକ୍ଷା ପାଆନ୍ତୁ ।' }] } }] });
+    }
+    return originalFetch(url, init);
+  };
+  const r = await handleChat(new Request('https://site/api/chat', {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json', Authorization: 'Bearer tok' },
+    body: JSON.stringify({ message: 'Dengue fever 123', lang: 'or' })
+  }), ENV);
+  assert.equal(r.status, 200);
+  const json = await r.json();
+  assert.ok(json.disclaimer.includes('ଡାକ୍ତରୀ ରୋଗ ନିର୍ଣ୍ଣୟ ନୁହେଁ'));
+  assert.ok(promptSent);
+  const promptText = JSON.stringify(promptSent);
+  assert.ok(promptText.includes('pure Odia language'));
+});

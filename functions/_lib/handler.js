@@ -201,9 +201,24 @@ export async function handleChat(request, env) {
 
     // 3) Language Detection & Safety router (no AI, no quota used).
     const reqLang = typeof body?.lang === 'string' ? body.lang.toLowerCase() : '';
-    const isHindi = reqLang === 'hi' || /[\u0900-\u097F]/.test(message);
-    const isOdia = !isHindi && (reqLang === 'or' || /[\u0B00-\u0B7F]/.test(message));
-    const langCode = isHindi ? 'hi' : (isOdia ? 'or' : 'en');
+    const hasOdiaScript = /[\u0B00-\u0B7F]/.test(message);
+    const hasHindiScript = /[\u0900-\u097F]/.test(message);
+
+    let isOdia = false;
+    let isHindi = false;
+    if (reqLang === 'or') {
+      isOdia = true;
+    } else if (reqLang === 'hi') {
+      isHindi = true;
+    } else if (reqLang === 'en') {
+      isOdia = false;
+      isHindi = false;
+    } else if (hasOdiaScript) {
+      isOdia = true;
+    } else if (hasHindiScript) {
+      isHindi = true;
+    }
+    const langCode = isOdia ? 'or' : (isHindi ? 'hi' : 'en');
 
     const verdict = classify(message);
     if (verdict.type !== 'ok') return fixed(verdict.type, langCode);

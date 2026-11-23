@@ -189,15 +189,32 @@ export async function onRequestPost({ request, env }) {
 
     if (!cleanText) return json({ error: 'empty_text', message: 'Text empty after cleaning.' }, 400);
 
-    const isHindi = /[\u0900-\u097F]/.test(cleanText) || (typeof body?.lang === 'string' && body.lang === 'hi');
-    const isOdia = !isHindi && (/[\u0B00-\u0B7F]/.test(cleanText) || (typeof body?.lang === 'string' && body.lang === 'or'));
+    const reqLang = typeof body?.lang === 'string' ? body.lang.toLowerCase() : '';
+    const hasOdiaScript = /[\u0B00-\u0B7F]/.test(cleanText);
+    const hasHindiScript = /[\u0900-\u097F]/.test(cleanText);
+
+    let isOdia = false;
+    let isHindi = false;
+    if (reqLang === 'or') {
+      isOdia = true;
+    } else if (reqLang === 'hi') {
+      isHindi = true;
+    } else if (reqLang === 'en') {
+      isOdia = false;
+      isHindi = false;
+    } else if (hasOdiaScript) {
+      isOdia = true;
+    } else if (hasHindiScript) {
+      isHindi = true;
+    }
+
     let speechText = cleanText;
-    if (isHindi) speechText = normalizeForHindiSpeech(cleanText);
-    else if (isOdia) speechText = normalizeForOdiaSpeech(cleanText);
+    if (isOdia) speechText = normalizeForOdiaSpeech(cleanText);
+    else if (isHindi) speechText = normalizeForHindiSpeech(cleanText);
 
     let targetLang = 'en-IN';
-    if (isHindi) targetLang = 'hi-IN';
-    else if (isOdia) targetLang = 'od-IN';
+    if (isOdia) targetLang = 'od-IN';
+    else if (isHindi) targetLang = 'hi-IN';
 
     let base64Audio = null;
     let mimeType = 'audio/wav';

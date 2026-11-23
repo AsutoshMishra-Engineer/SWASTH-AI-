@@ -76,6 +76,14 @@ test('guest mode card below auth box opens chat view with guest banner, chips, a
   assert.match(d.getElementById('guestRemainingText').textContent, /questions left today/);
   assert.equal(d.querySelectorAll('.chip').length, 5);
 });
+test('inline guest button inside auth card also opens chat view in guest mode', async () => {
+  const { d } = boot(); await tick();
+  assert.equal(d.getElementById('chatView').hidden, true);
+  d.getElementById('inlineGuestBtn').click(); await tick();
+  assert.equal(d.getElementById('chatView').hidden, false);
+  assert.equal(d.getElementById('authView').hidden, true);
+  assert.equal(d.getElementById('guestChatBanner').hidden, false);
+});
 test('sign-up validates name, age, email and password, then calls Supabase with user metadata', async () => {
   const { d, w, calls } = boot(); await tick();
   d.getElementById('tabSignUp').click();

@@ -17,7 +17,7 @@
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+Devanagari:wght@400;500;600;700&family=Noto+Sans+Oriya:wght@400;500;600;700&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="/vendor/leaflet.css">
-  <link rel="stylesheet" href="/style.css?v=20261123_01">
+  <link rel="stylesheet" href="/style.css?v=20261123_02">
 </head>
 <body>
   <a class="skip" href="#main">Skip to content</a>
@@ -170,6 +170,14 @@
               </div>
               <button id="authSubmit" class="btn primary full-width" type="submit">Sign in</button>
             </form>
+            <div class="auth-divider" style="display:flex; align-items:center; margin:14px 0 10px; color:#94a3b8; font-size:0.8rem; text-transform:uppercase; letter-spacing:0.05em;">
+              <span style="flex:1; height:1px; background:#e2e8f0;"></span>
+              <span style="padding:0 10px;">or</span>
+              <span style="flex:1; height:1px; background:#e2e8f0;"></span>
+            </div>
+            <button id="inlineGuestBtn" class="btn ghost full-width" type="button" style="border:1.5px solid var(--primary); color:var(--primary); font-weight:700; background:#f0fdfa; padding:10px 14px; border-radius:var(--radius); font-size:0.92rem; cursor:pointer;">
+              Start Instant Consultation as Guest →
+            </button>
             <p id="authMsg" class="msg" role="status" aria-live="polite"></p>
             <button id="resendBtn" class="btn ghost full-width" type="button" hidden>Resend verification email</button>
             <p class="fine">We only use your email to authenticate verified access. Your questions remain strictly private.</p>
@@ -709,7 +717,7 @@
 
   <script src="/vendor/leaflet.js"></script>
   <script src="/vendor/supabase.js"></script>
-  <script src="/config.js?v=20261123_01"></script>
-  <script src="/app.js?v=20261123_01"></script>
+  <script src="/config.js?v=20261123_02"></script>
+  <script src="/app.js?v=20261123_02"></script>
 </body>
 </html>

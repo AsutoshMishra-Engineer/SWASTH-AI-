@@ -289,6 +289,8 @@
   if (navSignInBtn) navSignInBtn.addEventListener('click', exitGuestMode);
   const guestModeBtn = $('guestModeBtn');
   if (guestModeBtn) guestModeBtn.addEventListener('click', enterGuestMode);
+  const inlineGuestBtn = $('inlineGuestBtn');
+  if (inlineGuestBtn) inlineGuestBtn.addEventListener('click', enterGuestMode);
   const guestSignInBtn = $('guestSignInBtn');
   if (guestSignInBtn) guestSignInBtn.addEventListener('click', exitGuestMode);
   const navChatBtn = $('navChatBtn');
@@ -880,6 +882,19 @@
       sosPillLabel.textContent = isHi ? '🚨 1-टैप SOS' : (isOr ? '🚨 ତୁରନ୍ତ SOS' : '🚨 1-Tap SOS');
     }
 
+    const inlineGuestBtn = $('inlineGuestBtn');
+    if (inlineGuestBtn) {
+      inlineGuestBtn.textContent = isHi
+        ? 'अतिथि के रूप में परामर्श शुरू करें →'
+        : (isOr ? 'ଅତିଥି ଭାବରେ ତୁରନ୍ତ ପରାମର୍ଶ ଆରମ୍ଭ କରନ୍ତୁ →' : 'Start Instant Consultation as Guest →');
+    }
+    const guestModeBtn = $('guestModeBtn');
+    if (guestModeBtn) {
+      guestModeBtn.textContent = isHi
+        ? 'अतिथि परामर्श शुरू करें →'
+        : (isOr ? 'ଅତିଥି ପରାମର୍ଶ ଆରମ୍ଭ କରନ୍ତୁ →' : 'Start Guest Consultation →');
+    }
+
     const imagePreviewLabel = $('imagePreviewLabel');
     if (imagePreviewLabel) {
       if (selectedDepartment === 'report' || pendingSkinImage?.isReport) {
@@ -1232,8 +1247,8 @@
     }
     try {
       const voices = window.speechSynthesis.getVoices() || [];
-      const isOdia = targetLang === 'or' || /[\u0B00-\u0B7F]/.test(clean);
-      const isHindi = targetLang === 'hi' || /[\u0900-\u097F]/.test(clean);
+      const isOdia = targetLang === 'or' || (targetLang !== 'hi' && /[\u0B00-\u0B7F]/.test(clean));
+      const isHindi = targetLang === 'hi' || (!isOdia && /[\u0900-\u097F]/.test(clean));
 
       if (isOdia) {
         const nativeOdiaVoice = findVoiceByLang(voices, 'or');
@@ -1315,10 +1330,10 @@
       stopSpeaking();
       const label = btn.querySelector('.speak-label');
       if (label) {
-        const isHi = targetLang === 'hi' || /[\u0900-\u097F]/.test(clean);
-        const isOr = targetLang === 'or' || /[\u0B00-\u0B7F]/.test(clean);
-        label.textContent = isHi ? 'ऑडियो उपलब्ध नहीं' : (isOr ? 'ଅଡିଓ ସଂଯୋଗ ହେଉନାହିଁ' : 'Audio not available');
-        setTimeout(() => { if (label) label.textContent = isHi ? 'सुनें' : (isOr ? 'ଶୁଣନ୍ତୁ' : 'Listen'); }, 3000);
+        const isOr = targetLang === 'or' || (targetLang !== 'hi' && /[\u0B00-\u0B7F]/.test(clean));
+        const isHi = targetLang === 'hi' || (!isOr && /[\u0900-\u097F]/.test(clean));
+        label.textContent = isOr ? 'ଅଡିଓ ସଂଯୋଗ ହେଉନାହିଁ' : (isHi ? 'ऑडियो उपलब्ध नहीं' : 'Audio not available');
+        setTimeout(() => { if (label) label.textContent = isOr ? 'ଶୁଣନ୍ତୁ' : (isHi ? 'सुनें' : 'Listen'); }, 3000);
       }
     }
   }
@@ -1484,15 +1499,28 @@
 
     btn.classList.add('speaking');
     const label = btn.querySelector('.speak-label');
-    const isOdia = /[\u0B00-\u0B7F]/.test(clean);
-    const isHindi = /[\u0900-\u097F]/.test(clean);
-    const langCode = isHindi ? 'hi' : (isOdia ? 'or' : 'en');
+    const hasOdiaScript = /[\u0B00-\u0B7F]/.test(clean);
+    const hasHindiScript = /[\u0900-\u097F]/.test(clean);
+    let langCode = currentLang || 'en';
+    if (currentLang === 'or') {
+      langCode = 'or';
+    } else if (currentLang === 'hi') {
+      langCode = 'hi';
+    } else if (currentLang === 'en') {
+      langCode = hasOdiaScript ? 'or' : (hasHindiScript ? 'hi' : 'en');
+    } else if (hasOdiaScript) {
+      langCode = 'or';
+    } else if (hasHindiScript) {
+      langCode = 'hi';
+    }
+    const isOdia = langCode === 'or';
+    const isHindi = langCode === 'hi';
     activeSpeakBtn = btn;
     if (handsFreeCallActive) {
       setHandsFreeStatus('speaking');
     }
     if (label) {
-      label.textContent = isHindi ? '⏳ ऑडियो तैयार...' : (isOdia ? '⏳ ଅଡିଓ ପ୍ରସ୍ତୁତ...' : '⏳ Loading...');
+      label.textContent = isOdia ? '⏳ ଅଡିଓ ପ୍ରସ୍ତୁତ...' : (isHindi ? '⏳ ऑडियो तैयार...' : '⏳ Loading...');
     }
 
     try {
@@ -1503,7 +1531,7 @@
           const audio = new Audio(audioData.blobUrl);
           activeAudio = audio;
           if (label) {
-            label.textContent = isHindi ? '⏹️ रोकें' : (isOdia ? '⏹️ ବନ୍ଦ କରନ୍ତୁ' : '⏹️ Stop');
+            label.textContent = isOdia ? '⏹️ ବନ୍ଦ କରନ୍ତୁ' : (isHindi ? '⏹️ रोकें' : '⏹️ Stop');
           }
 
           audio.onended = () => stopSpeaking();

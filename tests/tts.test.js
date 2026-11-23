@@ -119,3 +119,28 @@ test('tts: sarvam bulbul v3 fallback uses native Indian Odia speaker', async () 
   assert.equal(json.audio, 'c2FydmFtYXVkaW8=');
   assert.ok(calls.some((u) => u.includes('sarvam.ai')));
 });
+
+test('tts: lang=or strictly prioritizes Odia even with mixed English and Devanagari numerals', async () => {
+  let sarvamPayload = null;
+  const originalFetch = globalThis.fetch;
+  globalThis.fetch = async (url, init = {}) => {
+    const u = String(url);
+    if (u.includes('sarvam.ai')) {
+      sarvamPayload = JSON.parse(init.body);
+      return reply({ audios: ['c2FydmFtYXVkaW8='] });
+    }
+    return originalFetch(url, init);
+  };
+  const sarvamEnv = {
+    ...ENV,
+    SARVAM_API_KEY: 'sarvam-key',
+    SARVAM_SPEAKER: 'ritu'
+  };
+  const r = await onRequestPost({
+    request: req({ text: 'Swasth AI ଡାକ୍ତର ପରାମର୍ଶ 123', lang: 'or' }),
+    env: sarvamEnv
+  });
+  assert.equal(r.status, 200);
+  assert.ok(sarvamPayload);
+  assert.equal(sarvamPayload.target_language_code, 'od-IN');
+});
