@@ -100,15 +100,15 @@ ${langHeading}
 Conclude with the certified health disclaimer.`;
 
     const modelsToTry = [
-      env.GEMINI_VISION_MODEL,
-      'gemini-flash-lite-latest',
-      'gemini-3.5-flash',
       'gemini-3.5-flash-lite',
+      'gemini-flash-lite-latest',
+      env.GEMINI_VISION_MODEL,
+      'gemini-3-flash-preview',
       'gemini-flash-latest'
     ].filter(Boolean);
 
     let adviceText = '';
-    for (const model of modelsToTry) {
+    for (const model of [...new Set(modelsToTry)]) {
       try {
         const res = await timedFetch(`${gbase(env)}/v1beta/models/${model}:generateContent`, {
           method: 'POST',
@@ -126,7 +126,7 @@ Conclude with the certified health disclaimer.`;
               maxOutputTokens: 1600
             }
           })
-        }, L.UPSTREAM_TIMEOUT_MS, 'vision-report');
+        }, 8500, 'vision-report');
 
         if (res.ok) {
           const data = await res.json();

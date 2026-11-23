@@ -53,10 +53,10 @@ export async function onRequestPost({ request, env }) {
     }
 
     const modelsToTry = [
-      env.GEMINI_AUDIO_MODEL,
-      'gemini-flash-lite-latest',
-      'gemini-3.5-flash',
       'gemini-3.5-flash-lite',
+      'gemini-flash-lite-latest',
+      env.GEMINI_AUDIO_MODEL,
+      'gemini-3-flash-preview',
       'gemini-flash-latest'
     ].filter(Boolean);
     const reqLang = typeof body?.lang === 'string' ? body.lang.toLowerCase() : 'or';
@@ -69,7 +69,7 @@ export async function onRequestPost({ request, env }) {
         : 'The user is a rural citizen or resident of Odisha, India speaking in Odia (ଓଡ଼ିଆ) describing health symptoms or asking medical questions. Transcribe the spoken audio with high phonetic accuracy into natural Odia script (ଓଡ଼ିଆ). Understand regional colloquial Odia dialects (Sambalpuri, Cuttacki, Baleswari, Ganjami), village symptom idioms, and mixed medical loan words. Output ONLY the exact transcribed text in pure Odia script, nothing else.');
 
     let transcribed = '';
-    for (const model of modelsToTry) {
+    for (const model of [...new Set(modelsToTry)]) {
       try {
         const res = await timedFetch(`${gbase(env)}/v1beta/models/${model}:generateContent`, {
           method: 'POST',
@@ -87,7 +87,7 @@ export async function onRequestPost({ request, env }) {
               maxOutputTokens: 200
             }
           })
-        }, L.UPSTREAM_TIMEOUT_MS, 'transcribe');
+        }, 8500, 'transcribe');
 
         if (res.ok) {
           const data = await res.json();

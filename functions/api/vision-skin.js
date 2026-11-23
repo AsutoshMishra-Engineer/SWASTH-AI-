@@ -114,17 +114,17 @@ Ensure the tone is professional, reassuring, clear, and thoroughly informative (
 At the very end of your response, output a single invisible metadata tag indicating the primary department identified: [[DEPT:eye]] or [[DEPT:oral]] or [[DEPT:pediatric]] or [[DEPT:wound]] or [[DEPT:nail]] or [[DEPT:derma]].`;
 
     const modelsToTry = [
-      env.GEMINI_VISION_MODEL,
-      'gemini-flash-lite-latest',
-      'gemini-3.5-flash',
       'gemini-3.5-flash-lite',
+      'gemini-flash-lite-latest',
+      env.GEMINI_VISION_MODEL,
+      'gemini-3-flash-preview',
       'gemini-flash-latest'
     ].filter(Boolean);
 
     let answer = '';
     let lastError = null;
 
-    for (const model of modelsToTry) {
+    for (const model of [...new Set(modelsToTry)]) {
       try {
         const res = await timedFetch(`${gbase(env)}/v1beta/models/${model}:generateContent`, {
           method: 'POST',
@@ -142,7 +142,7 @@ At the very end of your response, output a single invisible metadata tag indicat
               maxOutputTokens: 1200
             }
           })
-        }, 22000, 'vision-skin');
+        }, 8500, 'vision-skin');
 
         if (res.ok) {
           const data = await res.json();
@@ -189,7 +189,14 @@ At the very end of your response, output a single invisible metadata tag indicat
   } catch (err) {
     if (err instanceof UpstreamError) {
       console.error('upstream error vision-skin:', err.where, err.status, err.detail || '');
-      return json({ error: 'upstream', message: 'Skin assessment service is currently busy. Please try again in a few moments.' }, 503);
+      const isOr = reqLang === 'or';
+      const isHi = reqLang === 'hi';
+      const busyMsg = isHi
+        ? 'क्लिनिकल फोटो मूल्यांकन सेवा इस समय व्यस्त है। कृपया कुछ क्षण बाद पुनः प्रयास करें।'
+        : (isOr
+          ? 'ଡାକ୍ତରୀ ଫଟୋ ପରୀକ୍ଷା ସେବା ଏହି ମୁହୂର୍ତ୍ତରେ ବ୍ୟସ୍ତ ଅଛି । ଦୟାକରି କିଛି ସମୟ ପରେ ପୁନର୍ବାର ଚେଷ୍ଟା କରନ୍ତୁ ।'
+          : 'Skin assessment service is currently busy. Please try again in a few moments.');
+      return json({ error: 'upstream', message: busyMsg }, 503);
     }
     console.error('vision-skin unexpected error:', err && err.message);
     return json({ error: 'server_error', message: 'Could not process skin image.' }, 500);

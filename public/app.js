@@ -1914,7 +1914,7 @@
           try { URL.revokeObjectURL(src); } catch {}
         }
         const canvas = document.createElement('canvas');
-        const MAX_DIM = 1200;
+        const MAX_DIM = isReport ? 1024 : 850;
         let width = img.width || 800;
         let height = img.height || 600;
         if (width > height) {
@@ -1932,7 +1932,7 @@
         canvas.height = height;
         const ctx = canvas.getContext('2d');
         ctx.drawImage(img, 0, 0, width, height);
-        const compressedDataUrl = canvas.toDataURL('image/jpeg', 0.85);
+        const compressedDataUrl = canvas.toDataURL('image/jpeg', 0.78);
         const base64Data = compressedDataUrl.split(',')[1];
         pendingSkinImage = {
           data: base64Data,
