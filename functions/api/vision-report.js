@@ -127,7 +127,7 @@ Conclude with the certified health disclaimer.`;
               maxOutputTokens: 1600
             }
           })
-        }, 8500, 'vision-report');
+        }, 15000, 'vision-report');
 
         if (res.ok) {
           const data = await res.json();

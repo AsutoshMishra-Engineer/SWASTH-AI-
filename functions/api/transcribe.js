@@ -88,7 +88,7 @@ export async function onRequestPost({ request, env }) {
               maxOutputTokens: 200
             }
           })
-        }, 8500, 'transcribe');
+        }, 12000, 'transcribe');
 
         if (res.ok) {
           const data = await res.json();
@@ -101,11 +101,7 @@ export async function onRequestPost({ request, env }) {
       }
     }
 
-    if (!transcribed) {
-      throw new UpstreamError('transcribe', 'no_transcription', 'Model did not return transcribed text');
-    }
-
-    return json({ text: transcribed });
+    return json({ text: transcribed || '' });
   } catch (err) {
     if (err instanceof UpstreamError) {
       console.error('upstream error transcribe:', err.where, err.status, err.detail || '');

@@ -140,10 +140,10 @@ At the very end of your response, output a single invisible metadata tag indicat
             }],
             generationConfig: {
               temperature: 0.2,
-              maxOutputTokens: 1200
+              maxOutputTokens: 900
             }
           })
-        }, 8500, 'vision-skin');
+        }, 15000, 'vision-skin');
 
         if (res.ok) {
           const data = await res.json();
