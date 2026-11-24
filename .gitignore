@@ -5,4 +5,7 @@ node_modules/
 *.log
 
 *Pitch_Dossier.pdf
+*Champion_Playbook.pdf
+*.pdf
 private_*
+scripts/build_champion_pdf.js
