@@ -858,13 +858,13 @@
       voiceBoxSub.textContent = isHi ? 'बोलकर पूछें' : (isOr ? 'ଓଡ଼ିଆରେ କୁହନ୍ତୁ' : 'Tap to speak');
     }
     if (photoBoxTitle) {
-      photoBoxTitle.textContent = isHi ? '📷 फोटो अपलोड' : (isOr ? '📷 ଫଟୋ ଅପ୍‌ଲୋଡ୍' : '📷 Upload Photo');
+      photoBoxTitle.textContent = isHi ? 'फोटो अपलोड' : (isOr ? 'ଫଟୋ ଅପ୍‌ଲୋଡ୍' : 'Upload Photo');
     }
     if (photoBoxSub) {
       photoBoxSub.textContent = isHi ? 'कैमरा या गैलरी' : (isOr ? 'କ୍ୟାମେରା ବା ଗ୍ୟାଲେରୀ' : 'Camera or Gallery');
     }
     if (reportBoxTitle) {
-      reportBoxTitle.textContent = isHi ? '📄 लैब व पर्ची' : (isOr ? '📄 ଲ୍ୟାବ୍ ଓ ପ୍ରେସକ୍ରିପସନ୍' : '📄 Lab / Prescription');
+      reportBoxTitle.textContent = isHi ? 'लैब व पर्ची' : (isOr ? 'ଲ୍ୟାବ୍ ଓ ପ୍ରେସକ୍ରିପସନ୍' : 'Lab / Prescription');
     }
     if (reportBoxSub) {
       reportBoxSub.textContent = isHi ? 'स्कैन व सरल अर्थ' : (isOr ? 'ସ୍କାନ୍ ଓ ସରଳ ବ୍ୟାଖ୍ୟା' : 'Scan & explain');
@@ -898,9 +898,9 @@
     const imagePreviewLabel = $('imagePreviewLabel');
     if (imagePreviewLabel) {
       if (selectedDepartment === 'report' || pendingSkinImage?.isReport) {
-        imagePreviewLabel.textContent = isHi ? '📄 पर्ची / रिपोर्ट संलग्न है' : (isOr ? '📄 ପ୍ରେସକ୍ରିପସନ୍ / ରିପୋର୍ଟ ସଂଲଗ୍ନ ଅଛି' : '📄 Prescription / Report Attached');
+        imagePreviewLabel.textContent = isHi ? 'पर्ची / रिपोर्ट संलग्न है' : (isOr ? 'ପ୍ରେସକ୍ରିପସନ୍ / ରିପୋର୍ଟ ସଂଲଗ୍ନ ଅଛି' : 'Prescription / Report Attached');
       } else {
-        imagePreviewLabel.textContent = isHi ? '📷 फोटो संलग्न है' : (isOr ? '📷 ଫଟୋ ସଂଲଗ୍ନ ହୋଇଛି' : '📷 Clinical Photo Attached');
+        imagePreviewLabel.textContent = isHi ? 'क्लिनिकल फोटो संलग्न है' : (isOr ? 'ଡାକ୍ତରୀ ଫଟୋ ସଂଲଗ୍ନ ହୋଇଛି' : 'Clinical Photo Attached');
       }
     }
     const imagePreviewHint = $('imagePreviewHint');
@@ -908,9 +908,9 @@
     const analyzePhotoBtnText = $('analyzePhotoBtnText');
     if (analyzePhotoBtnText) {
       if (selectedDepartment === 'report' || pendingSkinImage?.isReport) {
-        analyzePhotoBtnText.textContent = isHi ? '🚀 रिपोर्ट की AI जाँच शुरू करें →' : (isOr ? '🚀 ରିପୋର୍ଟର AI ବିଶ୍ଳେଷଣ ଆରମ୍ଭ କରନ୍ତୁ →' : '🚀 Start AI Report Scan Now →');
+        analyzePhotoBtnText.textContent = isHi ? 'रिपोर्ट की AI जाँच शुरू करें →' : (isOr ? 'ରିପୋର୍ଟର AI ବିଶ୍ଳେଷଣ ଆରମ୍ଭ କରନ୍ତୁ →' : 'Start AI Report Scan Now →');
       } else {
-        analyzePhotoBtnText.textContent = isHi ? '🚀 फोटो की AI जाँच शुरू करें →' : (isOr ? '🚀 ଫଟୋର AI ପରୀକ୍ଷା ଆରମ୍ଭ କରନ୍ତୁ →' : '🚀 Start AI Photo Scan Now →');
+        analyzePhotoBtnText.textContent = isHi ? 'फोटो की AI जाँच शुरू करें →' : (isOr ? 'ଫଟୋର AI ପରୀକ୍ଷା ଆରମ୍ଭ କରନ୍ତୁ →' : 'Start AI Photo Scan Now →');
       }
     }
 
@@ -1588,8 +1588,9 @@
     const box = document.createElement('div');
     box.className = 'scan-laser-box';
     const icon = document.createElement('span');
-    icon.textContent = isReport ? '📄' : '📸';
-    icon.style.fontSize = '18px';
+    icon.innerHTML = isReport
+      ? '<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/></svg>'
+      : '<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M23 19a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h4l2-3h6l2 3h4a2 2 0 0 1 2 2z"/><circle cx="12" cy="13" r="4"/></svg>';
     const beam = document.createElement('div');
     beam.className = 'scan-laser-beam';
     box.appendChild(icon);
@@ -1606,15 +1607,15 @@
     const isHi = currentLang === 'hi';
     if (isReport) {
       title.textContent = isHi
-        ? '📄 पर्ची / लैब रिपोर्ट का OCR विश्लेषण जारी है...'
-        : (isOr ? '📄 ଡାକ୍ତରୀ ପ୍ରେସକ୍ରିପସନ୍ ଓ ଲ୍ୟାବ୍ ରିପୋର୍ଟ ସ୍କାନ୍ ଚାଲିଛି...' : '📄 Prescription & Lab Report OCR Scanning...');
+        ? 'पर्ची / लैब रिपोर्ट का OCR विश्लेषण जारी है...'
+        : (isOr ? 'ଡାକ୍ତରୀ ପ୍ରେସକ୍ରିପସନ୍ ଓ ଲ୍ୟାବ୍ ରିପୋର୍ଟ ସ୍କାନ୍ ଚାଲିଛି...' : 'Prescription & Lab Report OCR Scanning...');
       sub.textContent = isHi
         ? 'दवाइयों के नाम, परीक्षण परिणाम व आवश्यक सावधानियां जाँची जा रही हैं'
         : (isOr ? 'ଔଷଧ ନାମ, ଟେଷ୍ଟ୍ ଫଳାଫଳ ଓ ଜରୁରୀ ସାବଧାନତା ଯାଞ୍ଚ ହେଉଛି' : 'Transcribing test values, medicines & doctor consultation advice');
     } else {
       title.textContent = isHi
-        ? '📸 क्लिनिकल फोटो विश्लेषण जारी है...'
-        : (isOr ? '📸 ଡାକ୍ତରୀ ଫଟୋ ପରୀକ୍ଷା ଚାଲିଛି...' : '📸 AI Clinical Photo Analyzing...');
+        ? 'क्लिनिकल फोटो विश्लेषण जारी है...'
+        : (isOr ? 'ଡାକ୍ତରୀ ଫଟୋ ପରୀକ୍ଷା ଚାଲିଛି...' : 'AI Clinical Photo Analyzing...');
       sub.textContent = isHi
         ? 'लक्षण, सुरक्षा प्रोटोकॉल व प्राथमिक उपचार जाँचे जा रहे हैं'
         : (isOr ? 'ଲକ୍ଷଣ, ସୁରକ୍ଷା ପ୍ରୋଟୋକଲ୍ ଓ ଚିକିତ୍ସା ଯାଞ୍ଚ ହେଉଛି' : 'Analyzing clinical features & triage safety protocol');
@@ -1641,32 +1642,26 @@
       const isOr = currentLang === 'or';
       const isHi = currentLang === 'hi';
 
-      let icon = '📸';
-      let title = isHi ? '📸 क्लिनिकल फोटो मूल्यांकन (Clinical Assessment)' : (isOr ? '📸 ଡାକ୍ତରୀ ଫଟୋ ପରୀକ୍ଷା' : '📸 AI Clinical Photo Assessment');
+      let icon = '<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M23 19a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h4l2-3h6l2 3h4a2 2 0 0 1 2 2z"/><circle cx="12" cy="13" r="4"/></svg>';
+      let title = isHi ? 'क्लिनिकल फोटो मूल्यांकन (Clinical Assessment)' : (isOr ? 'ଡାକ୍ତରୀ ଫଟୋ ପରୀକ୍ଷା' : 'AI Clinical Photo Assessment');
       let subtitle = isHi ? 'त्वचा, आँख, मुँह, घाव व बाल स्वास्थ्य जांच प्रोटोकॉल' : (isOr ? 'ଚର୍ମ, ଆଖି, ମୁଖ, ଘା\' ଓ ଶିଶୁ ସୁରକ୍ଷା ଯାଞ୍ଚ' : 'Multi-Condition Clinical Triage & Safety Protocol');
 
       if (dept === 'derma' || dept === 'photo') {
-        icon = '📸';
-        title = isHi ? '📸 क्लिनिकल फोटो मूल्यांकन' : (isOr ? '📸 ଡାକ୍ତରୀ ଫଟୋ ପରୀକ୍ଷା' : '📸 AI Clinical Photo Assessment');
+        title = isHi ? 'क्लिनिकल फोटो मूल्यांकन' : (isOr ? 'ଡାକ୍ତରୀ ଫଟୋ ପରୀକ୍ଷା' : 'AI Clinical Photo Assessment');
         subtitle = isHi ? 'लक्षण, प्राथमिक उपचार व सुरक्षा प्रोटोकॉल' : (isOr ? 'ଲକ୍ଷଣ, ସୁରକ୍ଷା ଓ ପ୍ରାଥମିକ ଚିକିତ୍ସା ଯାଞ୍ଚ' : 'Clinical Triage, First Aid & Safety Protocol');
       } else if (dept === 'eye') {
-        icon = '📸';
         title = isHi ? 'नेत्र चिकित्सा व दृष्टि मूल्यांकन (Netra Pariksha)' : (isOr ? 'ନେତ୍ର ବିଭାଗ ଓ ଦୃଷ୍ଟି ପରୀକ୍ଷା (ନେତ୍ର ପରୀକ୍ଷା)' : 'Ophthalmology & Eye Department (Netra Pariksha)');
         subtitle = isHi ? 'कंजक्टिवाइटिस, लाल आँख व आपातकालीन जांच' : (isOr ? 'କଞ୍ଜକ୍ଟିଭାଇଟିସ୍, ଲାଲ୍ ଆଖି ଓ ଜରୁରୀ ପରାମର୍ଶ' : 'Conjunctivitis, Stye, Red Eye & Visual Triage Protocol');
       } else if (dept === 'oral') {
-        icon = '📸';
         title = isHi ? 'मुख स्वास्थ्य व कैंसर पूर्व जांच (Mukh Swasthya)' : (isOr ? 'ମୁଖ ସ୍ୱାସ୍ଥ୍ୟ ଓ କର୍କଟ ପୂର୍ବ ଯାଞ୍ଚ (ମୁଖ ସ୍ୱାସ୍ଥ୍ୟ)' : 'Oral Health & Pre-Cancer Screening (Mukh Swasthya)');
         subtitle = isHi ? 'मुँह के छाले, तंबाकू व ल्यूकोप्लाकिया सुरक्षा जांच' : (isOr ? 'ତମାଖୁ, ଗୁଟ୍‌ଖା, ପାନ ଓ ଘା\' ଯାଞ୍ଚ ପ୍ରୋଟୋକଲ୍' : 'Aphthous Ulcers, OSMF & Pre-Malignancy Triage');
       } else if (dept === 'pediatric') {
-        icon = '📸';
         title = isHi ? 'शिशु स्वास्थ्य व नवजात मूल्यांकन (Shishu Swasthya)' : (isOr ? 'ଶିଶୁ ସ୍ୱାସ୍ଥ୍ୟ ଓ ନବଜାତ ଯତ୍ନ (ଶିଶୁ ସ୍ୱାସ୍ଥ୍ୟ)' : 'Pediatrics & Newborn Triage (Shishu Swasthya)');
         subtitle = isHi ? 'नवजात पीलिया (Jaundice), डायपर रैश व निर्जलीकरण जांच' : (isOr ? 'କାମଳ (Jaundice), ଡାଏପର ରାସ୍ ଓ ଶିଶୁ ସୁରକ୍ଷା' : 'Neonatal Jaundice, Dehydration & Pediatric Triage');
       } else if (dept === 'wound') {
-        icon = '📸';
         title = isHi ? 'घाव, जलन व पशु काटना (Khyata & Porajala)' : (isOr ? 'ଘା\', ପୋଡ଼ାଜଳା ଓ ପଶୁ କାମୁଡ଼ା (କ୍ଷତ ଓ ପୋଡ଼ାଜଳା)' : 'Wounds, Burns & Animal Bites (Khyata & Porajala)');
         subtitle = isHi ? 'कुत्ता काटने पर 15 मिनट पानी से धोने व रेबीज सुरक्षा प्रोटोकॉल' : (isOr ? 'କୁକୁର କାମୁଡ଼ା ରେବିସ୍ ସୁରକ୍ଷା ଓ ୧୫ ମିନିଟ୍ ଧୋଇବା ପ୍ରୋଟୋକଲ୍' : '15-Min Running Water Rabies Wash & Burn Triage');
       } else if (dept === 'nail') {
-        icon = '📸';
         title = isHi ? 'नाखून व एनीमिया दृश्य मूल्यांकन (Nakha Pariksha)' : (isOr ? 'ନଖ ଓ ରକ୍ତହୀନତା ପରୀକ୍ଷା (ନଖ ପରୀକ୍ଷା)' : 'Nails & Anemia Visual Screening (Nakha Pariksha)');
         subtitle = isHi ? 'रक्तहीनता (Pallor), ऑक्सीजन स्तर व पोषण जांच' : (isOr ? 'ରକ୍ତହୀନତା (Pallor), ଅକ୍ସିଜେନ୍ ଓ ପୋଷଣ ଯାଞ୍ଚ' : 'Subungual Pallor, Koilonychia & Hemoglobin Triage');
       }
@@ -1687,9 +1682,16 @@
       const isOr = currentLang === 'or';
       const isHi = currentLang === 'hi';
       repHeader.innerHTML = `
-        <div class="derma-head-icon">📄</div>
+        <div class="derma-head-icon">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/>
+            <polyline points="14 2 14 8 20 8"/>
+            <line x1="16" y1="13" x2="8" y2="13"/>
+            <line x1="16" y1="17" x2="8" y2="17"/>
+          </svg>
+        </div>
         <div class="derma-head-content">
-          <div class="derma-head-title">${isHi ? '📄 प्रिस्क्रिप्शन व लैब टेस्ट रिपोर्ट विश्लेषण' : (isOr ? '📄 ଡାକ୍ତରୀ ପ୍ରେସକ୍ରିପସନ୍ ଓ ଲ୍ୟାବ୍ ରିପୋର୍ଟ ବିଶ୍ଳେଷଣ' : '📄 Diagnostic Lab Report & Prescription Explainer')}</div>
+          <div class="derma-head-title">${isHi ? 'प्रिस्क्रिप्शन व लैब टेस्ट रिपोर्ट विश्लेषण' : (isOr ? 'ଡାକ୍ତରୀ ପ୍ରେସକ୍ରିପସନ୍ ଓ ଲ୍ୟାବ୍ ରିପୋର୍ଟ ବିଶ୍ଳେଷଣ' : 'Diagnostic Lab Report & Prescription Explainer')}</div>
           <div class="derma-head-sub">${isHi ? 'सरल भाषा में अर्थ, पोषण संबंधी सलाह व डॉक्टर से पूछने योग्य प्रश्न' : (isOr ? 'ସରଳ ଭାଷାରେ ଅର୍ଥ, ପଥ୍ୟ-ପୋଷଣ ଓ ଡାକ୍ତରଙ୍କୁ ପଚାରିବାକୁ ଥିବା ପ୍ରଶ୍ନ' : 'Plain language explanations, nutrition guidance & key doctor questions')}</div>
         </div>
       `;
@@ -1948,20 +1950,20 @@
           pills.forEach((x) => x.classList.toggle('active', x.getAttribute('data-dept') === 'report'));
           const imagePreviewLabel = $('imagePreviewLabel');
           if (imagePreviewLabel) {
-            imagePreviewLabel.textContent = isHi ? '📄 पर्ची / रिपोर्ट संलग्न है' : (isOr ? '📄 ପ୍ରେସକ୍ରିପସନ୍ / ରିପୋର୍ଟ ସଂଲଗ୍ନ ଅଛି' : '📄 Prescription / Report Attached');
+            imagePreviewLabel.textContent = isHi ? 'पर्ची / रिपोर्ट संलग्न है' : (isOr ? 'ପ୍ରେସକ୍ରିପସନ୍ / ରିପୋର୍ଟ ସଂଲଗ୍ନ ଅଛି' : 'Prescription / Report Attached');
           }
           const analyzePhotoBtnText = $('analyzePhotoBtnText');
           if (analyzePhotoBtnText) {
-            analyzePhotoBtnText.textContent = isHi ? '🚀 रिपोर्ट की AI जाँच शुरू करें →' : (isOr ? '🚀 ରିପୋର୍ଟର AI ବିଶ୍ଳେଷଣ ଆରମ୍ଭ କରନ୍ତୁ →' : '🚀 Start AI Report Scan Now →');
+            analyzePhotoBtnText.textContent = isHi ? 'रिपोर्ट की AI जाँच शुरू करें →' : (isOr ? 'ରିପୋର୍ଟର AI ବିଶ୍ଳେଷଣ ଆରମ୍ଭ କରନ୍ତୁ →' : 'Start AI Report Scan Now →');
           }
         } else {
           const imagePreviewLabel = $('imagePreviewLabel');
           if (imagePreviewLabel) {
-            imagePreviewLabel.textContent = isHi ? '📷 फोटो संलग्न है' : (isOr ? '📷 ଫଟୋ ସଂଲଗ୍ନ ହୋଇଛି' : '📷 Clinical Photo Attached');
+            imagePreviewLabel.textContent = isHi ? 'क्लिनिकल फोटो संलग्न है' : (isOr ? 'ଡାକ୍ତରୀ ଫଟୋ ସଂଲଗ୍ନ ହୋଇଛି' : 'Clinical Photo Attached');
           }
           const analyzePhotoBtnText = $('analyzePhotoBtnText');
           if (analyzePhotoBtnText) {
-            analyzePhotoBtnText.textContent = isHi ? '🚀 फोटो की AI जाँच शुरू करें →' : (isOr ? '🚀 ଫଟୋର AI ପରୀକ୍ଷା ଆରମ୍ଭ କରନ୍ତୁ →' : '🚀 Start AI Photo Scan Now →');
+            analyzePhotoBtnText.textContent = isHi ? 'फोटो की AI जाँच शुरू करें →' : (isOr ? 'ଫଟୋର AI ପରୀକ୍ଷା ଆରମ୍ଭ କରନ୍ତୁ →' : 'Start AI Photo Scan Now →');
           }
         }
         let thumb = $('imagePreviewThumb');
@@ -2154,11 +2156,11 @@
 
     const userBubbleText = text || (isReport
       ? (currentLang === 'hi'
-        ? '📄 डॉक्टर पर्ची / लैब टेस्ट रिपोर्ट विश्लेषण के लिए भेजी गई'
-        : (currentLang === 'or' ? '📄 ଡାକ୍ତରୀ ପ୍ରେସକ୍ରିପସନ୍ / ଲ୍ୟାବ୍ ରିପୋର୍ଟ ବିଶ୍ଳେଷଣ ପାଇଁ ପଠାଗଲା' : '📄 Doctor Prescription / Lab Report sent for clinical analysis'))
+        ? 'डॉक्टर पर्ची / लैब टेस्ट रिपोर्ट विश्लेषण के लिए भेजी गई'
+        : (currentLang === 'or' ? 'ଡାକ୍ତରୀ ପ୍ରେସକ୍ରିପସନ୍ / ଲ୍ୟାବ୍ ରିପୋର୍ଟ ବିଶ୍ଳେଷଣ ପାଇଁ ପଠାଗଲା' : 'Doctor Prescription / Lab Report sent for clinical analysis'))
       : (currentLang === 'hi'
-        ? '📷 क्लिनिकल फोटो मूल्यांकन के लिए भेजी गई'
-        : (currentLang === 'or' ? '📷 ଡାକ୍ତରୀ ପରୀକ୍ଷା ପାଇଁ ଫଟୋ ପଠାଗଲା' : '📷 Clinical photo sent for assessment')));
+        ? 'क्लिनिकल फोटो मूल्यांकन के लिए भेजी गई'
+        : (currentLang === 'or' ? 'ଡାକ୍ତରୀ ପରୀକ୍ଷା ପାଇଁ ଫଟୋ ପଠାଗଲା' : 'Clinical photo sent for assessment')));
     const userBubble = addBubble('user', userBubbleText);
     if (activeImage && activeImage.previewUrl) {
       const card = document.createElement('div');
@@ -2170,8 +2172,8 @@
       const badge = document.createElement('span');
       badge.className = 'user-image-badge';
       badge.textContent = isReport
-        ? (currentLang === 'hi' ? '📄 पर्ची / रिपोर्ट' : (currentLang === 'or' ? '📄 ପ୍ରେସକ୍ରିପସନ୍ / ରିପୋର୍ଟ' : '📄 Prescription/Report'))
-        : (currentLang === 'hi' ? '📷 फोटो (Photo)' : (currentLang === 'or' ? '📷 ଫଟୋ (Photo)' : '📷 Photo'));
+        ? (currentLang === 'hi' ? 'पर्ची / रिपोर्ट' : (currentLang === 'or' ? 'ପ୍ରେସକ୍ରିପସନ୍ / ରିପୋର୍ଟ' : 'Prescription/Report'))
+        : (currentLang === 'hi' ? 'फोटो (Photo)' : (currentLang === 'or' ? 'ଫଟୋ (Photo)' : 'Photo'));
       card.appendChild(imgEl);
       card.appendChild(badge);
       userBubble.prepend(card);

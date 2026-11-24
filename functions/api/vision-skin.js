@@ -17,6 +17,14 @@ async function timedFetch(url, init, ms, where) {
   finally { clearTimeout(t); }
 }
 
+function stripEmojis(text) {
+  if (!text) return '';
+  return text
+    .replace(/[\u{1F300}-\u{1FAFF}]|[\u{2600}-\u{27BF}]|[\u{1F000}-\u{1F2FF}]|[\u{2300}-\u{23FF}]|[\u{2B50}-\u{2B55}]|[\u{FE00}-\u{FE0F}]/gu, '')
+    .replace(/[ \t]+/g, ' ')
+    .trim();
+}
+
 export async function onRequestPost({ request, env }) {
   const L = getLimits(env);
   for (const k of ['SUPABASE_URL', 'SUPABASE_ANON_KEY', 'GEMINI_API_KEY']) {
@@ -63,15 +71,16 @@ export async function onRequestPost({ request, env }) {
     const base64Data = rawImage.replace(/^data:image\/[a-zA-Z]+;base64,/, '');
 
     const langInstruction = reqLang === 'or'
-      ? 'Respond strictly and entirely in pure Odia (ଓଡ଼ିଆ). Use these 4 exact Odia headings: "📘 ଦୃଶ୍ୟମାନ ଲକ୍ଷଣ ଓ ସମ୍ଭାବ୍ୟ କାରଣ:", "🏠 ସୁରକ୍ଷିତ ଘରୋଇ ଯତ୍ନ ଓ ତୁରନ୍ତ ଉପଶମ:", "⚠️ ବିପଦର ଲକ୍ଷଣ ଓ ସାବଧାନତା:", "🏥 ଡାକ୍ତରୀ ପରାମର୍ଶ:".'
+      ? 'Respond strictly and entirely in pure Odia (ଓଡ଼ିଆ). Use these 4 exact Odia headings: "ଦୃଶ୍ୟମାନ ଲକ୍ଷଣ ଓ ସମ୍ଭାବ୍ୟ କାରଣ:", "ସୁରକ୍ଷିତ ଘରୋଇ ଯତ୍ନ ଓ ତୁରନ୍ତ ଉପଶମ:", "ବିପଦର ଲକ୍ଷଣ ଓ ସାବଧାନତା:", "ଡାକ୍ତରୀ ପରାମର୍ଶ:".'
       : (reqLang === 'hi'
-        ? 'Respond strictly and entirely in pure Hindi (हिन्दी). Use these 4 exact Hindi headings: "📘 दृश्यमान लक्षण और संभावित कारण:", "🏠 सुरक्षित घरेलू देखभाल और तत्काल राहत:", "⚠️ खतरे के लक्षण व सावधानियां:", "🏥 डॉक्टर से परामर्श:".'
-        : 'Respond clearly in plain English using these 4 exact headings: "📘 Visual Observation & Probable Causes:", "🏠 Safe Home Care & Immediate Relief:", "⚠️ Warning Signs & Precautions:", "🏥 When to See a Doctor:".');
+        ? 'Respond strictly and entirely in pure Hindi (हिन्दी). Use these 4 exact Hindi headings: "दृश्यमान लक्षण और संभावित कारण:", "सुरक्षित घरेलू देखभाल और तत्काल राहत:", "खतरे के लक्षण व सावधानियां:", "डॉक्टर से परामर्श:".'
+        : 'Respond clearly in plain English using these 4 exact headings: "Visual Observation & Probable Causes:", "Safe Home Care & Immediate Relief:", "Warning Signs & Precautions:", "When to See a Doctor:".');
 
     const promptText = `You are Swasth AI, an expert clinical multi-department public health and visual triage consultant for India (compliant with National Health Mission, ICMR, AIIMS, and WHO clinical triage standards).
 Examine the user's uploaded clinical photo with high diagnostic precision and careful visual analysis, taking into account noted symptoms ("${symptoms || 'None specified'}") and requested clinical department ("${reqDept}").
 
 CRITICAL PATIENT SAFETY MANDATE - ABSOLUTELY ZERO UNPRESCRIBED RANDOM MEDICINES:
+- NO EMOJIS OR ICONS: Do NOT use any emojis, emoticons, or decorative icons in your response. Use clean, formal, clear clinical language only.
 - STRICT PROHIBITION: DO NOT prescribe, suggest, or name specific commercial medicines, antibiotics (e.g. Amoxicillin, Ciprofloxacin, Azithromycin), oral antifungals, prescription eye/ear drops, steroid creams (Betnovate, Panderm, Quadriderm, Dermikem, Clobetasol), or systemic drugs.
 - MANDATORY WARNING IN EVERY RESPONSE: Explicitly remind the user that self-medicating or taking random medicines from the internet without a physical doctor's clinical examination is dangerous, can cause severe toxicity, antibiotic resistance, steroid-induced skin/eye damage, or mask life-threatening emergencies.
 - Provide ONLY evidence-based, safe non-pharmacological first aid (e.g., continuous clean water flush, gentle soap wash, warm saline compress, hydration, sterile dressing) and guide the patient to an authorized physician, PHC, CHC, or medical specialist for formal diagnosis and prescription.
@@ -177,7 +186,7 @@ At the very end of your response, output a single invisible metadata tag indicat
     }
 
     return json({
-      answer,
+      answer: stripEmojis(answer),
       kind: 'vision_skin',
       department: detectedDept,
       disclaimer,

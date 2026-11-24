@@ -17,6 +17,14 @@ async function timedFetch(url, init, ms, where) {
   finally { clearTimeout(t); }
 }
 
+function stripEmojis(text) {
+  if (!text) return '';
+  return text
+    .replace(/[\u{1F300}-\u{1FAFF}]|[\u{2600}-\u{27BF}]|[\u{1F000}-\u{1F2FF}]|[\u{2300}-\u{23FF}]|[\u{2B50}-\u{2B55}]|[\u{FE00}-\u{FE0F}]/gu, '')
+    .replace(/[ \t]+/g, ' ')
+    .trim();
+}
+
 export async function onRequestPost({ request, env }) {
   const L = getLimits(env);
   for (const k of ['SUPABASE_URL', 'SUPABASE_ANON_KEY', 'GEMINI_API_KEY']) {
@@ -66,27 +74,28 @@ export async function onRequestPost({ request, env }) {
 
     const langHeading = isOr
       ? `Respond strictly and entirely in pure Odia (ଓଡ଼ିଆ). Use these 4 exact Odia headings:
-1. 📋 ପରୀକ୍ଷା ଫଳାଫଳ ଓ ମୁଖ୍ୟ ତଥ୍ୟ: (List identified test names, observed values, and normal ranges)
-2. 💡 ସରଳ ବ୍ୟାଖ୍ୟା (ଏହାର ଅର୍ଥ କ'ଣ?): (Explain in simple, encouraging Odia what the numbers mean)
-3. 🥗 ପଥ୍ୟ, ଖାଦ୍ୟ ଓ ସୁରକ୍ଷିତ ଜୀବନଶୈଳୀ: (Provide safe non-drug dietary guidance e.g. iron-rich foods, hydration)
-4. ❓ ଡାକ୍ତରଙ୍କୁ ପଚାରିବାକୁ ଥିବା ଜରୁରୀ ପ୍ରଶ୍ନ: (2-3 key questions for the patient's next doctor visit)`
+1. ପରୀକ୍ଷା ଫଳାଫଳ ଓ ମୁଖ୍ୟ ତଥ୍ୟ: (List identified test names, observed values, and normal ranges)
+2. ସରଳ ବ୍ୟାଖ୍ୟା (ଏହାର ଅର୍ଥ କ'ଣ?): (Explain in simple, encouraging Odia what the numbers mean)
+3. ପଥ୍ୟ, ଖାଦ୍ୟ ଓ ସୁରକ୍ଷିତ ଜୀବନଶୈଳୀ: (Provide safe non-drug dietary guidance e.g. iron-rich foods, hydration)
+4. ଡାକ୍ତରଙ୍କୁ ପଚାରିବାକୁ ଥିବା ଜରୁରୀ ପ୍ରଶ୍ନ: (2-3 key questions for the patient's next doctor visit)`
       : (isHi
         ? `Respond strictly and entirely in pure Hindi (हिन्दी). Use these 4 exact Hindi headings:
-1. 📋 जाँच परिणाम और मुख्य विवरण: (List identified test names, observed values, and normal ranges)
-2. 💡 सरल भाषा में अर्थ (इसका क्या मतलब है?): (Explain in simple Hindi what the numbers mean)
-3. 🥗 खान-पान, पोषण और सुरक्षित देखभाल: (Provide safe non-drug dietary and lifestyle advice)
-4. ❓ डॉक्टर से पूछने योग्य महत्वपूर्ण प्रश्न: (2-3 key questions for the patient's next doctor visit)`
+1. जाँच परिणाम और मुख्य विवरण: (List identified test names, observed values, and normal ranges)
+2. सरल भाषा में अर्थ (इसका क्या मतलब है?): (Explain in simple Hindi what the numbers mean)
+3. खान-पान, पोषण और सुरक्षित देखभाल: (Provide safe non-drug dietary and lifestyle advice)
+4. डॉक्टर से पूछने योग्य महत्वपूर्ण प्रश्न: (2-3 key questions for the patient's next doctor visit)`
         : `Respond clearly in plain English using these 4 exact headings:
-1. 📋 Identified Tests & Summary Values: (List identified test names, observed values, and normal ranges)
-2. 💡 Plain-Language Explanation (What This Means): (Explain what the numbers mean in simple everyday terms)
-3. 🥗 Nutrition, Safe Diet & Lifestyle Care: (Provide evidence-based non-pharmacological dietary tips)
-4. ❓ Key Questions to Ask Your Doctor: (2-3 specific empowering questions for the patient's next clinic visit)`);
+1. Identified Tests & Summary Values: (List identified test names, observed values, and normal ranges)
+2. Plain-Language Explanation (What This Means): (Explain what the numbers mean in simple everyday terms)
+3. Nutrition, Safe Diet & Lifestyle Care: (Provide evidence-based non-pharmacological dietary tips)
+4. Key Questions to Ask Your Doctor: (2-3 specific empowering questions for the patient's next clinic visit)`);
 
     const promptText = `You are Swasth AI, an expert clinical diagnostic document explainer and public health companion for Odisha and India.
 Analyze the user's uploaded medical image with high OCR accuracy and clinical comprehension. The image is a ${reportType === 'prescription' ? 'Doctor Prescription / OPD slip' : (reportType === 'lab_test' ? 'Pathology / Diagnostic Lab Test Report' : 'Doctor Prescription or Diagnostic Lab Test Report')}.
 User notes/symptoms: "${notes || 'None noted'}".
 
-CRITICAL CLINICAL SAFETY RULES:
+CRITICAL CLINICAL SAFETY & STYLE RULES:
+- NO EMOJIS OR ICONS: Do NOT use any emojis, emoticons, or icons anywhere in your response. Write clean, formal, clear clinical language.
 - STRICT PROHIBITION: DO NOT change, adjust, or recommend prescription medicine dosages.
 - Explicitly emphasize: "Never alter or stop prescribed medicines without your doctor's instruction."
 - For Lab Reports (CBC, Hemoglobin, Blood Sugar, Lipid Profile, Liver/Kidney/Thyroid function, Urine):
@@ -147,7 +156,7 @@ Conclude with the certified health disclaimer.`;
     const disclaimer = isOr ? DISCLAIMER_OR : (isHi ? DISCLAIMER_HI : DISCLAIMER);
     return json({
       kind: 'report_explanation',
-      answer: adviceText,
+      answer: stripEmojis(adviceText),
       disclaimer,
       lang: reqLang
     });
