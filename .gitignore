@@ -9,3 +9,4 @@ node_modules/
 *.pdf
 private_*
 scripts/build_champion_pdf.js
+scripts/build_video_script_pdf.js
