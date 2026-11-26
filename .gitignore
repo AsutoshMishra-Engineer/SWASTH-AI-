@@ -10,3 +10,5 @@ node_modules/
 private_*
 scripts/build_champion_pdf.js
 scripts/build_video_script_pdf.js
+scripts/build_grand_finale_playbook.js
+scripts/build_*.js
