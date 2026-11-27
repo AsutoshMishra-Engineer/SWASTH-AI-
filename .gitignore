@@ -12,3 +12,5 @@ scripts/build_champion_pdf.js
 scripts/build_video_script_pdf.js
 scripts/build_grand_finale_playbook.js
 scripts/build_*.js
+scripts/generate_qr.cjs
+scripts/generate_*.cjs

@@ -1348,8 +1348,8 @@
     return bytes.buffer;
   }
 
-  // Standardized concise spoken summary length for rapid sub-2s generation (ideal for elderly listeners)
-  const SPOKEN_SUMMARY_MAX_CHARS = 180;
+  // Full clinical audio synthesis limit (reads complete response up to 1200 chars)
+  const SPOKEN_SUMMARY_MAX_CHARS = 1200;
 
   // Cache pre-generated audio for zero-lag instant playback (stores { blobUrl, arrayBuffer })
   const audioCache = new Map();
